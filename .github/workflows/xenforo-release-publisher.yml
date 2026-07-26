@@ -143,19 +143,20 @@ jobs:
           # Dry Run Check
           if [ "$DRY_RUN" = "true" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "=== DRY RUN SUCCESSFUL ==="
-            echo "Target API:  https://forum.dice-dragons.de/api/resource-versions/"
-            echo "Title:       $TITLE"
-            echo "Version:     $VERSION_STRING"
-            echo "Attachment:  $ZIP_FILE"
-            echo "Docs File:   ${DOCS_FILE:-None (Fallback used)}"
+            echo "Target API Version: https://forum.dice-dragons.de/api/resource-versions/"
+            echo "Target API Update:  https://forum.dice-dragons.de/api/resource-updates/"
+            echo "Title:              $TITLE"
+            echo "Version:            $VERSION_STRING"
+            echo "Attachment:         $ZIP_FILE"
+            echo "Docs File:          ${DOCS_FILE:-None (Fallback used)}"
             echo "Message:"
             echo "$MESSAGE_CONTENT"
             echo "==========================="
             exit 0
           fi
 
-          # 3. XenForo API Call (2-step attachment upload)
-          # Step 1: Upload ZIP attachment via /api/attachments/new-key
+          # 3. XenForo API Execution
+          # Step A: Upload ZIP attachment via /api/attachments/new-key
           echo "Step 1: Creating attachment key and uploading file..."
           ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key" \
             -H "XF-Api-Key: ${XF_API_KEY}" \
@@ -170,9 +171,10 @@ jobs:
 
           ATTACH_KEY=$(echo "$ATTACH_RESP" | jq -r '.key // empty')
 
+          # Step B: Create New Downloadable Resource Version
           if [ -n "$ATTACH_KEY" ]; then
             echo "Attachment uploaded successfully. Key: $ATTACH_KEY"
-            echo "Step 2: Creating resource version via /api/resource-versions/..."
+            echo "Step 2: Creating new resource version via /api/resource-versions/..."
             curl -s -S -X POST "https://forum.dice-dragons.de/api/resource-versions/" \
               -H "XF-Api-Key: ${XF_API_KEY}" \
               -H "XF-Api-User: ${XF_API_USER}" \
@@ -199,3 +201,17 @@ jobs:
               -F "version_type=local" \
               -F "attachment=@${ZIP_FILE}"
           fi
+
+          echo ""
+          # Step C: Create Changelog / Release Post Update
+          echo "Step 3: Posting changelog update post via /api/resource-updates/..."
+          curl -s -S -X POST "https://forum.dice-dragons.de/api/resource-updates/" \
+            -H "XF-Api-Key: ${XF_API_KEY}" \
+            -H "XF-Api-User: ${XF_API_USER}" \
+            -H "X-XF-Api-Key: ${XF_API_KEY}" \
+            -H "X-XF-Api-User: ${XF_API_USER}" \
+            -F "api_key=${XF_API_KEY}" \
+            -F "api_user=${XF_API_USER}" \
+            -F "resource_id=${RESOURCE_ID}" \
+            -F "title=${TITLE}" \
+            -F "message=${MESSAGE_CONTENT}"
