@@ -6,7 +6,7 @@ on:
 
 jobs:
   xenforo-publish:
-    uses: Dice-Dragons/Core/.github/workflows/xenforo-release-publisher.yml@main
+    uses: ./.github/workflows/xenforo-release-publisher.yml
     with:
-      dry_run: true   # <-- Hier steuerst du fürs Testen, ob es ein Dry Run ist
+      dry_run: true 
     secrets: inherit
