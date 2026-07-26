@@ -52,22 +52,24 @@ class Templater extends XFCP_Templater
         $developmentConfig = $this->app->config('development');
         $productionMode = empty($developmentConfig['fullJs']);
 
-        if (!empty($dependentJS))
+        $src = $tmpOptions['src'];
+        if (!empty($dependentJS) && $src && isset($dependentJS[$src]))
         {
-            if ($productionMode) {
-                $jsArr = $dependentJS[$tmpOptions['prod']];
-            }
-            else {
-                $jsArr = $dependentJS[$tmpOptions['dev']];
-            }
-            if (is_array($jsArr))
+            $deps = $dependentJS[$src];
+            if (is_array($deps))
             {
-                foreach ($jsArr as $JS)
+                foreach ($deps as $dep)
                 {
-                    parent::includeJs($JS);
+                    if (is_array($dep))
+                    {
+                        $depFile = $productionMode ? ($dep['prod'] ?? $dep['dev'] ?? null) : ($dep['dev'] ?? $dep['prod'] ?? null);
+                        if ($depFile)
+                        {
+                            parent::includeJs(['src' => $depFile]);
+                        }
+                    }
                 }
             }
-
         }
 
         parent::includeJs($options);

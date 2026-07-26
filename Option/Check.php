@@ -4,7 +4,8 @@ namespace cv6\Core\Option;
 
 use XF\Option\AbstractOption;
 use XF\Entity\Option;
-use cv6\Core\XF\Repository\IconRepository;
+use XF\Repository\IconRepository;
+use cv6\Core\Helper\Icon as IconHelper;
 
 class Check extends AbstractOption
 {
@@ -15,7 +16,6 @@ class Check extends AbstractOption
      */
     public static function verifyDefault(&$value, Option $option)
     {
-
         if ($option->isInsert())
         {
             // always allow a new value to be submitted so we don't blow up installation
@@ -61,56 +61,178 @@ class Check extends AbstractOption
         return true;
     }
 
-    public static function verifyValidIconMandatory(&$value, Option $option, $option_id)
+    public static function parseIconString(string $value): array
     {
-        return self::verifyValidIcon($value, $option, $option_id, true);
+        $parts = array_filter(explode(' ', trim($value)));
+        
+        $validIcons = IconHelper::getIconList();
+        
+        $validVariants = array_keys(IconRepository::ICON_VARIANTS);
+        $blocklistRegex = IconRepository::ICON_CLASS_BLOCKLIST_REGEX;
+        $classRegex = IconRepository::ICON_CLASS_REGEX;
+        
+        $options = \XF::options();
+        $allowedStyles = (array) ($options->cv6CoreFaStyle ?? []);
+        $allowedRotations = (array) ($options->cv6CoreFaRotation ?? []);
+        $allowedAnimations = (array) ($options->cv6CoreFaAnimation ?? []);
+
+        $rotationClasses = ['fa-rotate-90', 'fa-rotate-180', 'fa-rotate-270', 'fa-flip-vertical', 'fa-flip-horizontal'];
+        $animationClasses = ['fa-spin', 'fa-pulse'];
+
+        $foundIcons = [];
+        $foundModifiers = [];
+        $unknownClasses = [];
+        $disallowedClasses = [];
+        
+        foreach ($parts as $part) {
+            $partLower = strtolower($part);
+            
+            if (in_array($partLower, $validVariants, true)) {
+                if (empty($allowedStyles[$partLower])) {
+                    $disallowedClasses[] = $part;
+                } else {
+                    $foundModifiers[] = $partLower;
+                }
+                continue;
+            }
+
+            if (in_array($partLower, $rotationClasses, true)) {
+                if (empty($allowedRotations[$partLower])) {
+                    $disallowedClasses[] = $part;
+                } else {
+                    $foundModifiers[] = $partLower;
+                }
+                continue;
+            }
+
+            if (in_array($partLower, $animationClasses, true)) {
+                if (empty($allowedAnimations[$partLower])) {
+                    $disallowedClasses[] = $part;
+                } else {
+                    $foundModifiers[] = $partLower;
+                }
+                continue;
+            }
+            
+            if (preg_match("/{$blocklistRegex}/i", $partLower)) {
+                $foundModifiers[] = $partLower;
+                continue;
+            }
+            
+            if (preg_match("/{$classRegex}/i", $partLower, $matches)) {
+                $name = $matches['name'];
+                if (isset($validIcons[$name]) || in_array($name, $validIcons, true)) {
+                    $foundIcons[] = $partLower;
+                    continue;
+                }
+            }
+            
+            $unknownClasses[] = $part;
+        }
+        
+        return [
+            'icons' => $foundIcons,
+            'modifiers' => $foundModifiers,
+            'unknown' => $unknownClasses,
+            'disallowed' => $disallowedClasses,
+        ];
     }
 
-    public static function verifyValidIcon(&$value, Option $option, $option_id, $mandatory = false)
+    public static function verifyValidIconMandatory(&$value, Option $option, $option_id)
     {
-
         if ($option->isInsert())
         {
-            // always allow a new value to be submitted so we don't blow up installation
             return true;
         }
 
-        /** @var IconRepository $iconRepo */
-        $iconRepo = \XF::repository('XF:Icon');
-        $icon = [];
+        $parsed = static::parseIconString($value);
 
-        $check = $iconRepo->getIconsFromClasses($value);
-
-        if (empty($check))
+        if (!empty($parsed['disallowed']))
         {
-            if ($mandatory)
-            {
-                $option->error(\XF::phrase('cv6_please_enter_valid_icon_classes'), $option->option_id);
-                return false;
-            }
-            return true;
+            $option->error(\XF::phrase('cv6_please_remove_disallowed_icon_classes_x', [
+                'items' => implode(', ', $parsed['disallowed'])
+            ]), $option->option_id);
+            return false;
         }
 
-        if (Count($check) > 1)
+        if (!empty($parsed['unknown']))
+        {
+            $option->error(\XF::phrase('cv6_please_remove_unknown_icon_classes_x', [
+                'items' => implode(', ', $parsed['unknown'])
+            ]), $option->option_id);
+            return false;
+        }
+
+        if (empty($parsed['icons']))
+        {
+            $option->error(\XF::phrase('cv6_please_enter_valid_icon_classes'), $option->option_id);
+            return false;
+        }
+
+        if (count($parsed['icons']) > 1)
         {
             $option->error(\XF::phrase('cv6_please_enter_only_one_icon_class'), $option->option_id);
             return false;
         }
 
-        if (method_exists($iconRepo, 'getUnknownIconData'))
-        {
-            $unknown = $iconRepo->getUnknownIconData($value);
-            $unknownItems = array_diff($unknown, $check[0]);
+        return true;
+    }
 
-            if (!empty($unknownItems))
-            {
-                $option->error(\XF::phrase('cv6_please_remove_unknown_icon_classes_x', ['items' => implode(', ', $unknownItems)]), $option->option_id);
-                return false;
-            }
+    public static function verifyValidIconOptional(&$value, Option $option, $option_id)
+    {
+        if ($option->isInsert())
+        {
+            return true;
+        }
+
+        if (trim($value) === '')
+        {
+            return true;
+        }
+
+        $parsed = static::parseIconString($value);
+
+        if (!empty($parsed['disallowed']))
+        {
+            $option->error(\XF::phrase('cv6_please_remove_disallowed_icon_classes_x', [
+                'items' => implode(', ', $parsed['disallowed'])
+            ]), $option->option_id);
+            return false;
+        }
+
+        if (!empty($parsed['unknown']))
+        {
+            $option->error(\XF::phrase('cv6_please_remove_unknown_icon_classes_x', [
+                'items' => implode(', ', $parsed['unknown'])
+            ]), $option->option_id);
+            return false;
+        }
+
+        if (empty($parsed['icons']))
+        {
+            // Valid modifiers specified but no icon -> clear value
+            $value = '';
+            return true;
+        }
+
+        if (count($parsed['icons']) > 1)
+        {
+            $option->error(\XF::phrase('cv6_please_enter_only_one_icon_class'), $option->option_id);
+            return false;
         }
 
         return true;
     }
-    
 
+    public static function verifyValidIcon(&$value, Option $option, $option_id, $mandatory = false)
+    {
+        if ($mandatory)
+        {
+            return static::verifyValidIconMandatory($value, $option, $option_id);
+        }
+        else
+        {
+            return static::verifyValidIconOptional($value, $option, $option_id);
+        }
+    }
 }

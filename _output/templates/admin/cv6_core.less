@@ -1,8 +1,22 @@
 .cv6-iconpreview {
 	width: 30px !important;
+	height: 30px !important;
+	font-size: 20px !important;
+	line-height: 1 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	vertical-align: middle !important;
 	.m-transition();
+
+	svg {
+		width: 1em;
+		height: 1em;
+		display: block;
+	}
+
 	&:hover {
-		 transform: scale(1.8);
+		transform: scale(1.8);
 	}
 }
 
@@ -80,4 +94,23 @@
 ul.listColumns.cv6-listColumns {
 	display: grid;
 	grid-template-columns: (repeat(2, 1fr));
+}
+
+@keyframes cv6-fa-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.fa-spin {
+	animation: cv6-fa-spin 2s infinite linear !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.fa-pulse {
+	animation: cv6-fa-spin 1s infinite steps(8) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 }

@@ -1,0 +1,93 @@
+<xf:macro name="cv6_inputIcon"
+			arg-target="!"
+			arg-name="!" 
+			arg-label=""
+			arg-rowclass=""
+			arg-hint=""
+			arg-explain=""
+			arg-value="" 
+			arg-stylechooser="{{ ['style','animation','rotation'] }}"
+			arg-placeholder="fa-..." 
+
+>
+	<xf:js src="cv6/admin/icon.js" min="1" addon="cv6/Core" />
+	<xf:css src="cv6_core.less" />
+	<xf:set var="$postField">
+		<xf:if is="$xf.options.cv6ShowIconHelper && $stylechooser != 0">
+			<span class='inputGroup-text'>
+				<span class="menuTrigger" data-xf-click="menu" aria-expanded="false" aria-haspopup="true">{{ phrase('cv6_fa_format') }}</span>
+				<div class="menu" data-menu="menu" aria-hidden="true">
+					<div class="menu-content">
+						<h4 class="menu-tabHeader tabs" data-xf-init="tabs" role="tablist">
+							<span class="hScroller" data-xf-init="h-scroller">
+								<span class="hScroller-scroll">
+									<xf:if is="in_array('style',$stylechooser)">
+										<a class="tabs-tab is-active" role="tab" tabindex="0" aria-controls="{{ unique_id('accountMenu') }}">{{ phrase('cv6_fa_style') }}</a>
+									</xf:if>
+									<xf:if is="in_array('animation',$stylechooser)">
+										<a class="tabs-tab" role="tab" tabindex="1">{{ phrase('cv6_fa_animation') }}</a>
+									</xf:if>
+									<xf:if is="in_array('rotation',$stylechooser)">
+										<a class="tabs-tab" role="tab" tabindex="2">{{ phrase('cv6_fa_rotation') }}</a>
+									</xf:if>
+								</span>
+							</span>
+							<i class="hScroller-action hScroller-action--end" aria-hidden="true"></i>
+							<i class="hScroller-action hScroller-action--start" aria-hidden="true"></i>
+						</h4>
+
+						<ul class="tabPanes cv6-tabPanes" 
+							data-xf-init="cv6CheckIconStyle"
+							data-icon=".cv6-iconpreview--{$target}"
+							data-target=".js-cv6-iconclasses"
+						>
+							<xf:if is="in_array('style',$stylechooser)">
+								<li class="is-active" role="tabpanel" aria-expanded="true">
+									<span class="menu-linkRow" data-class="fal">{{ phrase('cv6_fa_light') }}</span>
+									<span class="menu-linkRow" data-class="far">{{ phrase('cv6_fa_regular') }}</span>
+									<span class="menu-linkRow is-active" data-class="fas">{{ phrase('cv6_fa_solid') }}</span>
+									<span class="menu-linkRow" data-class="fad">{{ phrase('cv6_fa_duotone') }}</span>
+									<span class="menu-linkRow" data-class="fab">{{ phrase('cv6_fa_brand') }}</span>
+								</li>
+							</xf:if>
+							<xf:if is="in_array('animation',$stylechooser)">
+								<li role="tabpanel" aria-expanded="true">
+									<span class="menu-linkRow is-active" data-class="">{{ phrase('none') }}</span>
+									<span class="menu-linkRow" data-class="fa-spin">{{ phrase('cv6_fa_spin') }}</span>
+									<span class="menu-linkRow" data-class="fa-pulse">{{ phrase('cv6_fa_pulse') }}</span>
+								</li>
+							</xf:if>
+							<xf:if is="in_array('rotation',$stylechooser)">
+								<li role="tabpanel" aria-expanded="true">
+									<span class="menu-linkRow is-active" data-class="">{{ phrase('none') }}</span>
+									<span class="menu-linkRow" data-class="fa-rotate-90">{{ phrase('cv6_fa_90') }}</span>
+									<span class="menu-linkRow" data-class="fa-rotate-180">{{ phrase('cv6_fa_180') }}</span>
+									<span class="menu-linkRow" data-class="fa-rotate-270">{{ phrase('cv6_fa_270') }}</span>
+									<span class="menu-linkRow" data-class="fa-flip-horizontal">{{ phrase('cv6_fa_flip_vertical') }}</span>
+									<span class="menu-linkRow" data-class="fa-flip-vertical">{{ phrase('cv6_fa_flip_horizontal') }}</span>
+								</li>
+							</xf:if>
+						</ul>
+					</div>
+				</div>
+			</span>
+		</xf:if>
+	</xf:set>
+	<xf:set var="$preField">
+		<span class='inputGroup-text'><i class='far {$value} cv6-iconpreview--{$target} cv6-iconpreview'></i></span>
+	</xf:set>
+		<xf:textboxrow 
+			rowclass="{$rowclass}"
+			class="js-cv6-iconclasses"
+			label="{$label}"
+			hint="{$hint}"
+			explain="{$explain}"
+			name="{$name}" 
+			value="{$value}" 
+			placeholder="{$placeholder}" 
+			initialhtml = "<div class='inputGroup inputGroup--joined'>{$preField|raw}"
+			html="{$postField|raw}</div>"
+			data-xf-init="cv6ChangeIcon"
+			data-target=".cv6-iconpreview--{$target}"
+		/>
+</xf:macro>

@@ -1,0 +1,11 @@
+{
+    "route_type": "admin",
+    "route_prefix": "cv6-core",
+    "sub_name": "",
+    "format": "",
+    "build_class": "",
+    "build_method": "",
+    "controller": "cv6\\Core\\Admin\\Controller\\Icon",
+    "context": "",
+    "action_prefix": ""
+}

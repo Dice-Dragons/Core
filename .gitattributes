@@ -1,2 +1,22 @@
-# Auto detect text files and perform LF normalization
+# Handle line endings for text files
 * text=auto
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.less text eol=lf
+*.xml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+
+# Binary files (Icons)
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+
+# Export-Ignore (Exclude from git archive / releases)
+/_docs/ export-ignore
+/_releases/ export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/build.json export-ignore

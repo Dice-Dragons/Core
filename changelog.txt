@@ -1,0 +1,16 @@
+1.4.2
+ - Validated icon format classes against cv6Core settings (cv6CoreFaStyle, cv6CoreFaRotation, cv6CoreFaAnimation) in cv6\Core\Option\Check
+ - Filtered autocomplete icon suggestions in cv6\Core\Helper\Icon::searchIcons by enabled styles (excluding Brand icons when fab is disabled)
+
+1.4.1
+ - Auto-activate Brand (fab) variant in Layout Dropdown when selecting a brand icon
+ - Added memory feature (lastNonBrandStyle) to restore previous non-brand style (fas/fal/far) when selecting a non-brand icon after a brand icon
+
+1.4.0
+ - Added FontAwesome Icon Auto-Completion component (XF.cv6IconAutoComplete) with live SVG mask previews & currentColor text inheritance
+ - Added cv6\Core\Helper\Icon service helper & public/admin auto-complete controllers
+ - Added Option verifiers verifyValidIconMandatory & verifyValidIconOptional in cv6\Core\Option\Check using native XF IconRepository constants
+ - Added autocomplete=1 support to cv6_options_template_icon option template
+
+1.3.3
+ - Added autocomplete=1 parameter support to cv6_options_template_icon option template

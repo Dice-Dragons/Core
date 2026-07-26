@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<routes/>
+<routes>
+  <route route_type="admin" route_prefix="cv6-core" controller="cv6\Core\Admin\Controller\Icon"/>
+  <route route_type="public" route_prefix="cv6-core" controller="cv6\Core\Pub\Controller\Icon"/>
+</routes>

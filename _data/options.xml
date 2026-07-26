@@ -45,7 +45,8 @@ fab</sub_options>
     <default_value>fa-check</default_value>
     <edit_format_params>template=cv6_options_template_icon
 rotation=1
-animation=1</edit_format_params>
+animation=1
+autocomplete=1</edit_format_params>
     <relation group_id="debug" display_order="3600"/>
   </option>
   <option option_id="cv6LetterRegExp" edit_format="textbox" data_type="string" advanced="1">

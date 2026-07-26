@@ -1,6 +1,6 @@
 {
     "edit_format": "template",
-    "edit_format_params": "template=cv6_options_template_icon\nrotation=1\nanimation=1",
+    "edit_format_params": "template=cv6_options_template_icon\nrotation=1\nanimation=1\nautocomplete=1",
     "data_type": "string",
     "sub_options": [],
     "validation_class": "\\cv6\\Core\\Option\\Check",

@@ -8,7 +8,8 @@
     arg-explain="{$property.description}  {{ phrase('cv6_no_style') }}" 
     arg-value="{$fa}"
     arg-stylechooser="{{ [ $valueOptions.style == 1 ? 'style' : '', $valueOptions.rotation == 1 ? 'rotation' : '' ,  $valueOptions.animation == 1 ? 'animation' : ''] }}"
-    arg-type="stylevar"
+    arg-type="{{ $valueOptions.icontype ?: 'stylevar' }}"
     arg-stylefield="cv6-{$property.property_id}"
+    arg-autocomplete="{{ true }}"
 />
 <input type="hidden" name="{$formBaseKey}"  id="cv6-{$property.property_id}" value="{$property.property_value}">

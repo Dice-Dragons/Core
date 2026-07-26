@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <class_extensions>
   <extension from_class="XF\Repository\IconRepository" to_class="cv6\Core\XF\Repository\IconRepository" execute_order="9" active="1"/>
+  <extension from_class="XF\Service\AddOn\ReleaseBuilderService" to_class="cv6\Core\XF\Service\AddOn\ReleaseBuilderService" execute_order="10" active="0"/>
   <extension from_class="XF\Service\Icon\UsageAnalyzerService" to_class="cv6\Core\XF\Service\Icon\UsageAnalyzerService" execute_order="15" active="1"/>
   <extension from_class="XF\Template\Templater" to_class="cv6\Core\XF\Template\Templater" execute_order="10" active="1"/>
 </class_extensions>

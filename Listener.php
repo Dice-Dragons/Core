@@ -8,11 +8,9 @@ class Listener
     {
         $templater->addFunction('cv6icon', function ($templater, &$escape, $str)
         {
-            $iconParts = explode("-", trim($str, "@"));
-            if (count($iconParts) > 2)
+            if (is_string($str) && strpos($str, '@fa-var-') === 0)
             {
-                unset($iconParts[1]);
-                $str = join("-",$iconParts);
+                $str = 'fa-' . substr($str, 8);
             }
             return $str;
         });

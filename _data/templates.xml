@@ -1,53 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="admin" title="cv6_Messages" version_id="1010150" version_string="1.1.1 Release Candidate"><![CDATA[<xf:macro name="message" arg-display="block" arg-type="info" arg-title="" arg-message="!">
-    <xf:if is="$display=='row'">
-        <div class="block-rowMessage block-rowMessage--{$type} block-rowMessage--iconic">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    <xf:elseif is="$display=='block'" />
-        <div class="blockMessage blockMessage--{$type} blockMessage--iconic">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    <xf:else />
-        <div class="{$type}">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    </xf:if>
-</xf:macro>
-
-<xf:macro name="highlight" arg-display="block" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-display="{$display}" arg-type="highlight" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="success" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="success" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="warning" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="warning" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="error" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="error" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="important" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="important" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="alt" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="alt" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>]]></template>
   <template type="admin" title="cv6_admin_macros" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[<xf:macro name="is_active" arg-active="active" arg-selected="!" arg-label="" arg-hint="">
     <xf:checkboxrow>
         <xf:option name="{$active}" selected="{$selected}" label="{{ $label ?: phrase('cv6_is_active') }}"
@@ -93,11 +45,25 @@
     </xf:if>
 
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_core.less" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[.cv6-iconpreview {
+  <template type="admin" title="cv6_core.less" version_id="1040170" version_string="1.4.1"><![CDATA[.cv6-iconpreview {
 	width: 30px !important;
+	height: 30px !important;
+	font-size: 20px !important;
+	line-height: 1 !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+	vertical-align: middle !important;
 	.m-transition();
+
+	svg {
+		width: 1em;
+		height: 1em;
+		display: block;
+	}
+
 	&:hover {
-		 transform: scale(1.8);
+		transform: scale(1.8);
 	}
 }
 
@@ -175,8 +141,27 @@
 ul.listColumns.cv6-listColumns {
 	display: grid;
 	grid-template-columns: (repeat(2, 1fr));
+}
+
+@keyframes cv6-fa-spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+.fa-spin {
+	animation: cv6-fa-spin 2s infinite linear !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
+}
+
+.fa-pulse {
+	animation: cv6-fa-spin 1s infinite steps(8) !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	justify-content: center !important;
 }]]></template>
-  <template type="admin" title="cv6_fa_icon" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[<xf:macro id="cv6_inputIcon"
+  <template type="admin" title="cv6_fa_icon" version_id="1030370" version_string="1.3.3"><![CDATA[<xf:macro id="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -192,6 +177,7 @@ ul.listColumns.cv6-listColumns {
 			arg-dir="ltr"
 			arg-type="default"
 			arg-stylefield="{{ false }}"
+			arg-autocomplete="{{ false }}"
 >
 
 	<xf:js>
@@ -228,7 +214,7 @@ ul.listColumns.cv6-listColumns {
 			placeholder="{$placeholder}" 
 			initialhtml="<div class='inputGroup inputGroup--joined'>{$preField|raw}"
 			html="{$postField|raw}</div>" 
-			data-xf-init="cv6ChangeIcon" 
+			data-xf-init="cv6ChangeIcon{{ $autocomplete ? ' cv6-icon-auto-complete' : '' }}" 
 			data-target=".cv6-iconpreview--{$target}"
 			data-type="{$type}" 
 			data-style-field="{$stylefield}" 
@@ -376,54 +362,6 @@ ul.listColumns.cv6-listColumns {
 		</xf:if>
 	</xf:if>
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_messages" version_id="1010150" version_string="1.1.1 Release Candidate"><![CDATA[<xf:macro name="message" arg-display="block" arg-type="info" arg-title="" arg-message="!">
-    <xf:if is="$display=='row'">
-        <div class="block-rowMessage block-rowMessage--{$type} block-rowMessage--iconic">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    <xf:elseif is="$display=='block'" />
-        <div class="blockMessage blockMessage--{$type} blockMessage--iconic">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    <xf:else />
-        <div class="{$type}">
-            <xf:if is="$title">
-                <strong>{$title}</strong><br />
-            </xf:if>
-            {$message}
-        </div>
-    </xf:if>
-</xf:macro>
-
-<xf:macro name="highlight" arg-display="block" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-display="{$display}" arg-type="highlight" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="success" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="success" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="warning" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="warning" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="error" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="error" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="important" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="important" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>
-
-<xf:macro name="alt" arg-title="" arg-message="!">
-    <xf:macro name="message" arg-type="alt" arg-title="{$title}" arg-message="{$message}" />
-</xf:macro>]]></template>
   <template type="admin" title="cv6_options_icon" version_id="1000070" version_string="1.0.0"><![CDATA[<xf:macro name="cv6_fa_icon::cv6_inputIcon" arg-target="optionDefaultIcon" 
 	arg-name="{$inputName}" 
 	arg-label="{$option.title}"
@@ -445,7 +383,7 @@ ul.listColumns.cv6-listColumns {
 
 />
 <input type="hidden" name="options_listed[]" value="{$option.option_id}">]]></template>
-  <template type="admin" title="cv6_options_template_icon" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[<xf:macro id="cv6_fa_icon::cv6_inputIcon" 
+  <template type="admin" title="cv6_options_template_icon" version_id="1030370" version_string="1.3.3"><![CDATA[<xf:macro id="cv6_fa_icon::cv6_inputIcon" 
     arg-target="optionIcon-{$option.option_id}" 
     arg-name="{$inputName}" 
     arg-value="{{ $option.option_value ?: $option.default_value }}" 
@@ -454,6 +392,7 @@ ul.listColumns.cv6-listColumns {
     arg-explain="{$explainHtml}" 
     arg-rowclass="{$rowClass}"
     arg-stylechooser="{{ ['style', $formatParams.rotation == 1 ? 'rotation' : '' ,  $formatParams.animation == 1 ? 'animation' : ''] }}"
+    arg-autocomplete="{{ $formatParams.autocomplete == 1 }}"
 />
 <input type="hidden" name="options_listed[]" value="{$option.option_id}">]]></template>
   <template type="admin" title="cv6_style_fa_icon" version_id="1000070" version_string="1.0.0"><![CDATA[<xf:macro name="cv6_inputIcon"
@@ -560,7 +499,7 @@ ul.listColumns.cv6-listColumns {
     arg-stylechooser="{{ [ $valueOptions.style == 1 ? 'style' : '', $valueOptions.rotation == 1 ? 'rotation' : '' ,  $valueOptions.animation == 1 ? 'animation' : ''] }}"
     arg-type="style"
 />]]></template>
-  <template type="admin" title="cv6_style_var_template_icon" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[<xf:set var="$fa" value="{{ cv6icon($property.property_value) }}" />
+  <template type="admin" title="cv6_style_var_template_icon" version_id="1040170" version_string="1.4.1"><![CDATA[<xf:set var="$fa" value="{{ cv6icon($property.property_value) }}" />
 <xf:macro id="cv6_fa_icon::cv6_inputIcon" 
     arg-target="cv6-property-{$property.property_id}" 
     arg-rowclass="{$rowClass}"
@@ -570,8 +509,9 @@ ul.listColumns.cv6-listColumns {
     arg-explain="{$property.description}  {{ phrase('cv6_no_style') }}" 
     arg-value="{$fa}"
     arg-stylechooser="{{ [ $valueOptions.style == 1 ? 'style' : '', $valueOptions.rotation == 1 ? 'rotation' : '' ,  $valueOptions.animation == 1 ? 'animation' : ''] }}"
-    arg-type="stylevar"
+    arg-type="{{ $valueOptions.icontype ?: 'stylevar' }}"
     arg-stylefield="cv6-{$property.property_id}"
+    arg-autocomplete="{{ true }}"
 />
 <input type="hidden" name="{$formBaseKey}"  id="cv6-{$property.property_id}" value="{$property.property_value}">]]></template>
   <template type="admin" title="option_template_cv6_node_select" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[<xf:selectrow name="{$inputName}[]" 

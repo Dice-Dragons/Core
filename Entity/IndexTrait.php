@@ -55,7 +55,7 @@ trait IndexTrait
 
     public function fetchLetterIndex(int $withCounter = 0, Finder &$finder = null)
     {
-        $withCounter = $withCounter == 1 ?: 0;
+        $withCounter = ($withCounter == 1) ? 1 : 0;
         if ($this->createdIndex[$withCounter] === null)
         {
 
@@ -131,7 +131,7 @@ trait IndexTrait
             {
                 if ($finder !== null)
                 {
-                    $finder->whereSql($this->getIndexColumn() . ' REGEXP "^[0-9]"');
+                    $finder->whereSql($this->getIndexColumn() . ' REGEXP "^[^a-zA-Z0-9]"');
                 }
             } 
             else 
@@ -148,7 +148,7 @@ trait IndexTrait
                 'counter' => $indexCounter
             ];
         }
-        return $this-> createdIndex[$withCounter];
+        return $this->createdIndex[$withCounter];
     }
 
     public static function addIndexableStructureElements(Structure $structure)

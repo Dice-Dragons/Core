@@ -14,6 +14,7 @@
 			arg-dir="ltr"
 			arg-type="default"
 			arg-stylefield="{{ false }}"
+			arg-autocomplete="{{ false }}"
 >
 
 	<xf:js>
@@ -50,7 +51,7 @@
 			placeholder="{$placeholder}" 
 			initialhtml="<div class='inputGroup inputGroup--joined'>{$preField|raw}"
 			html="{$postField|raw}</div>" 
-			data-xf-init="cv6ChangeIcon" 
+			data-xf-init="cv6ChangeIcon{{ $autocomplete ? ' cv6-icon-auto-complete' : '' }}" 
 			data-target=".cv6-iconpreview--{$target}"
 			data-type="{$type}" 
 			data-style-field="{$stylefield}" 

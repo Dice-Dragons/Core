@@ -1,1 +1,5 @@
+# Exclude documentation and build helpers
+/_docs/
+/build.json
+/_data/
 _releases/

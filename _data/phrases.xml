@@ -37,6 +37,8 @@
   <phrase title="cv6_please_enter_only_one_icon_class" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[Please enter only one icon class and multiple formatting classes.]]></phrase>
   <phrase title="cv6_please_enter_valid_icon_classes" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[Please enter a valid font awesome icon class.]]></phrase>
   <phrase title="cv6_please_enter_valid_tag" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Please add a valid tag. This needs to be unique!]]></phrase>
+  <phrase title="cv6_please_remove_disallowed_icon_classes_x" version_id="1040170" version_string="1.4.1"><![CDATA[The following format classes are not enabled in settings and must be removed: {items}
+]]></phrase>
   <phrase title="cv6_please_remove_unknown_icon_classes_x" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[The following items are unknown and should be removed: {items}]]></phrase>
   <phrase title="cv6_remove_filter" version_id="1000170" version_string="1.0.1"><![CDATA[Remove index filter]]></phrase>
   <phrase title="cv6_slug_must_be_unique" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[URL Slug must be unique]]></phrase>
@@ -71,9 +73,9 @@
   <phrase title="option_explain.cv6ShowNumberTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting with a number, they will displayed under this tab. If enabled, type the Character in the textfield, which should be shown on the tab. Default: <strong>#</strong>]]></phrase>
   <phrase title="option_explain.cv6ShowOthersTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting neither with a number nor a character, they will displayed under this tab. If enabled, type the Character in the textfield, which should be shown on the tab. Default: <strong>?</strong>]]></phrase>
   <phrase title="option_explain.cv6extraFaIcons" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Like the original Option, but this one is used for my AddOns and will be also filled automatically. Please be careful with removing Icons.]]></phrase>
-  <phrase title="option_group.cv6Core" version_id="1000070" version_string="1.0.0"><![CDATA[[cv6] Core]]></phrase>
-  <phrase title="option_group.cv6LetterIndex" version_id="1020070" version_string="1.2.0"><![CDATA[Letter index]]></phrase>
-  <phrase title="option_group_description.cv6Core" version_id="1000070" version_string="1.0.0"><![CDATA[a few basic settings]]></phrase>
+  <phrase title="option_group.cv6Core" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[[DD] Core]]></phrase>
+  <phrase title="option_group.cv6LetterIndex" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[[DD] Letter index]]></phrase>
+  <phrase title="option_group_description.cv6Core" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[a few basic settings, Formerly known as [cv6] Core]]></phrase>
   <phrase title="option_group_description.cv6LetterIndex" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Options for the letter index tabs<br />
 <em>This will only have efefct if you have any index addon from me installed.</em>]]></phrase>
   <phrase title="style_prop.cv6IndexTabActive" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Active Index Tab]]></phrase>

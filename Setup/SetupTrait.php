@@ -2,18 +2,23 @@
 
 namespace cv6\Core\Setup;
 
+use XF\Db\Schema\Alter;
+
 trait SetupTrait
 {
 
-    var $indexDefinitions = [];
+    protected array $indexDefinitions = [];
+
     /**
      * inherit from this for the tables which need to be created.
      */
-    function getTables($tableName = null) {
+    public function getTables($tableName = null)
+    {
         return [];
     }
 
-    function getInitialData($tableName = null) {
+    public function getInitialData($tableName = null)
+    {
         return [];
     }
 
@@ -23,8 +28,7 @@ trait SetupTrait
         
         foreach ($this->getTables() as $tableName => $closure)
         {
-            if ( (!$sm->tableExists($tableName) && !$singleTable)
-                || (!$sm->tableExists($tableName) && $singleTable == $tableName) )
+            if (!$sm->tableExists($tableName) && (!$singleTable || $singleTable === $tableName))
             {
                 $sm->createTable($tableName, $closure);
             }      
@@ -44,36 +48,37 @@ trait SetupTrait
         }
     }    
 
-    private function indexExists($indexName) : bool
-    {
-        if (empty($this->indexDefinitions))
-        {
-            $this->indexDefinitions = $this->schemaManager()->getIndexDefinitions();
-        }
-
-        return isset($indexes[$indexName]);
-        
-    }
-
-    protected function addIndex($tableName, $indexName, $columns)
+    protected function indexExists(string $tableName, string $indexName): bool
     {
         $sm = $this->schemaManager();
-        $indexes = $this->getIndexDefinitions($tableName);
+        if (!$sm->tableExists($tableName))
+        {
+            return false;
+        }
+
+        $indexes = $sm->getTableIndexDefinitions($tableName);
+        return isset($indexes[$indexName]);
+    }
+
+    protected function addIndex(string $tableName, string $indexName, $columns)
+    {
+        $sm = $this->schemaManager();
 
         if ($sm->tableExists($tableName) && !$this->indexExists($tableName, $indexName))
         {
-            $sm->addIndex($tableName, $indexName, $columns);
+            $sm->alterTable($tableName, function (Alter $table) use ($indexName, $columns) {
+                $table->addKey($columns, $indexName);
+            });
         }
     }
 
     protected function insertInitialData($tableName = null) 
     {
-        /** @var \XF\Db\SchemaManager $sm */
-        $sm = $this->schemaManager();
+        $db = $this->db();
 
         foreach ($this->getInitialData() as $tableName => $query)
         {
-            $this->query($query);
+            $db->query($query);
         }
     }
 }

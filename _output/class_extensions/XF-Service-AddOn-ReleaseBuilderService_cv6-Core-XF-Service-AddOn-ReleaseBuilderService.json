@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Service\\AddOn\\ReleaseBuilderService",
+    "to_class": "cv6\\Core\\XF\\Service\\AddOn\\ReleaseBuilderService",
+    "execute_order": 10,
+    "active": false
+}

@@ -31,25 +31,20 @@ class IconRepository extends XFCP_IconRepository
         $rotateRegex = static::ICON_CLASS_ROTATE_REGEX;
         $validVariants = static::ICON_VARIANTS;
 
-        foreach ($classes as $class)
-        {
-            if (preg_match("/{$animationRegex}/i", $class))
-            {
+        foreach ($classes as $class) {
+            if (preg_match("/{$animationRegex}/i", $class)) {
                 continue;
             }
 
-            if (preg_match("/{$rotateRegex}/i", $class))
-            {
+            if (preg_match("/{$rotateRegex}/i", $class)) {
                 continue;
             }
 
-            if (array_key_exists($class, $validVariants))
-            {
+            if (array_key_exists($class, $validVariants)) {
                 continue;
             }
 
-            if (substr($class, 0, 3) === 'fa-')
-            {
+            if (substr($class, 0, 3) === 'fa-') {
                 $class = substr($class, 3);
             }
 
