@@ -7,4 +7,6 @@ on:
 jobs:
   xenforo-publish:
     uses: ./.github/workflows/xenforo-release-publisher.yml
-    secrets: inherit
+    secrets:
+      XENFORO_API_KEY: ${{ secrets.XENFORO_API_KEY }}
+      XENFORO_API_USER_ID: ${{ secrets.XENFORO_API_USER_ID }}

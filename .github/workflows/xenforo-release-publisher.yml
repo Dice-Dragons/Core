@@ -56,6 +56,10 @@ jobs:
 
           ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1)
 
+          if [ -z "$ZIP_FILE" ] && [ -d "_releases" ]; then
+            ZIP_FILE=$(ls _releases/*.zip 2>/dev/null | head -n 1)
+          fi
+
           # Fallback for manual workflow_dispatch test if no release ZIP is found
           if [ -z "$ZIP_FILE" ]; then
             echo "::warning::No release ZIP found. Creating dummy test ZIP for debug run..."
@@ -80,6 +84,17 @@ jobs:
             exit 1
           fi
 
+          # Check if secrets are missing/empty
+          if [ -z "$XF_API_KEY" ]; then
+            echo "::error::XENFORO_API_KEY secret is missing or empty in GitHub Repository Secrets!"
+            exit 1
+          fi
+
+          if [ -z "$XF_API_USER" ]; then
+            echo "::error::XENFORO_API_USER_ID secret is missing or empty in GitHub Repository Secrets!"
+            exit 1
+          fi
+
           # 1. Parse metadata from addon.json
           VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON" | tr -d '\r\n')
           VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON" | tr -d '\r\n')
@@ -92,6 +107,7 @@ jobs:
           echo "Parsed VERSION_ID:     '$VERSION_ID'"
           echo "Parsed VERSION_STRING: '$VERSION_STRING'"
           echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
+          echo "API Key Set:           ${#XF_API_KEY} chars"
           echo "======================================="
 
           # 2. Locate BBCode file
@@ -128,11 +144,41 @@ jobs:
             exit 0
           fi
 
-          # 3. XenForo API Call
-          curl -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+          # 3. XenForo API Call (2-step attachment upload with header + query fallback)
+          echo "Step 1: Creating attachment key and uploading file..."
+          ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
             -H "X-XF-Api-Key: $XF_API_KEY" \
             -H "X-XF-Api-User: $XF_API_USER" \
-            -F "version_string=${VERSION_STRING}" \
-            -F "title=${TITLE}" \
-            -F "message=${MESSAGE_CONTENT}" \
-            -F "attachment=@${ZIP_FILE}"
+            -H "XF-Api-Key: $XF_API_KEY" \
+            -H "XF-Api-User: $XF_API_USER" \
+            -F "type=resource_version" \
+            -F "context[resource_id]=${RESOURCE_ID}" \
+            -F "attachment=@${ZIP_FILE}")
+
+          ATTACH_KEY=$(echo "$ATTACH_RESP" | jq -r '.key // empty')
+
+          if [ -n "$ATTACH_KEY" ]; then
+            echo "Attachment uploaded successfully. Key: $ATTACH_KEY"
+            echo "Step 2: Creating resource version..."
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
+              -H "X-XF-Api-Key: $XF_API_KEY" \
+              -H "X-XF-Api-User: $XF_API_USER" \
+              -H "XF-Api-Key: $XF_API_KEY" \
+              -H "XF-Api-User: $XF_API_USER" \
+              -F "resource_id=${RESOURCE_ID}" \
+              -F "version_string=${VERSION_STRING}" \
+              -F "version_type=local" \
+              -F "version_attachment_key=${ATTACH_KEY}"
+          else
+            echo "::warning::Attachment upload via new-key failed or key empty. Response: $ATTACH_RESP"
+            echo "Attempting direct POST fallback..."
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
+              -H "X-XF-Api-Key: $XF_API_KEY" \
+              -H "X-XF-Api-User: $XF_API_USER" \
+              -H "XF-Api-Key: $XF_API_KEY" \
+              -H "XF-Api-User: $XF_API_USER" \
+              -F "resource_id=${RESOURCE_ID}" \
+              -F "version_string=${VERSION_STRING}" \
+              -F "version_type=local" \
+              -F "attachment=@${ZIP_FILE}"
+          fi
