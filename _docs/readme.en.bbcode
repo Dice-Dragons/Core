@@ -1,0 +1,68 @@
+[SIZE=6][B][DD] - Core Library v1.4.2[/B][/SIZE]
+
+[B][DD] - Core Library[/B] is the foundational framework required for (nearly) all cv6 / Dice Dragons add-ons. It provides a rich set of shared resources, UI components, and developer tools to ensure stability and reduce code duplication.
+
+[HEADING=2]🚀 Features & Developer Tools[/HEADING]
+
+This library includes essential tools for XenForo development:
+
+[HEADING=3]🎨 UI Components & Templates[/HEADING]
+[LIST]
+[*][B]FontAwesome Icon Auto-Completion[/B]: Interactive auto-completion dropdown ([I]fa-[/I] + 2 characters) with live SVG mask previews inheriting current text color ([I]currentColor[/I]), smooth [I]XF.Animate.fadeDown[/I]/[I]fadeUp[/I] transitions, and full support for modifier/variant classes ([I]fas[/I], [I]fa-spin[/I], [I]fa-rotate-90[/I]). Filters suggested icons based on enabled styles in [I]cv6CoreFaStyle[/I] (excluding Brand icons when [I]fab[/I] is disabled). Supports [I]autocomplete=1[/I] in option format parameters ([I]edit_format_params[/I]).
+[*][B]FontAwesome Icon Chooser[/B]: Ready-to-use template with a menu interface for selecting icons.
+[*][B]Asset Uploader[/B]: Standardized upload template including live image preview.
+[*][B]Universal Integration[/B]: Specialized templates to use the Icon Chooser and Asset Uploader easily in both [B]Style Properties[/B] and [B]Add-on Options[/B].
+[*][B]Tabbed Interfaces[/B]: Traits and templates to quickly create tabbed index pages.
+[/LIST]
+
+[HEADING=3]🛠 Backend & Logic[/HEADING]
+[LIST]
+[*][B]Icon Helper Service ([I]cv6\Core\Helper\Icon[/I])[/B]: Caches and scans native XenForo FontAwesome SVG icons ([I]styles/fa/[/I]) into XenForo registry ([I]cv6IconList[/I]) for fast search lookups.
+[*][B]Icon Controllers[/B]: Public ([I]cv6\Core\Pub\Controller\Icon[/I]) and Admin ([I]cv6\Core\Admin\Controller\Icon[/I]) controllers mapped to [I]cv6-core/auto-complete[/I].
+[*][B]Option Validators ([I]cv6\Core\Option\Check[/I])[/B]:
+[LIST]
+[*][I]verifyValidIconMandatory[/I]: Requires a valid icon class name. Validates format classes against enabled settings in the [I]cv6Core[/I] group ([I]cv6CoreFaStyle[/I], [I]cv6CoreFaRotation[/I], [I]cv6CoreFaAnimation[/I]).
+[*][I]verifyValidIconOptional[/I]: Clears input field if only modifiers are entered without an icon name, while properly validating unknown or disallowed classes using native [I]XF\Repository\IconRepository[/I] constants.
+[/LIST]
+[*][B]Setup Traits[/B]: Reusable traits to simplify add-on installation, upgrades, and database schema changes.
+[*][B]JS Dependency Handler[/B]: Efficient management of JavaScript dependencies.
+[*][B]Widget Framework[/B]: Base functionality for creating index widgets.
+[/LIST]
+
+[HEADING=3]💅 Styling & LESS[/HEADING]
+[LIST]
+[*][B]LESS Icon Helpers[/B]: Functionality to easily render FontAwesome icons directly within [I].less[/I] files.
+[*][B]Global Style Settings[/B]: Centralized opacity settings (standardizing the look across all cv6 add-ons).
+[/LIST]
+
+[HEADING=2]📋 Requirements[/HEADING]
+[LIST]
+[*][B]XenForo[/B]: 2.3.0 or higher
+[*][B]PHP[/B]: [B]8.2.0[/B] or higher
+[*][B]Dependency[/B]: This add-on is the required base for all cv6 extensions.
+[/LIST]
+
+[HEADING=2]🛠 Installation[/HEADING]
+
+[HEADING=3]1. Upload[/HEADING]
+Upload the contents to [I]src/addons/cv6/Core[/I].
+
+[HEADING=3]2. Install[/HEADING]
+Install the add-on via the Admin Control Panel or per CLI:
+[CODE=bash]php cmd.php xf-addon:install cv6/Core[/CODE]
+
+[HEADING=2]⚙️ Configuration[/HEADING]
+
+While this add-on primarily works in the background, it provides central settings:
+[LIST=1]
+[*]Navigate to [B]ACP > Options > [DD] Core Settings[/B].
+[*][B]Font Awesome Integration[/B]: Configure how icons and format styles/rotations/animations are rendered and permitted globally for dependent add-ons.
+[*][B]Central Design Settings[/B]: Adjust global opacity for all cv6 extensions.
+[/LIST]
+
+[HEADING=2]🔗 Links & Support[/HEADING]
+[LIST]
+[*][B]Developer[/B]: [URL='https://forum.dice-dragons.de/mitglieder/hoffi.1/']Hoffi[/URL]
+[*][B]Support Thread[/B]: [URL='https://forum.dice-dragons.de/forum/core/']Get Help Here[/URL]
+[*][B]FAQ[/B]: [URL='https://forum.dice-dragons.de/downloads/core.145/']View FAQ[/URL]
+[/LIST]
