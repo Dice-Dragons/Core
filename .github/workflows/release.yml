@@ -6,7 +6,7 @@ on:
 
 jobs:
   xenforo-publish:
-    uses: ./.github/workflows/xenforo-release-publisher.yml@main
+    uses: ./.github/workflows/xenforo-release-publisher.yml
     with:
       dry_run: true 
     secrets: inherit
