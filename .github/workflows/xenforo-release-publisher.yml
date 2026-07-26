@@ -143,7 +143,7 @@ jobs:
           # Dry Run Check
           if [ "$DRY_RUN" = "true" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "=== DRY RUN SUCCESSFUL ==="
-            echo "Target API:  https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions"
+            echo "Target API:  https://forum.dice-dragons.de/api/resource-versions/"
             echo "Title:       $TITLE"
             echo "Version:     $VERSION_STRING"
             echo "Attachment:  $ZIP_FILE"
@@ -155,7 +155,7 @@ jobs:
           fi
 
           # 3. XenForo API Call (2-step attachment upload)
-          # Note: XenForo reads HTTP_XF_API_KEY, which corresponds to header "XF-Api-Key" (not "X-XF-Api-Key")
+          # Step 1: Upload ZIP attachment via /api/attachments/new-key
           echo "Step 1: Creating attachment key and uploading file..."
           ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key" \
             -H "XF-Api-Key: ${XF_API_KEY}" \
@@ -172,8 +172,8 @@ jobs:
 
           if [ -n "$ATTACH_KEY" ]; then
             echo "Attachment uploaded successfully. Key: $ATTACH_KEY"
-            echo "Step 2: Creating resource version..."
-            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+            echo "Step 2: Creating resource version via /api/resource-versions/..."
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resource-versions/" \
               -H "XF-Api-Key: ${XF_API_KEY}" \
               -H "XF-Api-User: ${XF_API_USER}" \
               -H "X-XF-Api-Key: ${XF_API_KEY}" \
@@ -186,8 +186,8 @@ jobs:
               -F "version_attachment_key=${ATTACH_KEY}"
           else
             echo "::warning::Attachment upload via new-key failed or key empty. Response: $ATTACH_RESP"
-            echo "Attempting direct POST fallback..."
-            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+            echo "Attempting direct POST fallback to /api/resource-versions/..."
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resource-versions/" \
               -H "XF-Api-Key: ${XF_API_KEY}" \
               -H "XF-Api-User: ${XF_API_USER}" \
               -H "X-XF-Api-Key: ${XF_API_KEY}" \
