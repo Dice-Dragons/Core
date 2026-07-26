@@ -1,0 +1,6 @@
+jobs:
+  xenforo-publish:
+    uses: Dice-Dragons/Core/.github/workflows/xenforo-release-publisher.yml@main
+    with:
+      dry_run: true
+    secrets: inherit
