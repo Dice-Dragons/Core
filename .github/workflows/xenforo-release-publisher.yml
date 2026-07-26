@@ -85,10 +85,12 @@ jobs:
           if [ "$DRY_RUN" = "true" ]; then
             echo "=== DRY RUN SUCCESSFUL ==="
             echo "Target API:  https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions"
-            echo "Version:     $VERSION_STRING"
+            echo "Version:     $VERSION_STRING ($VERSION_ID)"
             echo "Attachment:  $ZIP_FILE"
             echo "Message:"
             echo "$MESSAGE_CONTENT"
+            echo "File for Content: $DOCS_FILE"
+            echo "AddOn ID: $ADDON_ID"
             echo "==========================="
             exit 0
           fi
