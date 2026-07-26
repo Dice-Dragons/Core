@@ -95,6 +95,15 @@ jobs:
             exit 1
           fi
 
+          # Clean secrets of potential carriage returns
+          XF_API_KEY=$(echo "$XF_API_KEY" | tr -d '\r\n')
+          XF_API_USER=$(echo "$XF_API_USER" | tr -d '\r\n')
+
+          # Check if XF_API_USER is numeric
+          if ! [[ "$XF_API_USER" =~ ^[0-9]+$ ]]; then
+            echo "::warning::XENFORO_API_USER_ID is set to '$XF_API_USER', but XenForo API expects a numeric user_id (e.g. 1). Please update the secret to the integer user_id."
+          fi
+
           # 1. Parse metadata from addon.json
           VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON" | tr -d '\r\n')
           VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON" | tr -d '\r\n')
@@ -107,7 +116,8 @@ jobs:
           echo "Parsed VERSION_ID:     '$VERSION_ID'"
           echo "Parsed VERSION_STRING: '$VERSION_STRING'"
           echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
-          echo "API Key Set:           ${#XF_API_KEY} chars"
+          echo "API User ID:           '$XF_API_USER'"
+          echo "API Key Length:        ${#XF_API_KEY} chars"
           echo "======================================="
 
           # 2. Locate BBCode file
@@ -144,13 +154,13 @@ jobs:
             exit 0
           fi
 
-          # 3. XenForo API Call (2-step attachment upload with header + query fallback)
+          # 3. XenForo API Call (2-step attachment upload)
           echo "Step 1: Creating attachment key and uploading file..."
-          ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
-            -H "X-XF-Api-Key: $XF_API_KEY" \
-            -H "X-XF-Api-User: $XF_API_USER" \
-            -H "XF-Api-Key: $XF_API_KEY" \
-            -H "XF-Api-User: $XF_API_USER" \
+          ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key" \
+            -H "X-XF-Api-Key: ${XF_API_KEY}" \
+            -H "X-XF-Api-User: ${XF_API_USER}" \
+            -F "api_key=${XF_API_KEY}" \
+            -F "api_user=${XF_API_USER}" \
             -F "type=resource_version" \
             -F "context[resource_id]=${RESOURCE_ID}" \
             -F "attachment=@${ZIP_FILE}")
@@ -160,11 +170,11 @@ jobs:
           if [ -n "$ATTACH_KEY" ]; then
             echo "Attachment uploaded successfully. Key: $ATTACH_KEY"
             echo "Step 2: Creating resource version..."
-            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
-              -H "X-XF-Api-Key: $XF_API_KEY" \
-              -H "X-XF-Api-User: $XF_API_USER" \
-              -H "XF-Api-Key: $XF_API_KEY" \
-              -H "XF-Api-User: $XF_API_USER" \
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+              -H "X-XF-Api-Key: ${XF_API_KEY}" \
+              -H "X-XF-Api-User: ${XF_API_USER}" \
+              -F "api_key=${XF_API_KEY}" \
+              -F "api_user=${XF_API_USER}" \
               -F "resource_id=${RESOURCE_ID}" \
               -F "version_string=${VERSION_STRING}" \
               -F "version_type=local" \
@@ -172,11 +182,11 @@ jobs:
           else
             echo "::warning::Attachment upload via new-key failed or key empty. Response: $ATTACH_RESP"
             echo "Attempting direct POST fallback..."
-            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions?api_key=${XF_API_KEY}&api_user=${XF_API_USER}" \
-              -H "X-XF-Api-Key: $XF_API_KEY" \
-              -H "X-XF-Api-User: $XF_API_USER" \
-              -H "XF-Api-Key: $XF_API_KEY" \
-              -H "XF-Api-User: $XF_API_USER" \
+            curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+              -H "X-XF-Api-Key: ${XF_API_KEY}" \
+              -H "X-XF-Api-User: ${XF_API_USER}" \
+              -F "api_key=${XF_API_KEY}" \
+              -F "api_user=${XF_API_USER}" \
               -F "resource_id=${RESOURCE_ID}" \
               -F "version_string=${VERSION_STRING}" \
               -F "version_type=local" \
