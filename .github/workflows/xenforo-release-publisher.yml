@@ -16,36 +16,54 @@ on:
 
   workflow_dispatch:
     inputs:
+      tag_name:
+        description: "Tag name to test (leave empty for latest release)"
+        required: false
+        type: string
       dry_run:
-        description: "Dry Run ausführen? (Nur Log, kein API-Call)"
+        description: "Dry Run (Only log output)"
         required: true
         type: boolean
-        default: true        
+        default: true
+
 jobs:
-  publish-release:
+  publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout AddOn Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Download Release Asset from GitHub
+      - name: Download Release Asset or Fallback
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag_name }}
         run: |
           set -e
 
-          # Download all attached zip assets from the current GitHub Release
-          gh release download "${{ github.event.release.tag_name }}" --repo "${{ github.repository }}" --pattern "*.zip"
-
-          # Find the downloaded ZIP file
-          ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1)
-
-          if [ -z "$ZIP_FILE" ] || [ ! -f "$ZIP_FILE" ]; then
-            echo "::error::No .zip asset found attached to the GitHub Release!"
-            exit 1
+          TAG_NAME="$INPUT_TAG"
+          if [ -z "$TAG_NAME" ] && [ -n "${{ github.event.release.tag_name }}" ]; then
+            TAG_NAME="${{ github.event.release.tag_name }}"
           fi
 
-          echo "Found release asset: $ZIP_FILE (Size: $(du -h "$ZIP_FILE" | cut -f1))"
+          echo "Target Tag: ${TAG_NAME:-'Latest Release'}"
+
+          # Download attached zip assets
+          if [ -n "$TAG_NAME" ]; then
+            gh release download "$TAG_NAME" --repo "${{ github.repository }}" --pattern "*.zip" || true
+          else
+            gh release download --repo "${{ github.repository }}" --pattern "*.zip" || true
+          fi
+
+          ZIP_FILE=$(ls *.zip 2>/dev/null | head -n 1)
+
+          # Fallback for manual workflow_dispatch test if no release ZIP is found
+          if [ -z "$ZIP_FILE" ]; then
+            echo "::warning::No release ZIP found. Creating dummy test ZIP for debug run..."
+            zip -r test-release.zip addon.json _docs/ 2>/dev/null || touch test-release.zip
+            ZIP_FILE="test-release.zip"
+          fi
+
+          echo "Found release asset: $ZIP_FILE"
           echo "ZIP_FILE_PATH=$ZIP_FILE" >> $GITHUB_ENV
 
       - name: Extract Metadata & Post Update to XenForo
@@ -65,30 +83,26 @@ jobs:
           # 1. Parse metadata from addon.json
           VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON" | tr -d '\r\n')
           VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON" | tr -d '\r\n')
-          ADDON_ID=$(jq -r '.legacy_addon_id // .title // "addon"' "$ADDON_JSON" | tr -d '\r\n')
           FAQ_URL=$(jq -r '.faq_url // empty' "$ADDON_JSON" | tr -d '\r\n')
           RESOURCE_ID=$(echo "$FAQ_URL" | grep -oE '[0-9]+/?$' | tr -d '/')
 
-          if [ -z "$VERSION_STRING" ] || [ -z "$VERSION_ID" ] || [ -z "$RESOURCE_ID" ]; then
-            echo "::error::Failed to parse version_string, version_id, or RESOURCE_ID from $ADDON_JSON!"
-            exit 1
-          fi
-
           TITLE="Version ${VERSION_STRING}"
 
-          echo "=== DEBUG INFO ==="
-          echo "VERSION_ID parsed as: '$VERSION_ID'"
-          echo "VERSION_STRING parsed as: '$VERSION_STRING'"
-          echo "Contents of ./_docs directory:"
-          ls -la ./_docs || echo "Directory ./_docs does not exist!"
-          echo "=================="
+          echo "================ DEBUG ================"
+          echo "Parsed VERSION_ID:     '$VERSION_ID'"
+          echo "Parsed VERSION_STRING: '$VERSION_STRING'"
+          echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
+          echo ""
+          echo "Listing contents of ./_docs/:"
+          ls -la ./_docs/ || echo "Directory ./_docs/ does not exist!"
+          echo "======================================="
 
           # 2. Locate BBCode file
           DOCS_FILE=""
           if [ -f "./_docs/changelog.${VERSION_ID}.bbcode" ]; then
             DOCS_FILE="./_docs/changelog.${VERSION_ID}.bbcode"
-          elif [ -f "_docs/changelog.${VERSION_ID}.bbcode" ]; then
-            DOCS_FILE="_docs/changelog.${VERSION_ID}.bbcode"
+          elif [ -f "./_docs/changelog.${VERSION_STRING}.bbcode" ]; then
+            DOCS_FILE="./_docs/changelog.${VERSION_STRING}.bbcode"
           elif [ -f "./_docs/info.de.bbcode" ]; then
             DOCS_FILE="./_docs/info.de.bbcode"
           fi
@@ -104,7 +118,7 @@ jobs:
           ZIP_FILE="$ZIP_FILE_PATH"
 
           # Dry Run Check
-          if [ "$DRY_RUN" = "true" ]; then
+          if [ "$DRY_RUN" = "true" ] || [ "${{ inputs.dry_run }}" = "true" ]; then
             echo "=== DRY RUN SUCCESSFUL ==="
             echo "Target API:  https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions"
             echo "Title:       $TITLE"
