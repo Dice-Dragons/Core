@@ -14,6 +14,13 @@ on:
       XENFORO_API_USER_ID:
         required: true
 
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry Run ausführen? (Nur Log, kein API-Call)"
+        required: true
+        type: boolean
+        default: true        
 jobs:
   publish-release:
     runs-on: ubuntu-latest
@@ -56,10 +63,10 @@ jobs:
           fi
 
           # 1. Parse metadata from addon.json
-          VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON")
-          VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON")
-          ADDON_ID=$(jq -r '.legacy_addon_id // .title // "addon"' "$ADDON_JSON")
-          FAQ_URL=$(jq -r '.faq_url // empty' "$ADDON_JSON")
+          VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON" | tr -d '\r\n')
+          VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON" | tr -d '\r\n')
+          ADDON_ID=$(jq -r '.legacy_addon_id // .title // "addon"' "$ADDON_JSON" | tr -d '\r\n')
+          FAQ_URL=$(jq -r '.faq_url // empty' "$ADDON_JSON" | tr -d '\r\n')
           RESOURCE_ID=$(echo "$FAQ_URL" | grep -oE '[0-9]+/?$' | tr -d '/')
 
           if [ -z "$VERSION_STRING" ] || [ -z "$VERSION_ID" ] || [ -z "$RESOURCE_ID" ]; then
@@ -67,24 +74,30 @@ jobs:
             exit 1
           fi
 
-          # 2. Build Title
           TITLE="Version ${VERSION_STRING}"
 
-          # 3. Locate BBCode changelog/documentation file with multiple fallbacks
+          echo "=== DEBUG INFO ==="
+          echo "VERSION_ID parsed as: '$VERSION_ID'"
+          echo "VERSION_STRING parsed as: '$VERSION_STRING'"
+          echo "Contents of ./_docs directory:"
+          ls -la ./_docs || echo "Directory ./_docs does not exist!"
+          echo "=================="
+
+          # 2. Locate BBCode file
           DOCS_FILE=""
-          
           if [ -f "./_docs/changelog.${VERSION_ID}.bbcode" ]; then
+            DOCS_FILE="./_docs/changelog.${VERSION_ID}.bbcode"
+          elif [ -f "_docs/changelog.${VERSION_ID}.bbcode" ]; then
             DOCS_FILE="_docs/changelog.${VERSION_ID}.bbcode"
-          elif [ -f "_docs/info.de.bbcode" ]; then
-            DOCS_FILE="_docs/info.de.bbcode"
+          elif [ -f "./_docs/info.de.bbcode" ]; then
+            DOCS_FILE="./_docs/info.de.bbcode"
           fi
 
           if [ -n "$DOCS_FILE" ] && [ -f "$DOCS_FILE" ]; then
-            echo "Found BBCode file at: $DOCS_FILE"
+            echo "SUCCESS: Found BBCode file at: $DOCS_FILE"
             MESSAGE_CONTENT=$(cat "$DOCS_FILE")
           else
-            echo "::warning::No matching BBCode file found in _docs/. Using default fallback message."
-            echo "Checked paths: _docs/changelog.${VERSION_ID}.bbcode, _docs/changelog.${VERSION_STRING}.bbcode, _docs/${VERSION_STRING}.bbcode, _docs/info.de.bbcode"
+            echo "::warning::No matching BBCode file found in ./_docs/!"
             MESSAGE_CONTENT="A new update to version [B]${VERSION_STRING}[/B] is now available."
           fi
 
@@ -104,7 +117,7 @@ jobs:
             exit 0
           fi
 
-          # 4. XenForo API Call: Upload new version including binary attachment
+          # 3. XenForo API Call
           curl -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
             -H "X-XF-Api-Key: $XF_API_KEY" \
             -H "X-XF-Api-User: $XF_API_USER" \
