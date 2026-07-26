@@ -95,9 +95,9 @@ jobs:
             exit 1
           fi
 
-          # Clean secrets of potential carriage returns
-          XF_API_KEY=$(echo "$XF_API_KEY" | tr -d '\r\n')
-          XF_API_USER=$(echo "$XF_API_USER" | tr -d '\r\n')
+          # Clean secrets of potential carriage returns/whitespace
+          XF_API_KEY=$(echo "$XF_API_KEY" | tr -d '\r\n ')
+          XF_API_USER=$(echo "$XF_API_USER" | tr -d '\r\n ')
 
           # Check if XF_API_USER is numeric
           if ! [[ "$XF_API_USER" =~ ^[0-9]+$ ]]; then
@@ -155,8 +155,11 @@ jobs:
           fi
 
           # 3. XenForo API Call (2-step attachment upload)
+          # Note: XenForo reads HTTP_XF_API_KEY, which corresponds to header "XF-Api-Key" (not "X-XF-Api-Key")
           echo "Step 1: Creating attachment key and uploading file..."
           ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key" \
+            -H "XF-Api-Key: ${XF_API_KEY}" \
+            -H "XF-Api-User: ${XF_API_USER}" \
             -H "X-XF-Api-Key: ${XF_API_KEY}" \
             -H "X-XF-Api-User: ${XF_API_USER}" \
             -F "api_key=${XF_API_KEY}" \
@@ -171,6 +174,8 @@ jobs:
             echo "Attachment uploaded successfully. Key: $ATTACH_KEY"
             echo "Step 2: Creating resource version..."
             curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+              -H "XF-Api-Key: ${XF_API_KEY}" \
+              -H "XF-Api-User: ${XF_API_USER}" \
               -H "X-XF-Api-Key: ${XF_API_KEY}" \
               -H "X-XF-Api-User: ${XF_API_USER}" \
               -F "api_key=${XF_API_KEY}" \
@@ -183,6 +188,8 @@ jobs:
             echo "::warning::Attachment upload via new-key failed or key empty. Response: $ATTACH_RESP"
             echo "Attempting direct POST fallback..."
             curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
+              -H "XF-Api-Key: ${XF_API_KEY}" \
+              -H "XF-Api-User: ${XF_API_USER}" \
               -H "X-XF-Api-Key: ${XF_API_KEY}" \
               -H "X-XF-Api-User: ${XF_API_USER}" \
               -F "api_key=${XF_API_KEY}" \
