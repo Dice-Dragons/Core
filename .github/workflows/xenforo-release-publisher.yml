@@ -67,15 +67,24 @@ jobs:
             exit 1
           fi
 
-          # 2. Locate BBCode changelog/documentation file
-          DOCS_FILE="_docs/changelog.${VERSION_ID}.bbcode"
-          if [ ! -f "$DOCS_FILE" ]; then
+          # 2. Build Title
+          TITLE="Version ${VERSION_STRING}"
+
+          # 3. Locate BBCode changelog/documentation file with multiple fallbacks
+          DOCS_FILE=""
+          
+          if [ -f "./_docs/changelog.${VERSION_ID}.bbcode" ]; then
+            DOCS_FILE="_docs/changelog.${VERSION_ID}.bbcode"
+          elif [ -f "_docs/info.de.bbcode" ]; then
             DOCS_FILE="_docs/info.de.bbcode"
           fi
 
-          if [ -f "$DOCS_FILE" ]; then
+          if [ -n "$DOCS_FILE" ] && [ -f "$DOCS_FILE" ]; then
+            echo "Found BBCode file at: $DOCS_FILE"
             MESSAGE_CONTENT=$(cat "$DOCS_FILE")
           else
+            echo "::warning::No matching BBCode file found in _docs/. Using default fallback message."
+            echo "Checked paths: _docs/changelog.${VERSION_ID}.bbcode, _docs/changelog.${VERSION_STRING}.bbcode, _docs/${VERSION_STRING}.bbcode, _docs/info.de.bbcode"
             MESSAGE_CONTENT="A new update to version [B]${VERSION_STRING}[/B] is now available."
           fi
 
@@ -85,21 +94,21 @@ jobs:
           if [ "$DRY_RUN" = "true" ]; then
             echo "=== DRY RUN SUCCESSFUL ==="
             echo "Target API:  https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions"
-            echo "Version:     $VERSION_STRING ($VERSION_ID)"
+            echo "Title:       $TITLE"
+            echo "Version:     $VERSION_STRING"
             echo "Attachment:  $ZIP_FILE"
+            echo "Docs File:   ${DOCS_FILE:-None (Fallback used)}"
             echo "Message:"
             echo "$MESSAGE_CONTENT"
-            echo "File for Content: $DOCS_FILE"
-            echo "AddOn ID: $ADDON_ID"
             echo "==========================="
             exit 0
           fi
 
-          # 3. XenForo API Call: Upload new version including binary attachment
+          # 4. XenForo API Call: Upload new version including binary attachment
           curl -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/versions" \
             -H "X-XF-Api-Key: $XF_API_KEY" \
             -H "X-XF-Api-User: $XF_API_USER" \
             -F "version_string=${VERSION_STRING}" \
-            -F "title=Version ${VERSION_STRING}" \
+            -F "title=${TITLE}" \
             -F "message=${MESSAGE_CONTENT}" \
             -F "attachment=@${ZIP_FILE}"
