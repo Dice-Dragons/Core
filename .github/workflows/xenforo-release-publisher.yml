@@ -2,6 +2,12 @@ name: XenForo Release Publisher (Core)
 
 on:
   workflow_call:
+    inputs:
+      dry_run:
+        description: "Dry run - nur loggen, nicht posten"
+        required: false
+        type: boolean
+        default: false
     secrets:
       XENFORO_API_KEY:
         required: true
