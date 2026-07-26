@@ -92,9 +92,6 @@ jobs:
           echo "Parsed VERSION_ID:     '$VERSION_ID'"
           echo "Parsed VERSION_STRING: '$VERSION_STRING'"
           echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
-          echo ""
-          echo "Listing contents of ./_docs/:"
-          ls -la ./_docs/ || echo "Directory ./_docs/ does not exist!"
           echo "======================================="
 
           # 2. Locate BBCode file
