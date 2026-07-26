@@ -112,30 +112,61 @@ jobs:
 
           TITLE="Version ${VERSION_STRING}"
 
+          # 2. Query XenForo API for currently published live version ID
+          LAST_VERSION_ID=0
+          RESOURCE_RESP=$(curl -s -S "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}" \
+            -H "XF-Api-Key: ${XF_API_KEY}" \
+            -H "XF-Api-User: ${XF_API_USER}" || true)
+
+          API_VER_ID=$(echo "$RESOURCE_RESP" | jq -r '.resource.CurrentVersion.resource_version_id // .resource.current_version_id // 0' 2>/dev/null || echo "0")
+          if [[ "$API_VER_ID" =~ ^[0-9]+$ ]]; then
+            LAST_VERSION_ID=$API_VER_ID
+          fi
+
           echo "================ DEBUG ================"
           echo "Parsed VERSION_ID:     '$VERSION_ID'"
           echo "Parsed VERSION_STRING: '$VERSION_STRING'"
           echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
+          echo "Live LAST_VERSION_ID:  '$LAST_VERSION_ID'"
           echo "API User ID:           '$XF_API_USER'"
           echo "API Key Length:        ${#XF_API_KEY} chars"
           echo "======================================="
 
-          # 2. Locate BBCode file
-          DOCS_FILE=""
-          if [ -f "./_docs/changelog.${VERSION_ID}.bbcode" ]; then
-            DOCS_FILE="./_docs/changelog.${VERSION_ID}.bbcode"
-          elif [ -f "./_docs/changelog.${VERSION_STRING}.bbcode" ]; then
-            DOCS_FILE="./_docs/changelog.${VERSION_STRING}.bbcode"
-          elif [ -f "./_docs/info.de.bbcode" ]; then
-            DOCS_FILE="./_docs/info.de.bbcode"
+          # 3. Locate & Aggregate BBCode Changelog Files between LAST_VERSION_ID and VERSION_ID
+          MESSAGE_CONTENT=""
+          FOUND_FILES=()
+
+          if [ -d "./_docs" ]; then
+            for f in $(ls ./_docs/changelog.*.bbcode 2>/dev/null | sort -V); do
+              FILE_VID=$(echo "$f" | grep -oE '[0-9]+' | head -n 1 || true)
+              if [ -n "$FILE_VID" ] && [[ "$FILE_VID" =~ ^[0-9]+$ ]]; then
+                if [ "$FILE_VID" -gt "$LAST_VERSION_ID" ] && [ "$FILE_VID" -le "$VERSION_ID" ]; then
+                  FOUND_FILES+=("$f")
+                fi
+              fi
+            done
           fi
 
-          if [ -n "$DOCS_FILE" ] && [ -f "$DOCS_FILE" ]; then
-            echo "SUCCESS: Found BBCode file at: $DOCS_FILE"
-            MESSAGE_CONTENT=$(cat "$DOCS_FILE")
+          if [ ${#FOUND_FILES[@]} -gt 0 ]; then
+            echo "SUCCESS: Aggregating ${#FOUND_FILES[@]} changelog file(s) (between live ID ${LAST_VERSION_ID} and release ID ${VERSION_ID}):"
+            for file in "${FOUND_FILES[@]}"; do
+              echo "  + $file"
+              if [ -n "$MESSAGE_CONTENT" ]; then
+                MESSAGE_CONTENT="${MESSAGE_CONTENT}"$'\n\n'
+              fi
+              MESSAGE_CONTENT="${MESSAGE_CONTENT}$(cat "$file")"
+            done
           else
-            echo "::warning::No matching BBCode file found in ./_docs/!"
-            MESSAGE_CONTENT="A new update to version [B]${VERSION_STRING}[/B] is now available."
+            echo "Notice: No changelogs found in range (${LAST_VERSION_ID} < VID <= ${VERSION_ID}). Using single file fallback..."
+            if [ -f "./_docs/changelog.${VERSION_ID}.bbcode" ]; then
+              MESSAGE_CONTENT=$(cat "./_docs/changelog.${VERSION_ID}.bbcode")
+            elif [ -f "./_docs/changelog.${VERSION_STRING}.bbcode" ]; then
+              MESSAGE_CONTENT=$(cat "./_docs/changelog.${VERSION_STRING}.bbcode")
+            elif [ -f "./_docs/info.de.bbcode" ]; then
+              MESSAGE_CONTENT=$(cat "./_docs/info.de.bbcode")
+            else
+              MESSAGE_CONTENT="A new update to version [B]${VERSION_STRING}[/B] is now available."
+            fi
           fi
 
           ZIP_FILE="$ZIP_FILE_PATH"
@@ -148,14 +179,14 @@ jobs:
             echo "Title:              $TITLE"
             echo "Version:            $VERSION_STRING"
             echo "Attachment:         $ZIP_FILE"
-            echo "Docs File:          ${DOCS_FILE:-None (Fallback used)}"
+            echo "Aggregated Files:   ${#FOUND_FILES[@]}"
             echo "Message:"
             echo "$MESSAGE_CONTENT"
             echo "==========================="
             exit 0
           fi
 
-          # 3. XenForo API Execution
+          # 4. XenForo API Execution
           # Step A: Upload ZIP attachment via /api/attachments/new-key
           echo "Step 1: Creating attachment key and uploading file..."
           ATTACH_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/attachments/new-key" \
@@ -203,8 +234,8 @@ jobs:
           fi
 
           echo ""
-          # Step C: Create Changelog / Release Post Update
-          echo "Step 3: Posting changelog update post via /api/resource-updates/..."
+          # Step C: Create Aggregated Changelog / Release Post Update
+          echo "Step 3: Posting aggregated changelog update post via /api/resource-updates/..."
           curl -s -S -X POST "https://forum.dice-dragons.de/api/resource-updates/" \
             -H "XF-Api-Key: ${XF_API_KEY}" \
             -H "XF-Api-User: ${XF_API_USER}" \
