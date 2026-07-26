@@ -1,0 +1,62 @@
+name: XenForo Release Publisher (Core)
+
+on:
+  workflow_call:
+    secrets:
+      XENFORO_API_KEY:
+        required: true
+      XENFORO_API_USER_ID:
+        required: true
+
+jobs:
+  publish-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout AddOn Repository
+        uses: actions/checkout@v4
+
+      - name: Extract Metadata & Post Update to XenForo
+        env:
+          XF_API_KEY: ${{ secrets.XENFORO_API_KEY }}
+          XF_API_USER: ${{ secrets.XENFORO_API_USER_ID }}
+        run: |
+          set -e
+
+          ADDON_JSON="addon.json"
+          if [ ! -f "$ADDON_JSON" ]; then
+            echo "::error::addon.json not found in repository root!"
+            exit 1
+          fi
+
+          # Extract version_string
+          VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON")
+
+          # Extract resource ID from faq_url (e.g. index.149/ -> 149)
+          FAQ_URL=$(jq -r '.faq_url // empty' "$ADDON_JSON")
+          RESOURCE_ID=$(echo "$FAQ_URL" | grep -oE '[0-9]+/?$' | tr -d '/')
+
+          if [ -z "$VERSION_STRING" ] || [ -z "$RESOURCE_ID" ]; then
+            echo "::error::Failed to parse version_string or RESOURCE_ID from $ADDON_JSON"
+            exit 1
+          fi
+
+          # Determine BBCode documentation path
+          DOCS_FILE="_docs/${VERSION_STRING}.bbcode"
+          if [ ! -f "$DOCS_FILE" ]; then
+            DOCS_FILE="_docs/release_notes.bbcode"
+          fi
+
+          if [ ! -f "$DOCS_FILE" ]; then
+            echo "::error::No matching BBCode file found in _docs/"
+            exit 1
+          fi
+
+          MESSAGE_CONTENT=$(cat "$DOCS_FILE")
+
+          # Call XenForo Resource Manager API
+          curl -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/update" \
+            -H "X-XF-Api-Key: $XF_API_KEY" \
+            -H "X-XF-Api-User: $XF_API_USER" \
+            --data-urlencode "version_string=${VERSION_STRING}" \
+            --data-urlencode "title=Update auf Version ${VERSION_STRING}" \
+            --data-urlencode "message=${MESSAGE_CONTENT}"
