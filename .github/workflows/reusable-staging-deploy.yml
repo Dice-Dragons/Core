@@ -1,0 +1,49 @@
+name: Reusable XenForo Staging Deployment
+
+on:
+  workflow_call:
+    inputs:
+      addon_id:
+        required: true
+        type: string
+        description: 'XenForo AddOn ID (e.g. cv6/DiceRoller)'
+      addon_dir:
+        required: true
+        type: string
+        description: 'Directory name under src/addons/cv6/'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'published'
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create AddOn Release Package
+        run: |
+          mkdir -p upload/src/addons/cv6/${{ inputs.addon_dir }}
+          # Hier dein Build/Copy-Schritt für das AddOn
+          rsync -av --exclude='.git*' --exclude='.github' ./ upload/src/addons/cv6/${{ inputs.addon_dir }}/
+
+      - name: Deploy Files to Staging via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          source: "upload/src/addons/cv6/${{ inputs.addon_dir }}/*"
+          target: "/var/www/staging/forum/src/addons/cv6/${{ inputs.addon_dir }}/"
+          strip_components: 4
+
+      - name: Run XenForo CLI Upgrade on Staging
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /var/www/staging/forum
+            php cmd.php xf:addon-upgrade ${{ inputs.addon_id }} --quiet
+            php cmd.php xf:rebuild-php-class-cache
