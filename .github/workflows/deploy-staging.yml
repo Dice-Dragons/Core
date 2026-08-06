@@ -1,0 +1,13 @@
+name: Deploy to XenForo Staging
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  call-core-workflow:
+    uses: dice-dragons/cv6-core/.github/workflows/reusable-staging-deploy.yml@main
+    with:
+      addon_id: '__ADDON_ID__'
+      addon_dir: '__ADDON_DIR__'
+    secrets: inherit
