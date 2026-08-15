@@ -6,7 +6,7 @@
             hint="{{ $hint ?: phrase('cv6_active_hint') }}" />
     </xf:checkboxrow>
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_assetupload" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[<xf:macro id="cv6_assetuploadrow" 
+  <template type="admin" title="cv6_assetupload" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="cv6_assetuploadrow" 
     arg-name="!" 
     arg-asset="!"
     arg-label="" 
@@ -19,8 +19,7 @@
     arg-preselector="" 
     >
 
-    <!-- <xf:js src="xf/form.js" min="1" /> -->
-    <xf:js prod="cv6/cv6core-admin.js" dev="cv6/core/asset.js" min="1" addon="cv6/Core" />
+    <xf:js src="cv6/core/asset.js" min="1" addon="cv6/Core" />
     
     <xf:css src="cv6_core.less" />
 
@@ -161,7 +160,7 @@ ul.listColumns.cv6-listColumns {
 	align-items: center !important;
 	justify-content: center !important;
 }]]></template>
-  <template type="admin" title="cv6_fa_icon" version_id="1030370" version_string="1.3.3"><![CDATA[<xf:macro id="cv6_inputIcon"
+  <template type="admin" title="cv6_fa_icon" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -188,7 +187,7 @@ ul.listColumns.cv6-listColumns {
 		});
 	</xf:js>
 
-	<xf:js prod="cv6/core/icon.min.js" dev="cv6/core/icon.js" addon="cv6/Core" />
+	<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
 	<xf:css src="cv6_core.less" />
 
 	<xf:set var="$postField">
@@ -238,7 +237,7 @@ ul.listColumns.cv6-listColumns {
 	arg-dir="ltr" 
 	arg-type="default" 
 	>
-	<xf:js prod="cv6/core/icon.min.js" dev="cv6/core/icon.js" addon="cv6/Core" />
+	<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
 	<xf:css src="cv6_core.less" />
 
 	<div class='inputGroup inputGroup--joined'>
@@ -395,7 +394,7 @@ ul.listColumns.cv6-listColumns {
     arg-autocomplete="{{ $formatParams.autocomplete == 1 }}"
 />
 <input type="hidden" name="options_listed[]" value="{$option.option_id}">]]></template>
-  <template type="admin" title="cv6_style_fa_icon" version_id="1000070" version_string="1.0.0"><![CDATA[<xf:macro name="cv6_inputIcon"
+  <template type="admin" title="cv6_style_fa_icon" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro name="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -407,7 +406,7 @@ ul.listColumns.cv6-listColumns {
 			arg-placeholder="fa-..." 
 
 >
-	<xf:js src="cv6/admin/icon.js" min="1" addon="cv6/Core" />
+	<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
 	<xf:css src="cv6_core.less" />
 	<xf:set var="$postField">
 		<xf:if is="$xf.options.cv6ShowIconHelper && $stylechooser != 0">
@@ -574,13 +573,13 @@ ul.listColumns.cv6-listColumns {
         </span>
     </div>
 </xf:macro>]]></template>
-  <template type="public" title="cv6_letterindex" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[<xf:macro id="letters" 
+  <template type="public" title="cv6_letterindex" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="letters" 
     arg-index="!" 
     arg-class="{{ false }}" 
     arg-route="!" 
     arg-params="{{ [] }}" 
-    arg-other="0" arg-othersign="{{ phrase('cv6_character_other') }}"
-    arg-number="0" arg-numbersign="{{ phrase('cv6_character_number') }}"
+    arg-other="0" arg-othersign="{{ phrase('cv6_letter_other') }}"
+    arg-number="0" arg-numbersign="{{ phrase('cv6_letter_number') }}"
 >
     <xf:css src="cv6_letterindex.less" />
     <div class="block-cv6-letterindex hScroller" data-xf-init="h-scroller" data-auto-scroll=".cv6-letterindex .active">
@@ -632,8 +631,8 @@ ul.listColumns.cv6-listColumns {
     arg-route="!" 
     arg-params="{{ [] }}" 
     arg-other="0"
-    arg-othersign="{{ phrase('cv6_character_other') }}" arg-number="0"
-    arg-numbersign="{{ phrase('cv6_character_number') }}">
+    arg-othersign="{{ phrase('cv6_letter_other') }}" arg-number="0"
+    arg-numbersign="{{ phrase('cv6_letter_number') }}">
     <xf:css src="cv6_letterindex.less" />
     <ul class="cv6-letterindex cv6-letterindex--widget {$class}">
         <xf:macro id="rawIndex" 
@@ -652,8 +651,8 @@ ul.listColumns.cv6-listColumns {
         arg-index="!" 
         arg-route="!" 
         arg-params="{{ [] }}"
-        arg-other="0" arg-othersign="{{ phrase('cv6_character_other') }}"
-        arg-number="0" arg-numbersign="{{ phrase('cv6_character_number') }}"        
+        arg-other="0" arg-othersign="{{ phrase('cv6_letter_other') }}"
+        arg-number="0" arg-numbersign="{{ phrase('cv6_letter_number') }}"        
     >
     <xf:if is="$number">
         <li class="cv6-index--link{{ $index.letter == '0-9' ? ' active' : '' }}{{ ($index.counter.0 > 0 || !$index.counter) ? '' : ' no-result'}}">

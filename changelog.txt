@@ -1,3 +1,7 @@
+1.4.3
+ - Moved core JS files to _files/ directory and updated admin templates for XF 2.3 native asset resolution
+ - Added syncGroupPhrases helper method to SetupTrait.php for automated phrase syncing
+
 1.4.2
  - Validated icon format classes against cv6Core settings (cv6CoreFaStyle, cv6CoreFaRotation, cv6CoreFaAnimation) in cv6\Core\Option\Check
  - Filtered autocomplete icon suggestions in cv6\Core\Helper\Icon::searchIcons by enabled styles (excluding Brand icons when fab is disabled)

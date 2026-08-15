@@ -79,7 +79,7 @@ autocomplete=1</edit_format_params>
 value=character
 type=textbox
 min=1
-placeholder={{ phrase('cv6_number_character') }}
+placeholder={{ phrase('cv6_number_letter') }}
 default=#</edit_format_params>
     <sub_options>enabled
 character</sub_options>
@@ -92,7 +92,7 @@ character</sub_options>
 value=character
 type=textbox
 min=1
-placeholder={{ phrase('cv6_other_character') }}
+placeholder={{ phrase('cv6_letter_other') }}
 default=?</edit_format_params>
     <sub_options>enabled
 character</sub_options>

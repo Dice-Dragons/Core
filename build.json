@@ -1,16 +1,12 @@
 {
     "additional_files": [
-        "js/cv6/core"
+        "js/cv6/core/asset.js",
+        "js/cv6/core/combosort.js",
+        "js/cv6/core/icon.js"
     ],
     "minify": [
         "js/cv6/core/asset.js",
         "js/cv6/core/combosort.js",
         "js/cv6/core/icon.js"
-    ],
-    "exclude": [
-        "_docs",
-        "*.md",
-        ".gitignore",
-        ".gitattributes"
     ]
 }

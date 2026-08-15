@@ -81,5 +81,51 @@ trait SetupTrait
             $db->query($query);
         }
     }
+
+    protected function syncGroupPhrases(string $tableName, string $phrasePrefix, ?string $addonId = null): void
+    {
+        $db = $this->db();
+        $sm = $this->schemaManager();
+
+        if (!$sm->tableExists($tableName))
+        {
+            return;
+        }
+
+        $groups = $db->fetchAll("SELECT group_id, title FROM {$tableName}");
+        if (empty($groups))
+        {
+            return;
+        }
+
+        $phraseTitles = [];
+        foreach ($groups as $group)
+        {
+            $phraseTitles[] = $phrasePrefix . '.' . $group['group_id'];
+        }
+
+        $existing = $db->fetchPairs("
+            SELECT title, phrase_id 
+            FROM xf_phrase 
+            WHERE title IN (" . $db->quote($phraseTitles) . ") AND language_id = 0
+        ");
+
+        $addonId = $addonId ?: ($this->addOn ? $this->addOn->getAddOnId() : '');
+
+        foreach ($groups as $group)
+        {
+            $phraseTitle = $phrasePrefix . '.' . $group['group_id'];
+            if (!isset($existing[$phraseTitle]) && !empty($group['title']))
+            {
+                /** @var \XF\Entity\Phrase $phrase */
+                $phrase = \XF::em()->create('XF:Phrase');
+                $phrase->title = $phraseTitle;
+                $phrase->phrase_text = (string)$group['title'];
+                $phrase->language_id = 0;
+                $phrase->addon_id = $addonId;
+                $phrase->save(false, false);
+            }
+        }
+    }
 }
 

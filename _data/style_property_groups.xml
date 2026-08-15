@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <style_property_groups>
   <style_property_group group_name="cv6Core" title="[DD] Core Settings" description="Some Settings that relates to more than one add-on" display_order="7001"/>
-  <style_property_group group_name="cv6Indexable" title="Character Index styling" description="Here you can style your index tabs." display_order="7010"/>
+  <style_property_group group_name="cv6Indexable" title="Letter Index styling" description="Here you can style your index tabs." display_order="7010"/>
 </style_property_groups>

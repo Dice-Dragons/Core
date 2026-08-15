@@ -1,6 +1,6 @@
 [B]Release 1.4.2 (ID 1040270)[/B]
 
 [LIST]
-[*][B]Options-Validierung für Format-Klassen[/B]: Die Option-Verifizierer in [I]cv6\Core\Option\Check[/I] prüfen genutzte Zusatz-Klassen nun gegen die in der [I]cv6Core[/I]-Gruppe erlaubten Optionen ([I]cv6CoreFaStyle[/I], [I]cv6CoreFaRotation[/I], [I]cv6CoreFaAnimation[/I]) und geben bei nicht erlaubten Klassen eine verständliche Fehlermeldung aus.
-[*][B]Gefilterte Autocomplete-Vorschläge[/B]: [I]cv6\Core\Helper\Icon::searchIcons()[/I] filtert Icon-Vorschläge basierend auf den erlaubten Styles in den Einstellungen. Bei deaktivierter Brand-Option ([I]fab[/I]) werden Brand-Icons nicht mehr vorgeschlagen.
+[*][B]Option Validation for Format Classes[/B]: Option verifiers in [I]cv6\Core\Option\Check[/I] now validate custom format classes against allowed settings in the [I]cv6Core[/I] option group ([I]cv6CoreFaStyle[/I], [I]cv6CoreFaRotation[/I], [I]cv6CoreFaAnimation[/I]), returning clear error messages for disallowed classes.
+[*][B]Filtered Autocomplete Suggestions[/B]: [I]cv6\Core\Helper\Icon::searchIcons()[/I] filters icon suggestions based on enabled styles in ACP settings. When the Brand option ([I]fab[/I]) is disabled, brand icons are excluded from suggestions.
 [/LIST]

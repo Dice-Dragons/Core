@@ -221,6 +221,12 @@
         "version_string": "1.2.0 Release Candidate 3",
         "hash": "424a6f9f65f63ad1fcb450df05af80a8"
     },
+    "cv6_please_remove_disallowed_icon_classes_x.txt": {
+        "global_cache": false,
+        "version_id": 1040170,
+        "version_string": "1.4.1",
+        "hash": "d6fd4faa6ec5d3d4f89ffb11022451e6"
+    },
     "cv6_please_remove_unknown_icon_classes_x.txt": {
         "global_cache": false,
         "version_id": 1030031,
@@ -411,13 +417,13 @@
         "global_cache": false,
         "version_id": 1010051,
         "version_string": "1.1.0 Release Candidate 1",
-        "hash": "1c49d9a6bdca2bf8f8ae11d9951f5c29"
+        "hash": "2a6da9c225a34b69e71fafe3d431bac4"
     },
     "option_explain.cv6ShowOthersTab.txt": {
         "global_cache": false,
         "version_id": 1010051,
         "version_string": "1.1.0 Release Candidate 1",
-        "hash": "2dc85bdf9ff668728b0354fa0f497feb"
+        "hash": "a194254214680bb8fa2267c1c485a2e7"
     },
     "option_explain.cv6extraFaIcons.txt": {
         "global_cache": false,
@@ -519,7 +525,7 @@
         "global_cache": false,
         "version_id": 1020070,
         "version_string": "1.2.0",
-        "hash": "e68165abe127e09a4ff432c7eb054a9d"
+        "hash": "127ce1d807a14e35cf4dc5d7bc1dbc29"
     },
     "style_prop_group_desc.cv6Core.txt": {
         "global_cache": false,

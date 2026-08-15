@@ -1,4 +1,10 @@
-# Exclude documentation and build helpers
-/build.json
+﻿# Exclude build releases & release XML data
 /_data/
-_releases/
+/_releases/
+
+# Editor and system files
+/.vscode/
+/.cursorrules
+/.phpunit.result.cache
+.DS_Store
+Thumbs.db

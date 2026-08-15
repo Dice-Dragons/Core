@@ -70,8 +70,8 @@
   <phrase title="option_explain.cv6RemoveTab" version_id="1010070" version_string="1.1.0"><![CDATA[The filter can also be removed like any other filter by clicking on the pill.]]></phrase>
   <phrase title="option_explain.cv6ReplaceXF" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[enables FA preview and Layout Menu]]></phrase>
   <phrase title="option_explain.cv6ShowIconHelper" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Enable to activate the FA Helper menu inside the Admin Panel.  For XF Fields it will add also the preview function.]]></phrase>
-  <phrase title="option_explain.cv6ShowNumberTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting with a number, they will displayed under this tab. If enabled, type the Character in the textfield, which should be shown on the tab. Default: <strong>#</strong>]]></phrase>
-  <phrase title="option_explain.cv6ShowOthersTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting neither with a number nor a character, they will displayed under this tab. If enabled, type the Character in the textfield, which should be shown on the tab. Default: <strong>?</strong>]]></phrase>
+  <phrase title="option_explain.cv6ShowNumberTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting with a number, they will displayed under this tab. If enabled, type the Letter in the textfield, which should be shown on the tab. Default: <strong>#</strong>]]></phrase>
+  <phrase title="option_explain.cv6ShowOthersTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[If you have threads starting neither with a number nor a letter, they will displayed under this tab. If enabled, type the Letter in the textfield, which should be shown on the tab. Default: <strong>?</strong>]]></phrase>
   <phrase title="option_explain.cv6extraFaIcons" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Like the original Option, but this one is used for my AddOns and will be also filled automatically. Please be careful with removing Icons.]]></phrase>
   <phrase title="option_group.cv6Core" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[[DD] Core]]></phrase>
   <phrase title="option_group.cv6LetterIndex" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[[DD] Letter index]]></phrase>
@@ -90,7 +90,7 @@ This is "inactive" state.]]></phrase>
   <phrase title="style_prop_desc.cv6IndexTabNoResult" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[]]></phrase>
   <phrase title="style_prop_desc.cv6IndexTabSize" version_id="1000170" version_string="1.0.1"><![CDATA[]]></phrase>
   <phrase title="style_prop_group.cv6Core" version_id="1020070" version_string="1.2.0"><![CDATA[[DD] Core Settings]]></phrase>
-  <phrase title="style_prop_group.cv6Indexable" version_id="1020070" version_string="1.2.0"><![CDATA[Character Index styling]]></phrase>
+  <phrase title="style_prop_group.cv6Indexable" version_id="1020070" version_string="1.2.0"><![CDATA[Letter Index styling]]></phrase>
   <phrase title="style_prop_group_desc.cv6Core" version_id="1000070" version_string="1.0.0"><![CDATA[Some Settings that relates to more than one add-on]]></phrase>
   <phrase title="style_prop_group_desc.cv6Indexable" version_id="1000170" version_string="1.0.1"><![CDATA[Here you can style your index tabs.]]></phrase>
 </phrases>

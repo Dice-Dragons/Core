@@ -13,11 +13,6 @@ namespace cv6\Core\XF\Repository
 	class XFCP_IconRepository extends \XF\Repository\IconRepository {}
 }
 
-namespace cv6\Core\XF\Service\AddOn
-{
-	class XFCP_ReleaseBuilderService extends \XF\Service\AddOn\ReleaseBuilderService {}
-}
-
 namespace cv6\Core\XF\Service\Icon
 {
 	class XFCP_UsageAnalyzerService extends \XF\Service\Icon\UsageAnalyzerService {}

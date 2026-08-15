@@ -1,10 +1,10 @@
-[SIZE=6][B][DD] - Core Library v1.4.2[/B][/SIZE]
+[SIZE=6][B][DD] - Core Library v1.4.3[/B][/SIZE]
 
 [B][DD] - Core Library[/B] ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
-[HEADING=2]🚀 Funktionen & Entwickler-Tools[/HEADING]
+[HEADING=2]Funktionen & Entwickler-Tools[/HEADING]
 
-[HEADING=3]🎨 UI-Komponenten & Templates[/HEADING]
+[HEADING=3]UI-Komponenten & Templates[/HEADING]
 [LIST]
 [*][B]FontAwesome Icon Auto-Vervollständigung[/B]: Interaktives Dropdown-Auswahlmenü bei Eingabe von [I]fa-[/I] + 2 Zeichen mit SVG-Masken-Vorschau in Vererbung der aktuellen Textfarbe ([I]currentColor[/I]), flüssigen [I]XF.Animate.fadeDown[/I]/[I]fadeUp[/I] Übergängen und Unterstützung für Zusatz- und Varianten-Klassen ([I]fas[/I], [I]fa-spin[/I], [I]fa-rotate-90[/I]). Filtert Vorschläge basierend auf aktivierten Styles in [I]cv6CoreFaStyle[/I] (schließt Brand-Icons aus, wenn [I]fab[/I] deaktiviert ist). Unterstützt [I]autocomplete=1[/I] in den Format-Parametern der Optionen ([I]edit_format_params[/I]).
 [*][B]FontAwesome Icon Chooser[/B]: Fertiges Menü-Template zur Auswahl von FontAwesome Icons.
@@ -13,7 +13,7 @@
 [*][B]Tab-Schnittstellen[/B]: Traits und Templates zum schnellen Erstellen getabbter Übersichtsseiten.
 [/LIST]
 
-[HEADING=3]🛠 Backend & Logik[/HEADING]
+[HEADING=3]Backend & Logik[/HEADING]
 [LIST]
 [*][B]Icon Helper Service ([I]cv6\Core\Helper\Icon[/I])[/B]: Indiziert und cacht native XenForo FontAwesome SVG-Icons ([I]styles/fa/[/I]) in der XenForo Registry ([I]cv6IconList[/I]) für schnelle Suchanfragen.
 [*][B]Icon Controller[/B]: Public ([I]cv6\Core\Pub\Controller\Icon[/I]) und Admin ([I]cv6\Core\Admin\Controller\Icon[/I]) Controller gemappt auf die Route [I]cv6-core/auto-complete[/I].
@@ -27,20 +27,20 @@
 [*][B]Widget Framework[/B]: Basisfunktionalität zum Erstellen von Index-Widgets.
 [/LIST]
 
-[HEADING=3]💅 Styling & LESS[/HEADING]
+[HEADING=3]Styling & LESS[/HEADING]
 [LIST]
 [*][B]LESS Icon Helpers[/B]: Funktionen zum direkten Rendern von FontAwesome Icons in [I].less[/I]-Dateien.
 [*][B]Zentrale Design-Einstellungen[/B]: Zentrale Deckkraft-Einstellungen für einheitliches Design.
 [/LIST]
 
-[HEADING=2]📋 Voraussetzungen[/HEADING]
+[HEADING=2]Voraussetzungen[/HEADING]
 [LIST]
 [*][B]XenForo[/B]: 2.3.0 oder höher
 [*][B]PHP[/B]: [B]8.2.0[/B] oder höher
 [*][B]Abhängigkeit[/B]: Basis-Add-On für alle cv6 Erweiterungen.
 [/LIST]
 
-[HEADING=2]🛠 Installation[/HEADING]
+[HEADING=2]Installation[/HEADING]
 
 [HEADING=3]1. Upload[/HEADING]
 Lade den Inhalt hoch nach [I]src/addons/cv6/Core[/I].
@@ -49,14 +49,14 @@ Lade den Inhalt hoch nach [I]src/addons/cv6/Core[/I].
 Installiere das Add-On über das ACP oder per CLI:
 [CODE=bash]php cmd.php xf-addon:install cv6/Core[/CODE]
 
-[HEADING=2]⚙️ Einrichtung[/HEADING]
+[HEADING=2]Einrichtung[/HEADING]
 [LIST=1]
 [*]Gehe im ACP zu [B]Optionen -> [DD] Core Settings[/B].
 [*][B]Font Awesome Integration[/B]: Globales Rendering von Icons und erlaubten Format-Styles/Rotationen/Animationen konfigurieren.
 [*][B]Zentrale Design-Einstellungen[/B]: Globale Deckkraft anpassen.
 [/LIST]
 
-[HEADING=2]🔗 Links & Support[/HEADING]
+[HEADING=2]Links & Support[/HEADING]
 [LIST]
 [*][B]Entwickler[/B]: [URL='https://forum.dice-dragons.de/mitglieder/hoffi.1/']Hoffi[/URL]
 [*][B]Support-Forum[/B]: [URL='https://forum.dice-dragons.de/forum/core/']Hilfe & Fragen[/URL]

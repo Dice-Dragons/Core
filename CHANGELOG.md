@@ -2,6 +2,14 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.4.3] - 2026-08-15
+
+### Added
+- **Setup Helper**: Added `syncGroupPhrases` helper method to `SetupTrait.php` to automate sync/import of group titles as master phrases.
+
+### Changed
+- **XenForo 2.3 Asset Resolution**: Moved core JavaScript files into the `_files/` directory, updating the build system and admin templates (`cv6_assetupload.html`, `cv6_fa_icon.html`, `cv6_style_fa_icon.html`) to resolve JS assets natively.
+
 ## [1.4.2] - 2026-07-26
 
 ### Fixed

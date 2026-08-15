@@ -3,8 +3,8 @@
     arg-class="{{ false }}" 
     arg-route="!" 
     arg-params="{{ [] }}" 
-    arg-other="0" arg-othersign="{{ phrase('cv6_character_other') }}"
-    arg-number="0" arg-numbersign="{{ phrase('cv6_character_number') }}"
+    arg-other="0" arg-othersign="{{ phrase('cv6_letter_other') }}"
+    arg-number="0" arg-numbersign="{{ phrase('cv6_letter_number') }}"
 >
     <xf:css src="cv6_letterindex.less" />
     <div class="block-cv6-letterindex hScroller" data-xf-init="h-scroller" data-auto-scroll=".cv6-letterindex .active">
@@ -56,8 +56,8 @@
     arg-route="!" 
     arg-params="{{ [] }}" 
     arg-other="0"
-    arg-othersign="{{ phrase('cv6_character_other') }}" arg-number="0"
-    arg-numbersign="{{ phrase('cv6_character_number') }}">
+    arg-othersign="{{ phrase('cv6_letter_other') }}" arg-number="0"
+    arg-numbersign="{{ phrase('cv6_letter_number') }}">
     <xf:css src="cv6_letterindex.less" />
     <ul class="cv6-letterindex cv6-letterindex--widget {$class}">
         <xf:macro id="rawIndex" 
@@ -76,8 +76,8 @@
         arg-index="!" 
         arg-route="!" 
         arg-params="{{ [] }}"
-        arg-other="0" arg-othersign="{{ phrase('cv6_character_other') }}"
-        arg-number="0" arg-numbersign="{{ phrase('cv6_character_number') }}"        
+        arg-other="0" arg-othersign="{{ phrase('cv6_letter_other') }}"
+        arg-number="0" arg-numbersign="{{ phrase('cv6_letter_number') }}"        
     >
     <xf:if is="$number">
         <li class="cv6-index--link{{ $index.letter == '0-9' ? ' active' : '' }}{{ ($index.counter.0 > 0 || !$index.counter) ? '' : ' no-result'}}">

@@ -5,9 +5,9 @@
         "hash": "91025e8ce1232150f9c07f62bfa631d0"
     },
     "admin/cv6_assetupload.html": {
-        "version_id": 1020031,
-        "version_string": "1.2.0 Beta 1",
-        "hash": "e8f3747e9826db63918eb0a5fea331d8"
+        "version_id": 1040270,
+        "version_string": "1.4.2",
+        "hash": "1f7943b833df0f86132494764abe5975"
     },
     "admin/cv6_core.less": {
         "version_id": 1040170,
@@ -15,9 +15,9 @@
         "hash": "170a5b69103d3912d84df548cbc94d86"
     },
     "admin/cv6_fa_icon.html": {
-        "version_id": 1030370,
-        "version_string": "1.3.3",
-        "hash": "6b807d6e51464b52f511f877d90716fd"
+        "version_id": 1040270,
+        "version_string": "1.4.2",
+        "hash": "bef816c09c067215cff1a00d90746fdd"
     },
     "admin/cv6_options_icon.html": {
         "version_id": 1000070,
@@ -35,9 +35,9 @@
         "hash": "44b7bee8fdfb039e3d4e736c6837241d"
     },
     "admin/cv6_style_fa_icon.html": {
-        "version_id": 1000070,
-        "version_string": "1.0.0",
-        "hash": "1c4e42330f52045c78589d00f03b5d75"
+        "version_id": 1040270,
+        "version_string": "1.4.2",
+        "hash": "7ee4f91dbde673900ae3b718809071d2"
     },
     "admin/cv6_style_template_icon.html": {
         "version_id": 1020031,
@@ -65,9 +65,9 @@
         "hash": "aac893322387b7a9fc859d6cd6b2db0a"
     },
     "public/cv6_letterindex.html": {
-        "version_id": 1020031,
-        "version_string": "1.2.0 Beta 1",
-        "hash": "93abba23618365b2fa7cf99e3dfcfeca"
+        "version_id": 1040270,
+        "version_string": "1.4.2",
+        "hash": "3198731b74241ae16cd0353d904b3de5"
     },
     "public/cv6_letterindex.less": {
         "version_id": 1020031,

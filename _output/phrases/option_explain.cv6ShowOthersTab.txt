@@ -1,1 +1,1 @@
-If you have threads starting neither with a number nor a character, they will displayed under this tab. If enabled, type the Character in the textfield, which should be shown on the tab. Default: <strong>?</strong>
+If you have threads starting neither with a number nor a letter, they will displayed under this tab. If enabled, type the Letter in the textfield, which should be shown on the tab. Default: <strong>?</strong>
