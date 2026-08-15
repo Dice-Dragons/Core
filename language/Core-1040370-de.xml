@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language title="Deutsch [Du]" date_format="j. F Y" date_short_format="M 'y" date_short_recent_format="M j" time_format="H:i" currency_format="{symbol}{value}" week_start="0" decimal_point="," thousands_separator="." label_separator=":" comma_separator=", " ellipsis="…" parenthesis_open="(" parenthesis_close=")" language_code="de-DE" text_direction="LTR" user_selectable="" addon_id="cv6/Core" base_version_id="1040370" export_version="2">
+  <phrase title="custom_bb_code_title.book" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Buchähnlich]]></phrase>
+  <phrase title="cv6_all_cv6_addons" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Alle [cv6] AddOns {icon::check}]]></phrase>
+  <phrase title="cv6_description" addon_id="cv6/Core" version_id="2000035" version_string="2.0.0 Beta 5"><![CDATA[Beschreibung]]></phrase>
+  <phrase title="cv6_fa_animation" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Animation]]></phrase>
+  <phrase title="cv6_fa_fa_flip_horizontal" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Horizontal spiegeln]]></phrase>
+  <phrase title="cv6_fa_fa_flip_vertical" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Vertikal spiegeln]]></phrase>
+  <phrase title="cv6_fa_fa_pulse" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Pulsierend]]></phrase>
+  <phrase title="cv6_fa_fa_spin" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Drehend]]></phrase>
+  <phrase title="cv6_fa_fab" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Marken Icons]]></phrase>
+  <phrase title="cv6_fa_fad" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Zweifarbig]]></phrase>
+  <phrase title="cv6_fa_rotation" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Drehung]]></phrase>
+  <phrase title="cv6_icon_style_based" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[keine (Style basiert)]]></phrase>
+  <phrase title="cv6_invalid_class" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Ungültige Font Awesome Klasse]]></phrase>
+  <phrase title="cv6_is_active" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[ist aktiv]]></phrase>
+  <phrase title="cv6_letter_filter" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Beginnt mit]]></phrase>
+  <phrase title="cv6_no_style" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Keine Layout Optionen möglich.]]></phrase>
+  <phrase title="cv6_please_enter_valid_tag" addon_id="cv6/Core" version_id="2000070" version_string="2.0.0"><![CDATA[Bitte gib einen gültigen Tag ein. Dieser muss eindeutig sein!]]></phrase>
+  <phrase title="cv6_remove_filter" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Buchstabenfilter entfernen]]></phrase>
+  <phrase title="cv6_sort_abc" addon_id="cv6/Core" version_id="1000020" version_string="1.0.0 Alpha 2"><![CDATA[Sortiere alphabetisch]]></phrase>
+  <phrase title="cv6_system_field_cannot_deleted" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Systemfelder können nicht gelöscht werden.]]></phrase>
+  <phrase title="cv6_unknown_fa_icon" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Unbekannter Font Awesome Wert]]></phrase>
+  <phrase title="cv6_xf_core" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Alle XenForo Core und AddOn Felder]]></phrase>
+  <phrase title="option.cv6CoreFaAnimation" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Icon Animation]]></phrase>
+  <phrase title="option.cv6CoreFaRotation" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Icon Drehung]]></phrase>
+  <phrase title="option.cv6CoreFaStyle" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Icon Stil]]></phrase>
+  <phrase title="option.cv6CoreImageSample" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Datei Upload]]></phrase>
+  <phrase title="option.cv6IconSample" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Font Awesome Icon]]></phrase>
+  <phrase title="option.cv6LetterRegExp" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Regular Expression für Buchstaben]]></phrase>
+  <phrase title="option.cv6MarkEmptyLetter" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[hebe leere Tabs hervor]]></phrase>
+  <phrase title="option.cv6RemoveTab" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Soll eine Registerkarte für "Filter entfernen" angezeigt werden?]]></phrase>
+  <phrase title="option.cv6ReplaceXF" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Ersetze (fast) alle XenForo Icon Felder]]></phrase>
+  <phrase title="option.cv6ShowIconHelper" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Aktiviere Font Awesome Icon Menu]]></phrase>
+  <phrase title="option.cv6ShowNumberTab" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[Soll ein Tab für Nummern angezeigt werden?]]></phrase>
+  <phrase title="option.cv6ShowOthersTab" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[Soll ein Tab für Sonstiges angezeigt werden?]]></phrase>
+  <phrase title="option.cv6extraFaIcons" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Weitere cv6 Icons berücksichtigen]]></phrase>
+  <phrase title="option_explain.cv6CoreFaAnimation" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Wird benötigt, um die erlaubten Animationen zu ermitteln.]]></phrase>
+  <phrase title="option_explain.cv6CoreFaRotation" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Wird benötigt, um die erlaubten Drehungen zu ermitteln.]]></phrase>
+  <phrase title="option_explain.cv6CoreFaStyle" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Wird benötigt, um die erlaubten Stile zu ermitteln.]]></phrase>
+  <phrase title="option_explain.cv6CoreImageSample" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[nur ein Beispiel]]></phrase>
+  <phrase title="option_explain.cv6IconSample" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[nur ein Beispiel]]></phrase>
+  <phrase title="option_explain.cv6LetterRegExp" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[RegExp wie die Buchstaben erkannt werden. Eine Anpassung ist nur Notwendig bei Umlauten etc.]]></phrase>
+  <phrase title="option_explain.cv6MarkEmptyLetter" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Wenn du möchtest, das man die Tabs ohne Ergebnis erkennen kann, aktiviere diese Option. Dies führt einen zusätzlichen Query auf der Seite aus.]]></phrase>
+  <phrase title="option_explain.cv6RemoveTab" addon_id="cv6/Core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Der Filter kann wie jeder andere Filter auch über die Anzeige entfernt werden.]]></phrase>
+  <phrase title="option_explain.cv6ShowIconHelper" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Aktiviere diese Option, um bei [cv6] Add-ons das FA Hilfsmenu zu aktivieren.]]></phrase>
+  <phrase title="option_explain.cv6ShowNumberTab" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[Themen die mit einer Ziffer anfangen, werden unter diesem Tab angezeigt. Wenn die Funktion aktiviert ist, gib hier das Zeichen ein, welcher auf dem Tab erscheinen soll. Standard: <strong>#</strong>]]></phrase>
+  <phrase title="option_explain.cv6ShowOthersTab" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[Themen die mit einem Zeichen anfangen, das weder Ziffer noch Buchstabe ist, werden unter diesem Tab angezeigt. Wenn die Funktion aktiviert ist, gib hier das Zeichen ein, welcher auf dem Tab erscheinen soll. Standard: <strong>?</strong>]]></phrase>
+  <phrase title="option_group.cv6LetterIndex" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[[cv6] Buchstabenindex]]></phrase>
+  <phrase title="option_group_description.cv6Core" addon_id="cv6/Core" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[ein paar Basis Einstellungen]]></phrase>
+  <phrase title="option_group_description.cv6LetterIndex" addon_id="cv6/Core" version_id="1000051" version_string="1.0.0 Release Candidate 1"><![CDATA[Allgemeine Optionen für den Buchstabenindex]]></phrase>
+  <phrase title="style_prop.cv6IndexTabActive" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Aktive Registerkarten]]></phrase>
+  <phrase title="style_prop.cv6IndexTabBasic" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Grundlegendes Erscheinungsbild der Register]]></phrase>
+  <phrase title="style_prop.cv6IndexTabHover" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Register Hover]]></phrase>
+  <phrase title="style_prop.cv6IndexTabNoResult" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Kein Ergebnis im Register]]></phrase>
+  <phrase title="style_prop.cv6IndexTabSize" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Register Größe]]></phrase>
+  <phrase title="style_prop_desc.cv6IndexTabBasic" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Dies definiert die Basisformatierung der Register. Dies ist der Inaktiv Zustand. Die Einstellungen oben, verändern die einzelnen Eigenschaften.]]></phrase>
+  <phrase title="style_prop_group.cv6Core" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[[cv6] Core Einstellungen]]></phrase>
+  <phrase title="style_prop_group.cv6Indexable" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[[cv6] Register Layout]]></phrase>
+  <phrase title="style_prop_group_desc.cv6Core" addon_id="cv6/Core" version_id="1000070" version_string="1.0.0"><![CDATA[Ein paar Style Einstellungen die für mehrere Add-Ons Gültigkeit haben.]]></phrase>
+  <phrase title="style_prop_group_desc.cv6Indexable" addon_id="cv6/Core" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Hier kannst du das Buchstabenregister anpassen.]]></phrase>
+</language>

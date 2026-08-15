@@ -51,6 +51,14 @@ Installiere das Add-On über das ACP oder per CLI:
 php cmd.php xf-addon:install cv6/Core
 ```
 
+### 3. Deutsches Sprachpaket (Optional)
+Für deutsche Übersetzungen kann das Sprachpaket importiert werden:
+1. Navigiere im ACP zu **Aussehen -> Sprachen**.
+2. Klicke oben rechts auf **Importieren**.
+3. Wähle die XML-Datei aus `src/addons/cv6/Core/language/Core-1040370-de.xml`.
+4. Wähle bei **Sprache überschreiben** die Sprache **Deutsch [Du]** (oder als Kind-Sprache importieren).
+5. Klicke auf **Importieren**.
+
 ---
 
 ## Einrichtung

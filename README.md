@@ -53,6 +53,14 @@ Install the add-on via the Admin Control Panel or per CLI:
 php cmd.php xf-addon:install cv6/Core
 ```
 
+### 3. German Language Pack (Optional)
+If you require German translations, import the German language pack:
+1. Go to **AdminCP > Appearance > Languages**.
+2. Click **Import** in the top right.
+3. Select the XML file from `src/addons/cv6/Core/language/Core-1040370-de.xml`.
+4. Choose **Overwrite language** and select **Deutsch [Du]** (or import as child language).
+5. Click **Import**.
+
 ---
 
 ## Configuration
