@@ -112,15 +112,55 @@ jobs:
 
           TITLE="Version ${VERSION_STRING}"
 
-          # 2. Query XenForo API for currently published live version ID
+          # Helper function to convert version string (e.g. "2.7.1" or "2.7.1 Beta 1") to numeric version ID
+          parse_version_string_to_id() {
+            local ver_str="$1"
+            if [ -z "$ver_str" ] || [ "$ver_str" = "null" ]; then
+              echo "0"
+              return
+            fi
+
+            # Matches major.minor.patch and optionally any extra text
+            if [[ "$ver_str" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)(.*)$ ]]; then
+              local major="${BASH_REMATCH[1]}"
+              local minor="${BASH_REMATCH[2]}"
+              local patch="${BASH_REMATCH[3]}"
+              local extra="${BASH_REMATCH[4]}"
+
+              # Trim whitespace from extra
+              extra=$(echo "$extra" | xargs)
+              local state_block=70 # default to stable
+
+              if [ -n "$extra" ]; then
+                local extra_lower=$(echo "$extra" | tr '[:upper:]' '[:lower:]')
+                if [[ "$extra_lower" =~ alpha([[:space:]]*([0-9]+))? ]]; then
+                  local build="${BASH_REMATCH[2]:-1}"
+                  state_block=$((10 + build - 1))
+                elif [[ "$extra_lower" =~ beta([[:space:]]*([0-9]+))? ]]; then
+                  local build="${BASH_REMATCH[2]:-1}"
+                  state_block=$((30 + build - 1))
+                elif [[ "$extra_lower" =~ rc([[:space:]]*([0-9]+))? || "$extra_lower" =~ release[[:space:]]candidate([[:space:]]*([0-9]+))? ]]; then
+                  local build="${BASH_REMATCH[2]:-1}"
+                  state_block=$((50 + build - 1))
+                fi
+              fi
+
+              local vid=$((major * 1000000 + minor * 10000 + patch * 100 + state_block))
+              echo "$vid"
+            else
+              echo "0"
+            fi
+          }
+
+          # 2. Query XenForo API for currently published live version string
           LAST_VERSION_ID=0
           RESOURCE_RESP=$(curl -s -S "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}" \
             -H "XF-Api-Key: ${XF_API_KEY}" \
             -H "XF-Api-User: ${XF_API_USER}" || true)
 
-          API_VER_ID=$(echo "$RESOURCE_RESP" | jq -r '.resource.CurrentVersion.resource_version_id // .resource.current_version_id // 0' 2>/dev/null || echo "0")
-          if [[ "$API_VER_ID" =~ ^[0-9]+$ ]]; then
-            LAST_VERSION_ID=$API_VER_ID
+          API_VER_STR=$(echo "$RESOURCE_RESP" | jq -r '.resource.version // .resource.CurrentVersion.version_string // empty' 2>/dev/null)
+          if [ -n "$API_VER_STR" ] && [ "$API_VER_STR" != "null" ]; then
+            LAST_VERSION_ID=$(parse_version_string_to_id "$API_VER_STR")
           fi
 
           echo "================ DEBUG ================"
@@ -128,6 +168,7 @@ jobs:
           echo "Parsed VERSION_STRING: '$VERSION_STRING'"
           echo "Parsed RESOURCE_ID:    '$RESOURCE_ID'"
           echo "Live LAST_VERSION_ID:  '$LAST_VERSION_ID'"
+          echo "API Live Version Str:  '$API_VER_STR'"
           echo "API User ID:           '$XF_API_USER'"
           echo "API Key Length:        ${#XF_API_KEY} chars"
           echo "======================================="

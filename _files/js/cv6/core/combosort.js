@@ -37,8 +37,8 @@
         },
 
         doSort: function (direction, field) {
-            var keys = this.container.querySelectorAll("input[name='field_choice[]'");
-            var values = this.container.querySelectorAll("input[name='field_choice_text[]'");
+            var keys = this.container.querySelectorAll("input[name='field_choice[]'], input[name='field_ids[]']");
+            var values = this.container.querySelectorAll("input[name='field_choice_text[]'], input[name='field_titles[]']");
             var fields = Array();
             keys.forEach(function (e,i) {
                 fields.push({ key: e.value, value: values[i].value, row: i });
@@ -93,8 +93,8 @@
         },
 
         doNumSort: function (direction, field) {
-            var keys = this.container.querySelectorAll("input[name='field_choice[]'");
-            var values = this.container.querySelectorAll("input[name='field_choice_text[]'");
+            var keys = this.container.querySelectorAll("input[name='field_choice[]'], input[name='field_ids[]']");
+            var values = this.container.querySelectorAll("input[name='field_choice_text[]'], input[name='field_titles[]']");
             var fields = Array();
             keys.forEach(function (e, i) {
                 fields.push({ key: e.value, value: values[i].value, row: i });
