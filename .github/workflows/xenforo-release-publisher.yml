@@ -32,6 +32,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Download Release Asset or Fallback
         env:
@@ -210,6 +212,45 @@ jobs:
             fi
           fi
 
+          # 3b. Detect newly committed/modified screenshots since last release tag
+          NEW_SCREENSHOTS=()
+          git fetch --tags --force 2>/dev/null || true
+
+          PREV_TAG=""
+          if [ -n "$TAG_NAME" ]; then
+            PREV_TAG=$(git describe --tags --abbrev=0 "${TAG_NAME}^" 2>/dev/null || true)
+          else
+            PREV_TAG=$(git tag --sort=-creatordate | sed -n '2p' || true)
+          fi
+
+          if [ -n "$PREV_TAG" ]; then
+            echo "Previous release tag identified: '$PREV_TAG'"
+            echo "Checking for new or modified screenshots between $PREV_TAG and ${TAG_NAME:-HEAD}..."
+            while IFS= read -r f; do
+              if [ -n "$f" ] && [ -f "$f" ]; then
+                NEW_SCREENSHOTS+=("$f")
+              fi
+            done < <(git diff --name-only --diff-filter=AM "$PREV_TAG" "${TAG_NAME:-HEAD}" -- "_docs/screenshots/" 2>/dev/null || true)
+          else
+            echo "No previous release tag found (initial release). Checking existing screenshots in _docs/screenshots/..."
+            if [ -d "_docs/screenshots" ]; then
+              while IFS= read -r f; do
+                if [ -n "$f" ] && [ -f "$f" ]; then
+                  NEW_SCREENSHOTS+=("$f")
+                fi
+              done < <(find _docs/screenshots -maxdepth 1 -type f \( -name "*.png" -o -name "*.jpg" -o -name "*.jpeg" -o -name "*.webp" \) 2>/dev/null || true)
+            fi
+          fi
+
+          if [ ${#NEW_SCREENSHOTS[@]} -gt 0 ]; then
+            echo "SUCCESS: Found ${#NEW_SCREENSHOTS[@]} new/modified screenshot(s) to upload:"
+            for shot in "${NEW_SCREENSHOTS[@]}"; do
+              echo "  + $shot"
+            done
+          else
+            echo "Notice: No new or modified screenshots found since previous release. Skipping screenshot upload."
+          fi
+
           ZIP_FILE="$ZIP_FILE_PATH"
 
           # Dry Run Check
@@ -221,6 +262,10 @@ jobs:
             echo "Version:            $VERSION_STRING"
             echo "Attachment:         $ZIP_FILE"
             echo "Aggregated Files:   ${#FOUND_FILES[@]}"
+            echo "New Screenshots:    ${#NEW_SCREENSHOTS[@]}"
+            for s in "${NEW_SCREENSHOTS[@]}"; do
+              echo "  + Screenshot:     $s"
+            done
             echo "Message:"
             echo "$MESSAGE_CONTENT"
             echo "==========================="
@@ -287,3 +332,67 @@ jobs:
             -F "resource_id=${RESOURCE_ID}" \
             -F "title=${TITLE}" \
             -F "message=${MESSAGE_CONTENT}"
+
+          # Step D: Upload Newly Committed Screenshots via CustomFields API
+          if [ ${#NEW_SCREENSHOTS[@]} -gt 0 ]; then
+            echo ""
+            echo "Step 4: Uploading ${#NEW_SCREENSHOTS[@]} new/modified screenshot(s) for resource ${RESOURCE_ID}..."
+
+            # 1. Collect existing attachment IDs from resource API response to preserve them
+            FINAL_ATT_IDS=()
+            if [ -n "$RESOURCE_RESP" ]; then
+              while IFS= read -r existing_id; do
+                if [ -n "$existing_id" ] && [[ "$existing_id" =~ ^[0-9]+$ ]]; then
+                  FINAL_ATT_IDS+=("$existing_id")
+                fi
+              done < <(echo "$RESOURCE_RESP" | jq -r '.resource.custom_fields_media.screenshots[].attachment_id // empty' 2>/dev/null || true)
+            fi
+
+            echo "Preserving ${#FINAL_ATT_IDS[@]} existing screenshot attachment(s) on resource."
+
+            # 2. Upload newly committed screenshots via /api/cv6-custom-fields/upload
+            NEW_UPLOAD_COUNT=0
+            for shot in "${NEW_SCREENSHOTS[@]}"; do
+              echo "Uploading $shot via /api/cv6-custom-fields/upload..."
+              SHOT_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/cv6-custom-fields/upload" \
+                -H "XF-Api-Key: ${XF_API_KEY}" \
+                -H "XF-Api-User: ${XF_API_USER}" \
+                -H "X-XF-Api-Key: ${XF_API_KEY}" \
+                -H "X-XF-Api-User: ${XF_API_USER}" \
+                -F "api_key=${XF_API_KEY}" \
+                -F "api_user=${XF_API_USER}" \
+                -F "field_id=screenshots" \
+                -F "field_source=resource" \
+                -F "content_id=${RESOURCE_ID}" \
+                -F "upload=@${shot}")
+
+              SHOT_ID=$(echo "$SHOT_RESP" | jq -r '.attachment_id // empty')
+              if [ -n "$SHOT_ID" ] && [[ "$SHOT_ID" =~ ^[0-9]+$ ]]; then
+                echo "Uploaded successfully: Attachment ID $SHOT_ID"
+                FINAL_ATT_IDS+=("$SHOT_ID")
+                NEW_UPLOAD_COUNT=$((NEW_UPLOAD_COUNT + 1))
+              else
+                echo "::warning::Failed to upload screenshot '$shot'. Response: $SHOT_RESP"
+              fi
+            done
+
+            # 3. Associate all attachment IDs with the resource's screenshots custom field
+            if [ "$NEW_UPLOAD_COUNT" -gt 0 ]; then
+              echo "Associating total ${#FINAL_ATT_IDS[@]} screenshot(s) with resource ${RESOURCE_ID}..."
+              RESOURCE_UPDATE_ARGS=()
+              for att_id in "${FINAL_ATT_IDS[@]}"; do
+                RESOURCE_UPDATE_ARGS+=(-F "custom_fields[screenshots][]=$att_id")
+              done
+
+              curl -s -S -X POST "https://forum.dice-dragons.de/api/resources/${RESOURCE_ID}/" \
+                -H "XF-Api-Key: ${XF_API_KEY}" \
+                -H "XF-Api-User: ${XF_API_USER}" \
+                -H "X-XF-Api-Key: ${XF_API_KEY}" \
+                -H "X-XF-Api-User: ${XF_API_USER}" \
+                -F "api_key=${XF_API_KEY}" \
+                -F "api_user=${XF_API_USER}" \
+                "${RESOURCE_UPDATE_ARGS[@]}"
+
+              echo "Resource screenshots custom field updated successfully."
+            fi
+          fi
