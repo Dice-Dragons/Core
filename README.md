@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *This documentation is also available in: [Deutsch](README.de.md)*
 
-![Version](https://img.shields.io/badge/version-1.4.3-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.5.0-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** is the foundational framework required for (nearly) all cv6 / Dice Dragons add-ons. It provides a rich set of shared resources, UI components, and developer tools to ensure stability and reduce code duplication.
 
@@ -25,6 +25,7 @@ This library includes essential tools for XenForo development:
     * `verifyValidIconMandatory`: Requires a valid icon class name. Validates format classes against enabled settings in the `cv6Core` group (`cv6CoreFaStyle`, `cv6CoreFaRotation`, `cv6CoreFaAnimation`).
     * `verifyValidIconOptional`: Clears input field if only modifiers are entered without an icon name, while properly validating unknown or disallowed classes using native `XF\Repository\IconRepository` constants.
 * **Setup Traits**: Reusable traits to simplify add-on installation, upgrades, and database schema changes.
+* **Multi-Alphabet Index Provider Repository (`cv6\Core\Repository\Alphabet`)**: Extensible multi-script alphabet registry (Latin, Greek, Cyrillic, Hebrew, Arabic) with RTL and variant mapping. See [Adding Custom Alphabet Providers](_docs/custom_alphabet.md).
 * **JS Dependency Handler**: Efficient management of JavaScript dependencies.
 * **Widget Framework**: Base functionality for creating index widgets.
 
@@ -57,7 +58,7 @@ php cmd.php xf-addon:install cv6/Core
 If you require German translations, import the German language pack:
 1. Go to **AdminCP > Appearance > Languages**.
 2. Click **Import** in the top right.
-3. Select the XML file from `src/addons/cv6/Core/language/Core-1040370-de.xml`.
+3. Select the XML file from `src/addons/cv6/Core/language/Core-1050070-de.xml`.
 4. Choose **Overwrite language** and select **Deutsch [Du]** (or import as child language).
 5. Click **Import**.
 

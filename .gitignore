@@ -1,6 +1,7 @@
-﻿# Exclude build releases & release XML data
+# Exclude build releases & release XML data
 /_data/
 /_releases/
+/_output/language/
 
 # Editor and system files
 /.vscode/
@@ -8,3 +9,4 @@
 /.phpunit.result.cache
 .DS_Store
 Thumbs.db
+*.bak

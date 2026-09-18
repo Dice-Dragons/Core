@@ -2,11 +2,15 @@
     "additional_files": [
         "js/cv6/core/asset.js",
         "js/cv6/core/combosort.js",
-        "js/cv6/core/icon.js"
+        "js/cv6/core/icon.js",
+        "js/cv6/core/phrase.js",
+        "js/cv6/core/toggle.js"
     ],
     "minify": [
         "js/cv6/core/asset.js",
         "js/cv6/core/combosort.js",
-        "js/cv6/core/icon.js"
+        "js/cv6/core/icon.js",
+        "js/cv6/core/phrase.js",
+        "js/cv6/core/toggle.js"
     ]
 }

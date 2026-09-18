@@ -114,3 +114,27 @@ ul.listColumns.cv6-listColumns {
 	align-items: center !important;
 	justify-content: center !important;
 }
+
+.cv6-multi-toggle,
+.cv6-bundle-toggle {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	padding: 2px 4px;
+	color: @xf-textColorMuted;
+	user-select: none;
+	text-decoration: none !important;
+
+	&:hover {
+		color: @xf-textColor;
+	}
+}
+
+.dataList-row--childRow,
+.dataList-row--bundleChild {
+	display: none;
+
+	&.is-active {
+		display: table-row;
+	}
+}

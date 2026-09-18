@@ -1,3 +1,10 @@
+1.5.0
+ - Added Multi-Alphabet Index Provider Repository (cv6\Core\Repository\Alphabet) supporting Latin, Greek, Cyrillic, Hebrew, and Arabic with RTL layout and letter variant mapping
+ - Added Code Event cv6_core_index_alphabets for third-party alphabet provider registration
+ - Added Inline Phrase Quick-Edit feature in AdminCP forms (fa-language button) with multi-language modal editing
+ - Updated IndexTrait with multibyte-safe string handling and direct repository integration
+ - Added developer documentation in Markdown and BBCode for custom alphabet providers
+
 1.4.3
  - Moved core JS files to _files/ directory and updated admin templates for XF 2.3 native asset resolution
  - Added syncGroupPhrases helper method to SetupTrait.php for automated phrase syncing

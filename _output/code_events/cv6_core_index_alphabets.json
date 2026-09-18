@@ -1,0 +1,10 @@
+{
+    "description": "<p>\n\tCalled when building the list of available alphabet index providers in the cv6\\Core\\Repository\\Alphabet repository.\n</p>",
+    "arguments": [
+        {
+            "name": "&classes",
+            "type": "array"
+        }
+    ],
+    "hint_description": null
+}

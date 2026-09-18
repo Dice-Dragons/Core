@@ -2,6 +2,8 @@
 
 namespace cv6\Core\Entity;
 
+use cv6\Core\Index\Provider\AbstractProvider;
+use cv6\Core\Repository\Alphabet;
 use XF\Mvc\Entity\Entity;
 use XF\Mvc\Entity\Finder;
 use XF\Mvc\Entity\Structure;
@@ -36,10 +38,42 @@ trait IndexTrait
         return (bool) $this->cv6_indexable;
     }
 
+    public function getAlphabetProvider(): AbstractProvider
+    {
+        $alphabetId = $this->getIndexAlphabetId();
+        return $this->repository(Alphabet::class)->getProvider($alphabetId);
+    }
+
+    public function getIndexAlphabetId(): ?string
+    {
+        if (isset($this->cv6_index_alphabet))
+        {
+            return (string)$this->cv6_index_alphabet;
+        }
+
+        if (isset($this->cv6_alphabet_id))
+        {
+            return (string)$this->cv6_alphabet_id;
+        }
+
+        return null;
+    }
+
+    public function hasNumberTab(): bool
+    {
+        if (isset($this->cv6_index_number_tab))
+        {
+            return (bool)$this->cv6_index_number_tab;
+        }
+
+        $option = \XF::options()->cv6ShowNumberTab;
+        return !empty($option['enabled']);
+    }
+
     public function fetchLetterCounter()
     {
         $result = $this->db()->fetchPairs("
-			SELECT UPPER(SUBSTR(".$this->getIndexColumn().",1,1)) AS letter, COUNT(*) AS c FROM ". $this->getIndexTable()."
+			SELECT UPPER(SUBSTRING(".$this->getIndexColumn().",1,1)) AS letter, COUNT(*) AS c FROM ". $this->getIndexTable()."
 			GROUP BY letter;");
 
         return $result;
@@ -53,7 +87,7 @@ trait IndexTrait
     {
     }
 
-    public function fetchLetterIndex(int $withCounter = 0, Finder &$finder = null)
+    public function fetchLetterIndex(int $withCounter = 0, ?Finder &$finder = null)
     {
         $withCounter = ($withCounter == 1) ? 1 : 0;
         if ($this->createdIndex[$withCounter] === null)
@@ -70,14 +104,17 @@ trait IndexTrait
 
             }
 
-            $letterIndex = range('A', 'Z');
+            $provider = $this->getAlphabetProvider();
+            $letterIndex = $provider->getLetters();
             $hide = array_flip(array_merge(['0','_'],$letterIndex));
+
             if ($withCounter == 1) {
                 $index = $this->fetchLetterCounter();
                 $indexCounter = [];
                 foreach ($index as $character => $count) 
                 {
-                    if (is_numeric($character)) 
+                    $character = $provider->normalizeLetter(mb_substr((string)$character, 0, 1, 'UTF-8'));
+                    if ($provider->isNumber($character)) 
                     {
                         if (!array_key_exists('0', $indexCounter)) 
                         {
@@ -88,9 +125,16 @@ trait IndexTrait
                         }
                         unset($hide["0"]);
                     } 
-                    else if (in_array($character, $letterIndex)) 
+                    else if ($provider->isLetter($character)) 
                     {
-                        $indexCounter[$character] = $count;
+                        if (!array_key_exists($character, $indexCounter))
+                        {
+                            $indexCounter[$character] = $count;
+                        }
+                        else
+                        {
+                            $indexCounter[$character] += $count;
+                        }
                         unset($hide[$character]);
                     } 
                     else 
@@ -111,27 +155,28 @@ trait IndexTrait
                 $indexCounter = false;
             }
 
-            $letter = strtoupper(\XF::app()->request()->filter('letter', 'str', '-'));
+            $letter = \XF::app()->request()->filter('letter', 'str', '-');
+            $letter = $provider->normalizeLetter($letter);
 
-            if (in_array($letter, $letterIndex)) 
+            if ($provider->isLetter($letter)) 
             {
                 if ($finder !== null)
                 {
-                    $finder->where($this->getIndexColumn(), 'LIKE', $letter . '%');
+                    $provider->applyLetterFilter($finder, $this->getIndexColumn(), $letter);
                 }
             } 
-            elseif ($letter == '0-9') 
+            elseif ($letter === '0-9') 
             {
                 if ($finder !== null)
                 {
-                    $finder->whereSql($this->getIndexColumn().' REGEXP "^[0-9]"');
+                    $provider->applyNumberFilter($finder, $this->getIndexColumn());
                 }
             } 
-            elseif ($letter == '_') 
+            elseif ($letter === '_') 
             {
                 if ($finder !== null)
                 {
-                    $finder->whereSql($this->getIndexColumn() . ' REGEXP "^[^a-zA-Z0-9]"');
+                    $provider->applyOtherFilter($finder, $this->getIndexColumn());
                 }
             } 
             else 
@@ -145,7 +190,10 @@ trait IndexTrait
                 'list' => $letterIndex,
                 'hide' => array_flip($hide),
                 'letter' => $letter,
-                'counter' => $indexCounter
+                'counter' => $indexCounter,
+                'provider' => $provider,
+                'hasNumberTab' => $this->hasNumberTab(),
+                'is_rtl' => $provider->isRtl(),
             ];
         }
         return $this->createdIndex[$withCounter];

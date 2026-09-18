@@ -67,7 +67,9 @@
             target: null,
             type: null,
             styleField: null,
-            showError: false
+            showError: false,
+            phraseUnknownIcon: null,
+            phraseUnknownClass: null
         },
 
         oldIconClass: null,
@@ -79,6 +81,8 @@
         targetClass: null,
         errorText: null,
         styleField: null,
+        inputTimer: null,
+        currentValue: '',
 
         newIcon: {
             variant: 'default',
@@ -113,7 +117,8 @@
             }
             
             if (this.options.showError == 1 || this.options.showError == true) {
-                this.errorText = document.querySelector('.cv6-iconerror');
+                const scope = this.target.closest('.formRow') || this.target.closest('.inputGroup') || document;
+                this.errorText = scope.querySelector('.cv6-iconerror') || document.querySelector('.cv6-iconerror');
             }
             else {
                 this.errorText = XF.createElementFromString('<div class="cv6-iconerror"></div>');
@@ -123,19 +128,22 @@
             this.targetClass = this.options.target.replace('.', '');
           
             this.loadingIcon = XF.createElementFromString(
-                XF.Icon.getIcon('default', 'fa-spinner', 'fa-pulse cv6-loading ' + this.targetClass)
+                XF.Icon.getIcon('default', 'fa-spinner', 'fa-pulse cv6-loading ' + this.targetClass + ' cv6-iconpreview')
             );
             this.errorIcon = XF.createElementFromString(
-                XF.Icon.getIcon('default', 'fa-bug', 'cv6-error-icon ' + this.targetClass)
+                XF.Icon.getIcon('default', 'fa-bug', 'cv6-error-icon ' + this.targetClass + ' cv6-iconpreview')
             );
             this.noIcon = XF.createElementFromString(
-                XF.Icon.getIcon('default', 'fa-times-octagon', 'cv6-no-icon ' + this.targetClass)
+                XF.Icon.getIcon('default', 'fa-times-octagon', 'cv6-no-icon ' + this.targetClass + ' cv6-iconpreview')
             );
 
             this.oldIconClass = this.target.value;
+            this.currentValue = this.target.value;
             
             XF.on(this.target, 'blur', this.blur6.bind(this));
             XF.on(this.target, 'focus', this.focus6.bind(this));
+            XF.on(this.target, 'input', this.handleInput.bind(this));
+            XF.on(this.target, 'change', this.handleChange.bind(this));
 
             this.inputGroup = this.target.closest('.inputGroup') || this.target.parentElement;
             this.layoutMenu = this.inputGroup ? this.inputGroup.querySelectorAll('.menu-linkRow') : [];
@@ -144,28 +152,94 @@
                 XF.on(linkRow, 'click', this.click6.bind(this));
             });            
 
-            this.analyzeIconText(true);
+            this.analyzeIconText(true, false);
         },
 
-        blur6: function (e) {
-            var s = this.analyzeIconText();
+        getPreview: function () {
+            let el = null;
+            if (this.inputGroup) {
+                el = this.inputGroup.querySelector(this.options.target) || this.inputGroup.querySelector('.cv6-iconpreview');
+            }
+            if (!el) {
+                const row = this.target.closest('.formRow');
+                if (row) {
+                    el = row.querySelector(this.options.target) || row.querySelector('.cv6-iconpreview');
+                }
+            }
+            if (!el) {
+                el = document.querySelector(this.options.target) || document.querySelector('.cv6-iconpreview');
+            }
+            return el;
+        },
+
+        hideError: function () {
+            if (this.errorText) {
+                if (window.getComputedStyle(this.errorText).display !== 'none') {
+                    XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast });
+                }
+                this.errorText.classList.add('is-hidden');
+            }
+        },
+
+        handleInput: function () {
+            this.hideError();
+            clearTimeout(this.inputTimer);
+            this.inputTimer = setTimeout(() => {
+                if (this.target.value === this.currentValue) {
+                    return;
+                }
+                this.currentValue = this.target.value;
+                this.updatePreview(false);
+            }, 250);
+        },
+
+        handleChange: function () {
+            clearTimeout(this.inputTimer);
+            if (this.target.value !== this.currentValue) {
+                this.currentValue = this.target.value;
+                this.updatePreview(false);
+            }
+        },
+
+        getPhrase: function (type) {
+            if (type === 'unknownIcon') {
+                return this.options.phraseUnknownIcon 
+                    || XF.phrase('cv6UnknownIcon', null, 'Unknown Font Awesome icon');
+            }
+            if (type === 'unknownClass') {
+                return this.options.phraseUnknownClass 
+                    || XF.phrase('cv6UnknownClass', null, 'Invalid Font Awesome Classes:');
+            }
+            return '';
+        },
+
+        updatePreview: function (isBlur = false) {
+            this.currentValue = this.target.value;
+            var s = this.analyzeIconText(true, isBlur);
             if (s) {
-                this.createIcon('cv6-iconpreview');
+                this.createIcon('cv6-iconpreview', isBlur);
             }
             else {
                 if (this.iconText.value == '') {
+                    this.setErrorText('');
+                    this.hideError();
                     this.showNoIcon();
                     this.clearIcon();
                 }
-                else
+                else if (isBlur)
                 {
                     this.showError();
                 }
             }
         },
 
+        blur6: function (e) {
+            clearTimeout(this.inputTimer);
+            this.updatePreview(true);
+        },
+
         focus6: function (e) {
-            this.showLoading();
+            this.hideError();
         },
 
         click6: function (e) {
@@ -201,11 +275,11 @@
             }            
 
             elm.classList.add('is-active');
-            this.analyzeIconText(false);
+            this.analyzeIconText(false, false);
             this.createIcon('cv6-iconpreview');
         },
 
-        analyzeIconText: function (setMenu = true) {
+        analyzeIconText: function (setMenu = true, showErrorText = true) {
 
             const ICON_CLASS_ANIMATION_REGEX = /^fa-(spin|pulse)$/i,
                 ICON_CLASS_ROTATION_REGEX = /^fa-(rotate-(90|180|270)|flip-(horizontal|vertical))$/i,
@@ -291,7 +365,9 @@
             }
 
             if (iconParts.length > 0) {
-                this.setErrorText(XF.phrase('cv6UnknownClass') + ' ' + iconParts.join(', '));
+                if (showErrorText) {
+                    this.setErrorText(this.getPhrase('unknownClass') + ' ' + iconParts.join(', '));
+                }
                 return false;
             }
             return true;
@@ -355,7 +431,7 @@
             this.newIcon.name = XF.Icon.normalizeIconName(name);
         },
 
-        async createIcon(additionalClass = '') {
+        async createIcon(additionalClass = '', isBlur = false) {
             this.setClasses(additionalClass);
             if (!this.newIcon.name) {
                 this.showNoIcon();
@@ -368,12 +444,19 @@
                     this.newIcon.classes
                 );
                 const object = XF.createElementFromString(icon);
-                document.querySelector(this.options.target).replaceWith(object); 
-                this.target.dispatchEvent(new Event("change", {  } ));
+                const current = this.getPreview();
+                if (current) {
+                    current.replaceWith(object);
+                }
+                this.setErrorText('');
+                this.hideError();
+                this.target.dispatchEvent(new Event("change", { bubbles: true }));
             }
             catch (e) {
                 console.warn(e);
-                this.showError(XF.phrase('cv6UnknownIcon'));
+                if (isBlur) {
+                    this.showError(this.getPhrase('unknownIcon'));
+                }
             }
             if (this.styleField) {
                 if (this.options.type === 'stylevar') {
@@ -393,13 +476,19 @@
         },
 
         showLoading: function () {
-            document.querySelector(this.options.target).replaceWith(this.loadingIcon);
-            XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast })
+            const current = this.getPreview();
+            if (current) {
+                current.replaceWith(this.loadingIcon);
+            }
+            XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast });
         },
 
         showNoIcon: function () {
-            document.querySelector(this.options.target).replaceWith(this.noIcon);
-            XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast })
+            const current = this.getPreview();
+            if (current) {
+                current.replaceWith(this.noIcon);
+            }
+            XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast });
         },
 
 
@@ -416,13 +505,18 @@
             if (newText) {
                 this.errorText.innerText = newText;
             }
-            if (this.errorText.innerText == '') {
-                XF.Animate.fadeUp(this.errorText, { speed: XF.config.speed.fast })
-            } 
-            else if (this.errorText.classList.contains('is-hidden')) {
-                XF.Animate.fadeDown(this.errorText, { speed: XF.config.speed.fast })
+            if (!this.errorText || this.errorText.innerText == '') {
+                this.hideError();
+                return;
             }
-           document.querySelector(this.options.target).replaceWith(this.errorIcon);
+            this.errorText.classList.remove('is-hidden');
+            if (window.getComputedStyle(this.errorText).display === 'none') {
+                XF.Animate.fadeDown(this.errorText, { speed: XF.config.speed.fast });
+            }
+            const current = this.getPreview();
+            if (current) {
+                current.replaceWith(this.errorIcon);
+            }
         },
 
     });

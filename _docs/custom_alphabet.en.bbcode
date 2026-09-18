@@ -1,0 +1,173 @@
+[SIZE=6][B]Adding Custom Alphabet Providers in cv6/Core[/B][/SIZE]
+
+The [B]cv6/Core[/B] add-on provides an extensible multi-script alphabet index provider architecture for XenForo 2.3. Out of the box, [B]cv6/Core[/B] includes 5 script providers:
+[LIST]
+[*][B]Latin[/B] ([I]latin[/I]): Standard English/Western European alphabet (A–Z).
+[*][B]Greek[/B] ([I]greek[/I]): Greek script (Α–Ω) with Tonos vowel normalization.
+[*][B]Cyrillic[/B] ([I]cyrillic[/I]): Universal Cyrillic script (А–Я) supporting extended Slavic and regional variants.
+[*][B]Hebrew[/B] ([I]hebrew[/I]): Hebrew script (א–ת) with Nikkud stripping, Sofit final form mapping, and RTL support.
+[*][B]Arabic[/B] ([I]arabic[/I]): Arabic script (ا–ي) with Tashkil stripping, letter variant normalization, Eastern/Persian digit recognition, and RTL support.
+[/LIST]
+
+Developers can easily register custom alphabet providers (e.g. Japanese Hiragana/Katakana, Georgian, Armenian, Devanagari, or custom domain taxonomies).
+
+[HEADING=2]1. Creating the Provider Class[/HEADING]
+
+A custom alphabet provider must extend [I]cv6\Core\Index\Provider\AbstractProvider[/I].
+
+Create your provider class in your add-on directory, for example [I]src/addons/Vendor/Addon/Index/Provider/Georgian.php[/I]:
+
+[CODE=php]<?php
+
+namespace Vendor\Addon\Index\Provider;
+
+use cv6\Core\Index\Provider\AbstractProvider;
+use XF\Mvc\Entity\Finder;
+use XF\Phrase;
+
+class Georgian extends AbstractProvider
+{
+    public function getId(): string
+    {
+        return 'georgian';
+    }
+
+    public function getTitle(): Phrase|string
+    {
+        return \XF::phrase('vendor_addon_alphabet_georgian');
+    }
+
+    /**
+     * Returns an array of uppercase/standard letter symbols for the index bar.
+     *
+     * @return string[]
+     */
+    public function getLetters(): array
+    {
+        return [
+            'ა', 'ბ', 'გ', 'დ', 'ე', 'ვ', 'ზ', 'თ', 'ი', 'კ', 'ლ', 'მ', 'ნ',
+            'ო', 'პ', 'ჟ', 'რ', 'ს', 'ტ', 'უ', 'ფ', 'ქ', 'ღ', 'ყ', 'შ', 'ჩ',
+            'ც', 'ძ', 'წ', 'ჭ', 'ხ', 'ჯ', 'ჰ',
+        ];
+    }
+
+    /**
+     * Normalizes an incoming letter character (e.g. casing, accents, variants).
+     */
+    public function normalizeLetter(string $character): string
+    {
+        return mb_strtoupper($character, 'UTF-8');
+    }
+
+    /**
+     * Determines whether the given character belongs to this alphabet.
+     */
+    public function isLetter(string $character): bool
+    {
+        return in_array($this->normalizeLetter($character), $this->getLetters(), true);
+    }
+
+    /**
+     * Filters the finder for records starting with the selected letter.
+     */
+    public function applyLetterFilter(Finder $finder, string $column, string $letter): void
+    {
+        $escaped = $finder->escapeLike($letter, '?%');
+        $finder->whereSql($column . ' LIKE ' . \XF::db()->quote($escaped));
+    }
+
+    /**
+     * Filters for records starting with numbers (0-9).
+     */
+    public function applyNumberFilter(Finder $finder, string $column): void
+    {
+        $finder->whereSql($column . ' REGEXP "^[0-9]"');
+    }
+
+    /**
+     * Filters for non-alphabetic, non-numeric characters ("Other / #").
+     */
+    public function applyOtherFilter(Finder $finder, string $column): void
+    {
+        $finder->whereSql($column . ' REGEXP "^[^0-9\x{10D0}-\x{10FA}]"');
+    }
+
+    /**
+     * Return true if the alphabet requires Right-to-Left (RTL) layout.
+     */
+    public function isRtl(): bool
+    {
+        return false;
+    }
+}[/CODE]
+
+[HEADING=2]2. Registering the Provider[/HEADING]
+
+You have two clean options in XenForo to register your custom provider:
+
+[HEADING=3]Option A: Via XenForo Code Event Listener (cv6_core_index_alphabets) [Recommended][/HEADING]
+
+1. Create an event listener class in your add-on, for example [I]src/addons/Vendor/Addon/Listener.php[/I]:
+
+[CODE=php]<?php
+
+namespace Vendor\Addon;
+
+class Listener
+{
+    public static function cv6CoreIndexAlphabets(array &$classes): void
+    {
+        $classes['georgian'] = \Vendor\Addon\Index\Provider\Georgian::class;
+    }
+}[/CODE]
+
+2. Register the Code Event Listener in the XenForo AdminCP ([B]Development > Code event listeners[/B]) or via CLI:
+[LIST]
+[*][B]Listen to event[/B]: [I]cv6_core_index_alphabets[/I]
+[*][B]Execute callback[/B]: [I]Vendor\Addon\Listener :: cv6CoreIndexAlphabets[/I]
+[/LIST]
+
+[HEADING=3]Option B: Via XenForo Class Extension (XFCP_Alphabet)[/HEADING]
+
+Extend [I]cv6\Core\Repository\Alphabet[/I] via XenForo's class extension system:
+
+[CODE=php]<?php
+
+namespace Vendor\Addon\Repository;
+
+use cv6\Core\Repository\XFCP_Alphabet;
+
+class Alphabet extends XFCP_Alphabet
+{
+    public function getDefaultProviders(): array
+    {
+        $providers = parent::getDefaultProviders();
+        $providers['georgian'] = \Vendor\Addon\Index\Provider\Georgian::class;
+        return $providers;
+    }
+}[/CODE]
+
+[HEADING=2]3. Working with the Alphabet Repository[/HEADING]
+
+All alphabet operations in [B]cv6/Core[/B] are managed through the singleton repository [I]cv6\Core\Repository\Alphabet[/I]:
+
+[CODE=php]/** @var \cv6\Core\Repository\Alphabet $alphabetRepo */
+$alphabetRepo = \XF::repository(\cv6\Core\Repository\Alphabet::class);
+
+// Retrieve all active providers:
+$providers = $alphabetRepo->getProviders();
+
+// Retrieve a specific provider by ID (falls back to Latin if null/unknown):
+$provider = $alphabetRepo->getProvider('georgian');
+
+// Retrieve options array formatted for <xf:selectrow>:
+$options = $alphabetRepo->getProviderOptions();[/CODE]
+
+In templates using [I]cv6_letterindex.html[/I], right-to-left layout is applied automatically when [I]$provider->isRtl()[/I] returns [I]true[/I]:
+
+[CODE=html]<xf:macro template="cv6_letterindex" name="letters"
+    arg-index="{$index}"
+    arg-route="forum/view"
+    arg-params="{$forum}"
+    arg-number="1"
+    arg-other="1" />[/CODE]

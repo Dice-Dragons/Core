@@ -1,0 +1,15 @@
+[SIZE=6][B]Changelog - [DD] Core Library v1.5.0[/B][/SIZE]
+
+[HEADING=2]Added[/HEADING]
+[LIST]
+[*][B]Multi-Alphabet Index Provider Repository ([I]cv6\Core\Repository\Alphabet[/I])[/B]: Extensible repository providing multi-script alphabet index management. Out of the box supports 5 scripts: Latin ([I]latin[/I]), Greek ([I]greek[/I] with Tonos normalization), Cyrillic ([I]cyrillic[/I] with Slavic/regional variant mappings and composite OR-LIKE filtering), Hebrew ([I]hebrew[/I] with Nikkud stripping, Sofit final-form mapping, and RTL layout), and Arabic ([I]arabic[/I] with Tashkil stripping, letter variant normalization, Eastern/Persian digit support, and RTL layout).
+[*][B]Code Event ([I]cv6_core_index_alphabets[/I])[/B]: Official code event allowing third-party add-ons to easily register or override alphabet providers without touching core files.
+[*][B]Inline Phrase Quick-Edit[/B]: Added an inline translation modal ([I]fa-language[/I] button) to AdminCP text inputs ([I]<xf:textbox>[/I], [I]<xf:textarea>[/I]) with [I]phrase="..."[/I] or [I]cv6-phrase="..."[/I]. Allows administrators with [I]language[/I] permission to translate dynamic content phrases across all installed languages directly from the edit view without leaving the form.
+[*][B]RTL Support for Letter Index[/B]: Updated [I]cv6_letterindex.html[/I] template and [I]IndexTrait[/I] to automatically detect RTL providers ([I]$provider->isRtl()[/I]) and apply [I]dir="rtl"[/I] to the letter bar.
+[*][B]Developer Documentation[/B]: Added comprehensive guides ([I]_docs/custom_alphabet.md[/I], [I]custom_alphabet.de.md[/I], and BBCode versions) detailing how to build and register custom alphabet providers.
+[/LIST]
+
+[HEADING=2]Changed[/HEADING]
+[LIST]
+[*][B]IndexTrait Modernization[/B]: Updated [I]IndexTrait.php[/I] to fetch providers directly from the [I]Alphabet[/I] repository ([I]$this->repository(Alphabet::class)->getProvider(...)[/I]), use multibyte-safe string manipulation ([I]mb_strtoupper[/I], [I]mb_substr[/I]), and prepare for PHP 8.4 compatibility.
+[/LIST]

@@ -1,0 +1,77 @@
+<xf:title>{{ phrase('cv6_core_phrase_translations', {'title': $displayTitle}) }}</xf:title>
+
+<xf:description class="pairs pairs--inline">
+	<dl class="pairs pairs--inline">
+		<dt>{{ phrase('phrase_title') }}</dt>
+		<dd><code>{$phraseTitle}</code></dd>
+	</dl>
+</xf:description>
+
+<xf:js src="cv6/core/phrase.js" min="1" addon="cv6/Core" />
+
+<xf:form action="{{ link('cv6-phrases/quick-save') }}" ajax="true" class="block js-cv6PhraseQuickSaveForm" data-xf-init="cv6-phrase-quick-save">
+	<div class="block-container">
+		<div class="block-body">
+
+			<xf:if is="$canEditMaster">
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0" />
+				</xf:if>
+			<xf:elseif is="$masterText !== ''" />
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						readonly="true"
+						explain="{{ phrase('cv6_core_phrase_master_readonly_explain') }}"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						readonly="true"
+						explain="{{ phrase('cv6_core_phrase_master_readonly_explain') }}" />
+				</xf:if>
+			</xf:if>
+
+			<xf:foreach loop="$languageData" key="$langId" value="$data">
+				<xf:set var="$explainText">
+					<xf:if is="!$data.isCustomized && $data.inheritedFrom">
+						{{ phrase('cv6_core_inherited_from_x', {'language': $data.inheritedFrom}) }}
+					</xf:if>
+				</xf:set>
+
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[{$langId}]"
+						value="{$data.text}"
+						placeholder="{$data.placeholder}"
+						label="{$data.language.title}"
+						hint="{$data.language.language_code}"
+						explain="{$explainText}"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[{$langId}]"
+						value="{$data.text}"
+						placeholder="{$data.placeholder}"
+						label="{$data.language.title}"
+						hint="{$data.language.language_code}"
+						explain="{$explainText}" />
+				</xf:if>
+			</xf:foreach>
+
+			<xf:hiddenval name="phrase" value="{$phraseTitle}" />
+			<xf:hiddenval name="target_id" value="{$targetId}" />
+			<xf:hiddenval name="multiline" value="{{ $multiline ? 1 : 0 }}" />
+
+		</div>
+
+		<xf:submitrow icon="save" sticky="true" />
+	</div>
+</xf:form>

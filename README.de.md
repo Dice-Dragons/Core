@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *Diese Dokumentation ist auch verfügbar auf: [English](README.md)*
 
-![Version](https://img.shields.io/badge/version-1.4.3-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.5.0-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
@@ -23,6 +23,7 @@
     * `verifyValidIconMandatory`: Pflichtfeld-Prüfung für ein gültiges Haupt-Icon. Validiert Format-Klassen gegen aktivierte Einstellungen der `cv6Core`-Gruppe (`cv6CoreFaStyle`, `cv6CoreFaRotation`, `cv6CoreFaAnimation`).
     * `verifyValidIconOptional`: Leert das Eingabefeld automatisch, wenn nur Modifizierer ohne Icon angegeben werden, und prüft ungültige oder nicht erlaubte Klassen anhand der nativen `XF\Repository\IconRepository` Konstanten.
 * **Setup Traits**: Wiederverwendbare Traits für Installation, Upgrades und Schema-Änderungen.
+* **Multi-Alphabet Index-Provider Repository (`cv6\Core\Repository\Alphabet`)**: Erweiterbares Alphabet-Registry für mehrere Schriftsysteme (Lateinisch, Griechisch, Kyrillisch, Hebräisch, Arabisch) mit RTL- und Varianten-Unterstützung. Siehe [Eigene Alphabet-Provider hinzufügen](_docs/custom_alphabet.de.md).
 * **JS Dependency Handler**: Effiziente Verwaltung von JavaScript-Abhängigkeiten.
 * **Widget Framework**: Basisfunktionalität zum Erstellen von Index-Widgets.
 
@@ -55,7 +56,7 @@ php cmd.php xf-addon:install cv6/Core
 Für deutsche Übersetzungen kann das Sprachpaket importiert werden:
 1. Navigiere im ACP zu **Aussehen -> Sprachen**.
 2. Klicke oben rechts auf **Importieren**.
-3. Wähle die XML-Datei aus `src/addons/cv6/Core/language/Core-1040370-de.xml`.
+3. Wähle die XML-Datei aus `src/addons/cv6/Core/language/Core-1050070-de.xml`.
 4. Wähle bei **Sprache überschreiben** die Sprache **Deutsch [Du]** (oder als Kind-Sprache importieren).
 5. Klicke auf **Importieren**.
 

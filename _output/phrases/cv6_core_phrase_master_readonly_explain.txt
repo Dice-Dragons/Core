@@ -1,0 +1,1 @@
+Master phrases can only be modified when development mode is enabled.

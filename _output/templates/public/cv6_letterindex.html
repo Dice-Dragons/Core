@@ -9,7 +9,7 @@
     <xf:css src="cv6_letterindex.less" />
     <div class="block-cv6-letterindex hScroller" data-xf-init="h-scroller" data-auto-scroll=".cv6-letterindex .active">
         <span class="hScroller-scroll">
-            <ul class="cv6-letterindex {$class}">
+            <ul class="cv6-letterindex {$class}" dir="{{ $index.is_rtl ? 'rtl' : null }}">
                 <xf:if is="$xf.options.cv6RemoveTab">
                     <li title="{{ phrase('cv6_remove_filter') }}" data-xf-init="tooltip"
                         class="cv6-index--link  remove{{ !$index.letter ? ' active' : ''}}">
@@ -59,7 +59,7 @@
     arg-othersign="{{ phrase('cv6_letter_other') }}" arg-number="0"
     arg-numbersign="{{ phrase('cv6_letter_number') }}">
     <xf:css src="cv6_letterindex.less" />
-    <ul class="cv6-letterindex cv6-letterindex--widget {$class}">
+    <ul class="cv6-letterindex cv6-letterindex--widget {$class}" dir="{{ $index.is_rtl ? 'rtl' : null }}">
         <xf:macro id="rawIndex" 
             arg-index="{$index}" 
             arg-route="{$route}" 

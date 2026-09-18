@@ -2,6 +2,19 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.5.0] - 2026-09-18
+
+### Added
+- **Multi-Alphabet Index Provider Repository (`cv6\Core\Repository\Alphabet`)**: Extensible repository providing multi-script alphabet index management. Out of the box supports 5 scripts: Latin (`latin`), Greek (`greek` with Tonos normalization), Cyrillic (`cyrillic` with Slavic/regional variant mappings and composite OR-LIKE filtering), Hebrew (`hebrew` with Nikkud stripping, Sofit final-form mapping, and RTL layout), and Arabic (`arabic` with Tashkil stripping, letter variant normalization, Eastern/Persian digit support, and RTL layout).
+- **Code Event (`cv6_core_index_alphabets`)**: Official code event allowing third-party add-ons to easily register or override alphabet providers without touching core files.
+- **Inline Phrase Quick-Edit**: Added an inline translation modal (`fa-language` button) to AdminCP text inputs (`<xf:textbox>`, `<xf:textarea>`) with `phrase="..."` or `cv6-phrase="..."`. Allows administrators with `language` permission to translate dynamic content phrases across all installed languages directly from the edit view without leaving the form.
+- **RTL Support for Letter Index**: Updated `cv6_letterindex.html` template and `IndexTrait` to automatically detect RTL providers (`$provider->isRtl()`) and apply `dir="rtl"` to the letter bar.
+- **Developer Documentation**: Added comprehensive guides (`_docs/custom_alphabet.md`, `custom_alphabet.de.md`, and BBCode versions) detailing how to build and register custom alphabet providers.
+
+### Changed
+- **IndexTrait Modernization**: Updated `IndexTrait.php` to fetch providers directly from the `Alphabet` repository (`$this->repository(Alphabet::class)->getProvider(...)`), use multibyte-safe string manipulation (`mb_strtoupper`, `mb_substr`), and prepare for PHP 8.4 compatibility.
+- **Strict Master Phrase Single Source of Truth**: Form quick-edits strictly keep `xf_phrase` as single source of truth without falling back to temporary form input values. Master phrases remain intact when saving individual language translations.
+
 ## [1.4.3] - 2026-08-15
 
 ### Added
