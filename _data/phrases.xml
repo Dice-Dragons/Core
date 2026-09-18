@@ -9,6 +9,24 @@
   <phrase title="cv6_all_cv6_addons" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[All [cv6] AddOns {icon::check}]]></phrase>
   <phrase title="cv6_az" version_id="1020070" version_string="1.2.0"><![CDATA[a to z and numbers]]></phrase>
   <phrase title="cv6_copyright_base" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[&copy; 2025 by <a class="u-concealed" dir="ltr" target="_blank" rel="sponsored noopener" href="https://forum.dice-dragons.de/">Dice & Dragons</a>]]></phrase>
+  <phrase title="cv6_core_alphabet_arabic" version_id="1040370" version_string="1.4.3"><![CDATA[Arabic (ا–ي)
+]]></phrase>
+  <phrase title="cv6_core_alphabet_cyrillic" version_id="1040370" version_string="1.4.3"><![CDATA[Cyrillic (А–Я)
+]]></phrase>
+  <phrase title="cv6_core_alphabet_greek" version_id="1040370" version_string="1.4.3"><![CDATA[Greek (Α–Ω)
+]]></phrase>
+  <phrase title="cv6_core_alphabet_hebrew" version_id="1040370" version_string="1.4.3"><![CDATA[Hebrew (א–ת)
+]]></phrase>
+  <phrase title="cv6_core_alphabet_latin" version_id="1040370" version_string="1.4.3"><![CDATA[Latin (A–Z)
+]]></phrase>
+  <phrase title="cv6_core_inherited_from_x" version_id="1040370" version_string="1.4.3"><![CDATA[Inherited from: {language}
+]]></phrase>
+  <phrase title="cv6_core_phrase_master_readonly_explain" version_id="1040370" version_string="1.4.3"><![CDATA[Master phrases can only be modified when development mode is enabled.
+]]></phrase>
+  <phrase title="cv6_core_phrase_translations" version_id="1040370" version_string="1.4.3"><![CDATA[Phrase translations: {title}
+]]></phrase>
+  <phrase title="cv6_core_translate_phrase" version_id="1040370" version_string="1.4.3"><![CDATA[Translate phrase
+]]></phrase>
   <phrase title="cv6_delete_selected" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Delete selected]]></phrase>
   <phrase title="cv6_description" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Description]]></phrase>
   <phrase title="cv6_fa_animation" version_id="1000070" version_string="1.0.0"><![CDATA[Animation]]></phrase>

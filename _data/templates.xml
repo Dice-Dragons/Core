@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="admin" title="cv6_admin_macros" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[<xf:macro name="is_active" arg-active="active" arg-selected="!" arg-label="" arg-hint="">
+  <template type="admin" title="cv6_admin_macros" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:macro name="is_active" arg-active="active" arg-selected="!" arg-label="" arg-hint="">
     <xf:checkboxrow>
         <xf:option name="{$active}" selected="{$selected}" label="{{ $label ?: phrase('cv6_is_active') }}"
             hint="{{ $hint ?: phrase('cv6_active_hint') }}" />
     </xf:checkboxrow>
-</xf:macro>]]></template>
+</xf:macro>
+
+<xf:macro name="toggle_js">
+    <xf:js src="cv6/core/toggle.js" min="1" addon="cv6/Core" />
+</xf:macro>]]></template>
   <template type="admin" title="cv6_assetupload" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="cv6_assetuploadrow" 
     arg-name="!" 
     arg-asset="!"
@@ -44,7 +48,7 @@
     </xf:if>
 
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_core.less" version_id="1040170" version_string="1.4.1"><![CDATA[.cv6-iconpreview {
+  <template type="admin" title="cv6_core.less" version_id="1040370" version_string="1.4.3"><![CDATA[.cv6-iconpreview {
 	width: 30px !important;
 	height: 30px !important;
 	font-size: 20px !important;
@@ -159,8 +163,110 @@ ul.listColumns.cv6-listColumns {
 	display: inline-flex !important;
 	align-items: center !important;
 	justify-content: center !important;
+}
+
+.cv6-multi-toggle,
+.cv6-bundle-toggle {
+	display: inline-flex;
+	align-items: center;
+	cursor: pointer;
+	padding: 2px 4px;
+	color: @xf-textColorMuted;
+	user-select: none;
+	text-decoration: none !important;
+
+	&:hover {
+		color: @xf-textColor;
+	}
+}
+
+.dataList-row--childRow,
+.dataList-row--bundleChild {
+	display: none;
+
+	&.is-active {
+		display: table-row;
+	}
 }]]></template>
-  <template type="admin" title="cv6_fa_icon" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="cv6_inputIcon"
+  <template type="admin" title="cv6_core_phrase_quick_edit" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:title>{{ phrase('cv6_core_phrase_translations', {'title': $displayTitle}) }}</xf:title>
+
+<xf:description class="pairs pairs--inline">
+	<dl class="pairs pairs--inline">
+		<dt>{{ phrase('phrase_title') }}</dt>
+		<dd><code>{$phraseTitle}</code></dd>
+	</dl>
+</xf:description>
+
+<xf:js src="cv6/core/phrase.js" min="1" addon="cv6/Core" />
+
+<xf:form action="{{ link('cv6-phrases/quick-save') }}" ajax="true" class="block js-cv6PhraseQuickSaveForm" data-xf-init="cv6-phrase-quick-save">
+	<div class="block-container">
+		<div class="block-body">
+
+			<xf:if is="$canEditMaster">
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0" />
+				</xf:if>
+			<xf:elseif is="$masterText !== ''" />
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						readonly="true"
+						explain="{{ phrase('cv6_core_phrase_master_readonly_explain') }}"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[0]" value="{$masterText}"
+						label="{{ phrase('master_language') }}"
+						hint="language_id: 0"
+						readonly="true"
+						explain="{{ phrase('cv6_core_phrase_master_readonly_explain') }}" />
+				</xf:if>
+			</xf:if>
+
+			<xf:foreach loop="$languageData" key="$langId" value="$data">
+				<xf:set var="$explainText">
+					<xf:if is="!$data.isCustomized && $data.inheritedFrom">
+						{{ phrase('cv6_core_inherited_from_x', {'language': $data.inheritedFrom}) }}
+					</xf:if>
+				</xf:set>
+
+				<xf:if is="$multiline">
+					<xf:textarearow name="phrases[{$langId}]"
+						value="{$data.text}"
+						placeholder="{$data.placeholder}"
+						label="{$data.language.title}"
+						hint="{$data.language.language_code}"
+						explain="{$explainText}"
+						autosize="true" />
+				<xf:else />
+					<xf:textboxrow name="phrases[{$langId}]"
+						value="{$data.text}"
+						placeholder="{$data.placeholder}"
+						label="{$data.language.title}"
+						hint="{$data.language.language_code}"
+						explain="{$explainText}" />
+				</xf:if>
+			</xf:foreach>
+
+			<xf:hiddenval name="phrase" value="{$phraseTitle}" />
+			<xf:hiddenval name="target_id" value="{$targetId}" />
+			<xf:hiddenval name="multiline" value="{{ $multiline ? 1 : 0 }}" />
+
+		</div>
+
+		<xf:submitrow icon="save" sticky="true" />
+	</div>
+</xf:form>
+]]></template>
+  <template type="admin" title="cv6_fa_icon" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:macro id="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -218,6 +324,8 @@ ul.listColumns.cv6-listColumns {
 			data-type="{$type}" 
 			data-style-field="{$stylefield}" 
 			data-show-error="{$showError}"
+			data-phrase-unknown-icon="{{ phrase('cv6_unknown_fa_icon') }}"
+			data-phrase-unknown-class="{{ phrase('cv6_invalid_class:') }}"
 			readonly="{$readonly}" 
 			maxlength="{$maxlength}" 
 			dir="{$dir}"
@@ -573,7 +681,7 @@ ul.listColumns.cv6-listColumns {
         </span>
     </div>
 </xf:macro>]]></template>
-  <template type="public" title="cv6_letterindex" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="letters" 
+  <template type="public" title="cv6_letterindex" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:macro id="letters" 
     arg-index="!" 
     arg-class="{{ false }}" 
     arg-route="!" 
@@ -584,7 +692,7 @@ ul.listColumns.cv6-listColumns {
     <xf:css src="cv6_letterindex.less" />
     <div class="block-cv6-letterindex hScroller" data-xf-init="h-scroller" data-auto-scroll=".cv6-letterindex .active">
         <span class="hScroller-scroll">
-            <ul class="cv6-letterindex {$class}">
+            <ul class="cv6-letterindex {$class}" dir="{{ $index.is_rtl ? 'rtl' : null }}">
                 <xf:if is="$xf.options.cv6RemoveTab">
                     <li title="{{ phrase('cv6_remove_filter') }}" data-xf-init="tooltip"
                         class="cv6-index--link  remove{{ !$index.letter ? ' active' : ''}}">
@@ -634,7 +742,7 @@ ul.listColumns.cv6-listColumns {
     arg-othersign="{{ phrase('cv6_letter_other') }}" arg-number="0"
     arg-numbersign="{{ phrase('cv6_letter_number') }}">
     <xf:css src="cv6_letterindex.less" />
-    <ul class="cv6-letterindex cv6-letterindex--widget {$class}">
+    <ul class="cv6-letterindex cv6-letterindex--widget {$class}" dir="{{ $index.is_rtl ? 'rtl' : null }}">
         <xf:macro id="rawIndex" 
             arg-index="{$index}" 
             arg-route="{$route}" 

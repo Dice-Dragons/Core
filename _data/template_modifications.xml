@@ -11,13 +11,14 @@
 				explain="{{ phrase('admin_navigation_icon_explain') }}"
 				dir="ltr" />]]></find>
     <replace><![CDATA[<xf:if is="$xf.options.cv6ReplaceXF">
-	<xf:macro id="cv6_fa_icon::cv6_inputIcon"
+	<xf:macro template="cv6_fa_icon" name="cv6_inputIcon"
 				arg-name="icon" 
 				arg-value="{$navigation.icon}"
 				arg-label="{{ phrase('font_awesome_icon') }}"
-		  		arg-target="admin-nav"
+		  		arg-target="admin-nav-{$navigation.navigation_id|default('new')}"
 			  	arg-placeholder="fa-..."
-			  	arg-stylechooser="{{ ['style','rotation'] }}"
+			  	arg-stylechooser="{{ ['style','animation','rotation'] }}"
+			  	arg-autocomplete="{{ true }}"
 			  	arg-explain="{{ phrase('admin_navigation_icon_explain') }}"
 			/>	
 <xf:else />
