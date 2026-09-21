@@ -2,16 +2,19 @@
 {
 	"use strict";
 
-	if (typeof XF.ToggleClick === 'undefined')
-	{
-		console.error('XF.ToggleClick is not defined. Cannot initialize XF.cv6MultiToggle.');
-		return;
-	}
+	const hasToggleClick = typeof XF.ToggleClick !== 'undefined';
+	const baseClass = hasToggleClick ? XF.ToggleClick : XF.Event.AbstractHandler;
 
-	XF.cv6MultiToggle = XF.extend(XF.ToggleClick, {
+	XF.cv6MultiToggle = XF.extend(baseClass, {
 		eventNameSpace: 'cv6MultiToggle',
 
-		options: Object.assign({}, XF.ToggleClick.prototype.options, {
+		options: Object.assign({}, (hasToggleClick && XF.ToggleClick.prototype && XF.ToggleClick.prototype.options) ? XF.ToggleClick.prototype.options : {}, {
+			target: null,
+			container: null,
+			hide: null,
+			activeClass: 'is-active',
+			activateParent: null,
+			scrollTo: null,
 			storageType: 'local',
 			storageContainer: 'toggle',
 			storageKey: null,
@@ -19,6 +22,11 @@
 			storage: false,
 		}),
 
+		toggleTarget: null,
+		toggleParent: null,
+		toggleUrl: null,
+		ajaxLoaded: false,
+		loading: false,
 		storage: null,
 
 		init ()
@@ -26,7 +34,7 @@
 			// Resolve multi-targets (supports relative, container, and global selectors)
 			this.toggleTarget = this.getToggleTargets();
 
-			if (this.options.activateParent)
+			if (this.options.activateParent && this.target.parentNode)
 			{
 				this.toggleParent = this.target.parentNode;
 			}
@@ -37,6 +45,29 @@
 
 			// Restore state from persistent storage if configured
 			this.initStorage();
+		},
+
+		click (e)
+		{
+			e.preventDefault();
+			this.toggle();
+		},
+
+		toggle ()
+		{
+			if (this.isVisible())
+			{
+				this.hide();
+			}
+			else
+			{
+				this.show();
+			}
+
+			if (this.target && typeof this.target.blur === 'function')
+			{
+				this.target.blur();
+			}
 		},
 
 		getToggleTargets ()
@@ -66,7 +97,7 @@
 				targets = document.querySelectorAll(targetSelector);
 			}
 
-			return XF.toElementArray(targets);
+			return typeof XF.toElementArray === 'function' ? XF.toElementArray(targets) : Array.from(targets || []);
 		},
 
 		getToggleUrl ()
@@ -80,6 +111,21 @@
 			if (toggleTarget && url)
 			{
 				return url === 'trigger-href' ? this.target.getAttribute('href') : url;
+			}
+			return null;
+		},
+
+		getContainer ()
+		{
+			if (this.options.container)
+			{
+				const container = this.target.closest(this.options.container);
+				if (!container)
+				{
+					console.error('Container parent not found: ' + this.options.container);
+					return null;
+				}
+				return container;
 			}
 			return null;
 		},
@@ -202,6 +248,112 @@
 			}
 
 			XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
+		},
+
+		activeTransitionComplete (e)
+		{
+			if (e && e.currentTarget)
+			{
+				XF.trigger(e.currentTarget, 'toggle:shown');
+				if (typeof XF.layoutChange === 'function')
+				{
+					XF.layoutChange();
+				}
+			}
+		},
+
+		inactiveTransitionComplete (e)
+		{
+			if (e && e.currentTarget)
+			{
+				XF.trigger(e.currentTarget, 'toggle:hidden');
+				if (typeof XF.layoutChange === 'function')
+				{
+					XF.layoutChange();
+				}
+			}
+		},
+
+		hideSpecified ()
+		{
+			if (this.options.hide)
+			{
+				const hide = document.querySelector(this.options.hide);
+				if (hide && typeof XF.display === 'function')
+				{
+					XF.display(hide, 'none');
+				}
+			}
+		},
+
+		scrollTo ()
+		{
+			if (this.options.scrollTo && this.toggleTarget && this.toggleTarget.length && typeof XF.smoothScroll === 'function')
+			{
+				const toggleTarget = this.toggleTarget[0];
+				const topOffset = toggleTarget.getBoundingClientRect().top + window.scrollY,
+					height = toggleTarget.offsetHeight,
+					windowHeight = document.documentElement.clientHeight;
+
+				let offset;
+				if (height < windowHeight)
+				{
+					offset = topOffset - ((windowHeight / 2) - (height / 2));
+				}
+				else
+				{
+					offset = topOffset;
+				}
+
+				XF.smoothScroll(offset);
+			}
+		},
+
+		load ()
+		{
+			const href = this.toggleUrl;
+			if (!href || this.loading)
+			{
+				return;
+			}
+
+			this.loading = true;
+
+			XF.ajax('get', href, data =>
+			{
+				if (data.html && typeof XF.setupHtmlInsert === 'function')
+				{
+					XF.setupHtmlInsert(data.html, (html, container, onComplete) =>
+					{
+						const loadSelector = this.toggleTarget[0].dataset.loadSelector;
+						if (loadSelector)
+						{
+							const newHtml = html.querySelector(loadSelector);
+							if (newHtml)
+							{
+								html = newHtml;
+							}
+						}
+
+						this.ajaxLoaded = true;
+						this.toggleTarget.forEach(target =>
+						{
+							target.append(html.cloneNode(true));
+						});
+						XF.activate(html);
+
+						onComplete(true);
+
+						this.show();
+
+						return false;
+					});
+				}
+			}).finally(() =>
+			{
+				this.ajaxLoaded = true;
+				this.loading = false;
+			});
 		},
 
 		updateAria (isActive)
@@ -354,14 +506,18 @@
 	});
 
 	// Register event handlers for click
-	XF.Event.register('click', 'cv6-multi-toggle', 'XF.cv6MultiToggle');
-	XF.Event.register('click', 'cv6-bundle-toggle', 'XF.cv6MultiToggle');
+	XF.Event.register('click', 'cv6-multi-toggle', XF.cv6MultiToggle);
+	XF.Event.register('click', 'cv6-bundle-toggle', XF.cv6MultiToggle);
 
 	// Backwards compatibility alias on XF object
 	XF.cv6BundleToggle = XF.cv6MultiToggle;
 
 	// Element handler for explicit data-xf-init="cv6-multi-toggle"
 	XF.cv6MultiToggleElement = XF.Element.newHandler({
+		_onEvent ()
+		{
+			return true;
+		},
 		init ()
 		{
 			XF.Event.initElement(this.target, 'click');
@@ -385,9 +541,21 @@
 		});
 	};
 
-	XF.on(document, 'xf:page-load-complete', () =>
+	if (document.readyState === 'complete')
 	{
 		initStoredToggles(document);
+	}
+	else
+	{
+		XF.on(document, 'xf:page-load-complete', () =>
+		{
+			initStoredToggles(document);
+		});
+	}
+
+	XF.on(document, 'xf:reinit', e =>
+	{
+		initStoredToggles(e.element || document);
 	});
 
 })(window, document);
