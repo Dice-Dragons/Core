@@ -44,23 +44,45 @@
 
 		toggle ()
 		{
-			const activeClass = this.options.activeClass || 'is-active';
-			const willBeActive = !this.target.classList.contains(activeClass);
-
-			this.applyState(willBeActive);
-			this.saveStorage(willBeActive);
-
-			if (this.target && typeof this.target.blur === 'function')
+			if (this.isVisible())
 			{
-				this.target.blur();
+				this.hide(false);
 			}
-
-			XF.trigger(this.target, 'cv6-toggle:complete', { active: willBeActive });
+			else
+			{
+				this.show(false);
+			}
 		},
 
 		hide (instant = false)
 		{
-			this.applyState(false);
+			if (!this.isVisible())
+			{
+				return;
+			}
+
+			const activeClass = this.options.activeClass || 'is-active';
+
+			if (this.toggleParent)
+			{
+				XF.Transition.removeClassTransitioned(this.toggleParent, activeClass, null, instant);
+			}
+
+			const targets = this.getToggleTargets();
+			targets.forEach(target =>
+			{
+				XF.Transition.removeClassTransitioned(target, activeClass, () =>
+				{
+					if (typeof XF.layoutChange === 'function')
+					{
+						XF.layoutChange();
+					}
+				}, instant);
+			});
+
+			XF.Transition.removeClassTransitioned(this.target, activeClass, null, instant);
+
+			this.updateAria(false);
 			this.saveStorage(false);
 
 			if (this.target && typeof this.target.blur === 'function')
@@ -68,12 +90,43 @@
 				this.target.blur();
 			}
 
+			if (typeof XF.layoutChange === 'function')
+			{
+				XF.layoutChange();
+			}
+
 			XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
 		},
 
 		show (instant = false)
 		{
-			this.applyState(true);
+			if (this.isVisible())
+			{
+				return;
+			}
+
+			const activeClass = this.options.activeClass || 'is-active';
+
+			if (this.toggleParent)
+			{
+				XF.Transition.addClassTransitioned(this.toggleParent, activeClass, null, instant);
+			}
+
+			const targets = this.getToggleTargets();
+			targets.forEach(target =>
+			{
+				XF.Transition.addClassTransitioned(target, activeClass, () =>
+				{
+					if (typeof XF.layoutChange === 'function')
+					{
+						XF.layoutChange();
+					}
+				}, instant);
+			});
+
+			XF.Transition.addClassTransitioned(this.target, activeClass, null, instant);
+
+			this.updateAria(true);
 			this.saveStorage(true);
 
 			if (this.target && typeof this.target.blur === 'function')
@@ -81,7 +134,24 @@
 				this.target.blur();
 			}
 
+			if (typeof XF.layoutChange === 'function')
+			{
+				XF.layoutChange();
+			}
+
 			XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
+		},
+
+		applyState (isActive, instant = true)
+		{
+			if (isActive)
+			{
+				this.show(instant);
+			}
+			else
+			{
+				this.hide(instant);
+			}
 		},
 
 		isVisible ()
@@ -139,31 +209,6 @@
 			return null;
 		},
 
-		applyState (isActive)
-		{
-			const activeClass = this.options.activeClass || 'is-active';
-
-			this.target.classList.toggle(activeClass, isActive);
-
-			if (this.toggleParent)
-			{
-				this.toggleParent.classList.toggle(activeClass, isActive);
-			}
-
-			const targets = this.getToggleTargets();
-			targets.forEach(target =>
-			{
-				target.classList.toggle(activeClass, isActive);
-			});
-
-			this.updateAria(isActive);
-
-			if (typeof XF.layoutChange === 'function')
-			{
-				XF.layoutChange();
-			}
-		},
-
 		updateAria (isActive)
 		{
 			if (typeof isActive === 'undefined')
@@ -206,7 +251,7 @@
 			const storedValue = this.getStoredState(key);
 			if (storedValue !== null)
 			{
-				this.applyState(storedValue);
+				this.applyState(storedValue, true);
 			}
 		},
 
