@@ -23,6 +23,9 @@ class Templater extends XFCP_Templater
             'cv6/Core' => [
                 'cv6/core/asset.js' => [
                     ['dev' => 'xf/form.js', 'prod' => 'xf/form.min.js']
+                ],
+                'cv6/core/toggle.js' => [
+                    ['dev' => 'xf/structure.js', 'prod' => 'xf/structure.min.js']
                 ]
             ]
         ];
