@@ -17,7 +17,7 @@
 			storageContainer: 'toggle',
 			storageKey: null,
 			storageExpiry: 86400 * 30, // 30 days
-			storage: false,
+			storage: true,
 		}),
 
 		toggleTarget: null,
@@ -385,13 +385,46 @@
 
 		applyState (isActive, instant = true)
 		{
+			const activeClass = this.options.activeClass || 'is-active';
+			const targets = this.getToggleTargets();
+
 			if (isActive)
 			{
-				this.show(instant);
+				if (!this.isVisible())
+				{
+					this.show(instant);
+				}
+				else
+				{
+					targets.forEach(target =>
+					{
+						target.classList.add(activeClass);
+						if (target.style && typeof target.style.removeProperty === 'function')
+						{
+							target.style.removeProperty('display');
+						}
+					});
+					this.updateAria(true);
+				}
 			}
 			else
 			{
-				this.hide(instant);
+				if (this.isVisible())
+				{
+					this.hide(instant);
+				}
+				else
+				{
+					targets.forEach(target =>
+					{
+						target.classList.remove(activeClass);
+						if (target.style && typeof target.style.removeProperty === 'function')
+						{
+							target.style.removeProperty('display');
+						}
+					});
+					this.updateAria(false);
+				}
 			}
 		},
 
@@ -470,9 +503,14 @@
 				return this.options.storageKey;
 			}
 
-			if (this.options.storage)
+			if (this.target.dataset && this.target.dataset.storageKey)
 			{
-				const target = this.options.target || (this.target.id ? '#' + this.target.id : null);
+				return this.target.dataset.storageKey;
+			}
+
+			if (this.options.storage !== false && (!this.target.dataset || this.target.dataset.storage !== 'false'))
+			{
+				const target = this.options.target || (this.target.dataset ? this.target.dataset.target : null) || (this.target.id ? '#' + this.target.id : null);
 				if (target)
 				{
 					return 'cv6-toggle:' + target.replace(/[^a-zA-Z0-9_-]/g, '_');
@@ -547,7 +585,7 @@
 					const item = data[key];
 					if (Array.isArray(item))
 					{
-						return Boolean(item[1]);
+						return Boolean(item.length >= 3 ? item[2] : item[1]);
 					}
 					return Boolean(item);
 				}
@@ -586,6 +624,10 @@
 				if (storage)
 				{
 					storage.set(container, key, isActive, expiry);
+					if (typeof storage.syncToStorage === 'function')
+					{
+						storage.syncToStorage(container);
+					}
 					return;
 				}
 			}
@@ -594,7 +636,7 @@
 			{
 				const data = XF.LocalStorage.getJson(container) || {};
 				const timestamp = Math.floor(Date.now() / 1000);
-				data[key] = [timestamp, isActive, expiry];
+				data[key] = [timestamp, expiry, isActive];
 				XF.LocalStorage.setJson(container, data);
 				return;
 			}
@@ -620,10 +662,8 @@
 	// Auto-initialize persistent toggles on page load (so stored state is restored without requiring a click)
 	const initStoredToggles = (root = document) =>
 	{
-		const selector = '[data-xf-click~="cv6-multi-toggle"][data-storage-key], ' +
-			'[data-xf-click~="cv6-bundle-toggle"][data-storage-key], ' +
-			'[data-xf-click~="cv6-multi-toggle"][data-storage], ' +
-			'[data-xf-click~="cv6-bundle-toggle"][data-storage]';
+		const selector = '[data-xf-click~="cv6-multi-toggle"]:not([data-storage="false"]), ' +
+			'[data-xf-click~="cv6-bundle-toggle"]:not([data-storage="false"])';
 
 		const elements = root.querySelectorAll(selector);
 		elements.forEach(el =>
