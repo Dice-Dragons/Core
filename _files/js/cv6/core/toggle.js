@@ -63,24 +63,55 @@
 
 			const activeClass = this.options.activeClass || 'is-active';
 
+			this.target.classList.remove(activeClass);
+
 			if (this.toggleParent)
 			{
-				XF.Transition.removeClassTransitioned(this.toggleParent, activeClass, null, instant);
+				this.toggleParent.classList.remove(activeClass);
 			}
 
 			const targets = this.getToggleTargets();
-			targets.forEach(target =>
-			{
-				XF.Transition.removeClassTransitioned(target, activeClass, () =>
-				{
-					if (typeof XF.layoutChange === 'function')
-					{
-						XF.layoutChange();
-					}
-				}, instant);
-			});
 
-			XF.Transition.removeClassTransitioned(this.target, activeClass, null, instant);
+			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.slideUp !== 'function')
+			{
+				targets.forEach(target =>
+				{
+					target.classList.remove(activeClass);
+					if (target.style && typeof target.style.removeProperty === 'function')
+					{
+						target.style.removeProperty('display');
+					}
+				});
+
+				if (typeof XF.layoutChange === 'function')
+				{
+					XF.layoutChange();
+				}
+			}
+			else
+			{
+				let remaining = targets.length;
+				targets.forEach(target =>
+				{
+					XF.Animate.slideUp(target, {
+						speed: XF.config.speed.fast,
+						complete: () =>
+						{
+							target.classList.remove(activeClass);
+							if (target.style && typeof target.style.removeProperty === 'function')
+							{
+								target.style.removeProperty('display');
+							}
+
+							remaining--;
+							if (remaining <= 0 && typeof XF.layoutChange === 'function')
+							{
+								XF.layoutChange();
+							}
+						}
+					});
+				});
+			}
 
 			this.updateAria(false);
 			this.saveStorage(false);
@@ -88,11 +119,6 @@
 			if (this.target && typeof this.target.blur === 'function')
 			{
 				this.target.blur();
-			}
-
-			if (typeof XF.layoutChange === 'function')
-			{
-				XF.layoutChange();
 			}
 
 			XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
@@ -107,24 +133,57 @@
 
 			const activeClass = this.options.activeClass || 'is-active';
 
+			this.target.classList.add(activeClass);
+
 			if (this.toggleParent)
 			{
-				XF.Transition.addClassTransitioned(this.toggleParent, activeClass, null, instant);
+				this.toggleParent.classList.add(activeClass);
 			}
 
 			const targets = this.getToggleTargets();
-			targets.forEach(target =>
-			{
-				XF.Transition.addClassTransitioned(target, activeClass, () =>
-				{
-					if (typeof XF.layoutChange === 'function')
-					{
-						XF.layoutChange();
-					}
-				}, instant);
-			});
 
-			XF.Transition.addClassTransitioned(this.target, activeClass, null, instant);
+			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.slideDown !== 'function')
+			{
+				targets.forEach(target =>
+				{
+					target.classList.add(activeClass);
+					if (target.style && typeof target.style.removeProperty === 'function')
+					{
+						target.style.removeProperty('display');
+					}
+				});
+
+				if (typeof XF.layoutChange === 'function')
+				{
+					XF.layoutChange();
+				}
+			}
+			else
+			{
+				let remaining = targets.length;
+				targets.forEach(target =>
+				{
+					target.style.display = 'none';
+					target.classList.add(activeClass);
+
+					XF.Animate.slideDown(target, {
+						speed: XF.config.speed.fast,
+						complete: () =>
+						{
+							if (target.style && typeof target.style.removeProperty === 'function')
+							{
+								target.style.removeProperty('display');
+							}
+
+							remaining--;
+							if (remaining <= 0 && typeof XF.layoutChange === 'function')
+							{
+								XF.layoutChange();
+							}
+						}
+					});
+				});
+			}
 
 			this.updateAria(true);
 			this.saveStorage(true);
@@ -132,11 +191,6 @@
 			if (this.target && typeof this.target.blur === 'function')
 			{
 				this.target.blur();
-			}
-
-			if (typeof XF.layoutChange === 'function')
-			{
-				XF.layoutChange();
 			}
 
 			XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
