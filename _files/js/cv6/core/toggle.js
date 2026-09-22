@@ -56,12 +56,13 @@
 
 		hide (instant = false)
 		{
-			if (!this.isVisible())
+			if (!this.isVisible() || (!instant && this.isTransitioning()))
 			{
 				return;
 			}
 
 			const activeClass = this.options.activeClass || 'is-active';
+			const speed = (XF.config && XF.config.speed) ? XF.config.speed.fast : 200;
 
 			this.target.classList.remove(activeClass);
 
@@ -70,9 +71,17 @@
 				this.toggleParent.classList.remove(activeClass);
 			}
 
+			this.updateAria(false);
+			this.saveStorage(false);
+
+			if (this.target && typeof this.target.blur === 'function')
+			{
+				this.target.blur();
+			}
+
 			const targets = this.getToggleTargets();
 
-			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.slideUp !== 'function')
+			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.animate !== 'function')
 			{
 				targets.forEach(target =>
 				{
@@ -87,51 +96,45 @@
 				{
 					XF.layoutChange();
 				}
+
+				XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
 			}
 			else
 			{
 				let remaining = targets.length;
+				if (!remaining)
+				{
+					XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
+					return;
+				}
+
 				targets.forEach(target =>
 				{
-					XF.Animate.slideUp(target, {
-						speed: XF.config.speed.fast,
-						complete: () =>
+					this.slideUpTarget(target, speed, () =>
+					{
+						remaining--;
+						if (remaining <= 0)
 						{
-							target.classList.remove(activeClass);
-							if (target.style && typeof target.style.removeProperty === 'function')
-							{
-								target.style.removeProperty('display');
-							}
-
-							remaining--;
-							if (remaining <= 0 && typeof XF.layoutChange === 'function')
+							if (typeof XF.layoutChange === 'function')
 							{
 								XF.layoutChange();
 							}
+							XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
 						}
 					});
 				});
 			}
-
-			this.updateAria(false);
-			this.saveStorage(false);
-
-			if (this.target && typeof this.target.blur === 'function')
-			{
-				this.target.blur();
-			}
-
-			XF.trigger(this.target, 'cv6-toggle:complete', { active: false });
 		},
 
 		show (instant = false)
 		{
-			if (this.isVisible())
+			if (this.isVisible() || (!instant && this.isTransitioning()))
 			{
 				return;
 			}
 
 			const activeClass = this.options.activeClass || 'is-active';
+			const speed = (XF.config && XF.config.speed) ? XF.config.speed.fast : 200;
 
 			this.target.classList.add(activeClass);
 
@@ -140,9 +143,17 @@
 				this.toggleParent.classList.add(activeClass);
 			}
 
+			this.updateAria(true);
+			this.saveStorage(true);
+
+			if (this.target && typeof this.target.blur === 'function')
+			{
+				this.target.blur();
+			}
+
 			const targets = this.getToggleTargets();
 
-			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.slideDown !== 'function')
+			if (instant || typeof XF.Animate === 'undefined' || typeof XF.Animate.animate !== 'function')
 			{
 				targets.forEach(target =>
 				{
@@ -157,43 +168,219 @@
 				{
 					XF.layoutChange();
 				}
+
+				XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
 			}
 			else
 			{
 				let remaining = targets.length;
+				if (!remaining)
+				{
+					XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
+					return;
+				}
+
 				targets.forEach(target =>
 				{
-					target.style.display = 'none';
-					target.classList.add(activeClass);
-
-					XF.Animate.slideDown(target, {
-						speed: XF.config.speed.fast,
-						complete: () =>
+					this.slideDownTarget(target, speed, () =>
+					{
+						remaining--;
+						if (remaining <= 0)
 						{
-							if (target.style && typeof target.style.removeProperty === 'function')
-							{
-								target.style.removeProperty('display');
-							}
-
-							remaining--;
-							if (remaining <= 0 && typeof XF.layoutChange === 'function')
+							if (typeof XF.layoutChange === 'function')
 							{
 								XF.layoutChange();
 							}
+							XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
 						}
 					});
 				});
 			}
+		},
 
-			this.updateAria(true);
-			this.saveStorage(true);
+		slideUpTarget (target, speed, onComplete)
+		{
+			const activeClass = this.options.activeClass || 'is-active';
+			target.classList.add('is-transitioning');
 
-			if (this.target && typeof this.target.blur === 'function')
+			if (target.tagName && target.tagName.toLowerCase() === 'tr')
 			{
-				this.target.blur();
-			}
+				const cells = Array.from(target.querySelectorAll('td, th'));
+				if (!cells.length)
+				{
+					target.classList.remove(activeClass);
+					target.classList.remove('is-transitioning');
+					target.style.display = 'none';
+					onComplete();
+					return;
+				}
 
-			XF.trigger(this.target, 'cv6-toggle:complete', { active: true });
+				const originalStyles = cells.map(td => td.style.cssText);
+				const paddings = cells.map(td => ({
+					top: parseFloat(window.getComputedStyle(td).paddingTop) || 0,
+					bottom: parseFloat(window.getComputedStyle(td).paddingBottom) || 0
+				}));
+
+				const wrappers = cells.map(td =>
+				{
+					const w = document.createElement('div');
+					w.className = 'cv6-tr-slide-wrapper';
+					w.style.overflow = 'hidden';
+					while (td.firstChild)
+					{
+						w.appendChild(td.firstChild);
+					}
+					td.appendChild(w);
+					return w;
+				});
+
+				const heights = wrappers.map(w => w.offsetHeight);
+
+				XF.Animate.animate(target, {
+					speed: speed,
+					step: (el, { delta }) =>
+					{
+						const factor = 1 - delta;
+						wrappers.forEach((w, i) =>
+						{
+							w.style.height = (heights[i] * factor) + 'px';
+							cells[i].style.paddingTop = (paddings[i].top * factor) + 'px';
+							cells[i].style.paddingBottom = (paddings[i].bottom * factor) + 'px';
+						});
+					},
+					finish: () =>
+					{
+						target.classList.remove(activeClass);
+						target.style.display = 'none';
+						wrappers.forEach((w, i) =>
+						{
+							const td = cells[i];
+							while (w.firstChild)
+							{
+								td.appendChild(w.firstChild);
+							}
+							w.remove();
+							td.style.cssText = originalStyles[i];
+						});
+						target.classList.remove('is-transitioning');
+					},
+					complete: onComplete
+				});
+			}
+			else
+			{
+				XF.Animate.slideUp(target, {
+					speed: speed,
+					complete: () =>
+					{
+						target.classList.remove(activeClass);
+						target.classList.remove('is-transitioning');
+						if (target.style && typeof target.style.removeProperty === 'function')
+						{
+							target.style.removeProperty('display');
+						}
+						onComplete();
+					}
+				});
+			}
+		},
+
+		slideDownTarget (target, speed, onComplete)
+		{
+			const activeClass = this.options.activeClass || 'is-active';
+			target.classList.add('is-transitioning');
+
+			if (target.tagName && target.tagName.toLowerCase() === 'tr')
+			{
+				const cells = Array.from(target.querySelectorAll('td, th'));
+				if (!cells.length)
+				{
+					target.classList.add(activeClass);
+					target.classList.remove('is-transitioning');
+					target.style.removeProperty('display');
+					onComplete();
+					return;
+				}
+
+				const originalStyles = cells.map(td => td.style.cssText);
+
+				target.style.display = 'table-row';
+				target.classList.add(activeClass);
+
+				const paddings = cells.map(td => ({
+					top: parseFloat(window.getComputedStyle(td).paddingTop) || 0,
+					bottom: parseFloat(window.getComputedStyle(td).paddingBottom) || 0
+				}));
+
+				const wrappers = cells.map(td =>
+				{
+					const w = document.createElement('div');
+					w.className = 'cv6-tr-slide-wrapper';
+					w.style.overflow = 'hidden';
+					while (td.firstChild)
+					{
+						w.appendChild(td.firstChild);
+					}
+					td.appendChild(w);
+					return w;
+				});
+
+				const heights = wrappers.map(w => w.offsetHeight);
+
+				wrappers.forEach((w, i) =>
+				{
+					w.style.height = '0px';
+					cells[i].style.paddingTop = '0px';
+					cells[i].style.paddingBottom = '0px';
+				});
+
+				XF.Animate.animate(target, {
+					speed: speed,
+					step: (el, { delta }) =>
+					{
+						wrappers.forEach((w, i) =>
+						{
+							w.style.height = (heights[i] * delta) + 'px';
+							cells[i].style.paddingTop = (paddings[i].top * delta) + 'px';
+							cells[i].style.paddingBottom = (paddings[i].bottom * delta) + 'px';
+						});
+					},
+					finish: () =>
+					{
+						wrappers.forEach((w, i) =>
+						{
+							const td = cells[i];
+							while (w.firstChild)
+							{
+								td.appendChild(w.firstChild);
+							}
+							w.remove();
+							td.style.cssText = originalStyles[i];
+						});
+						target.style.removeProperty('display');
+						target.classList.remove('is-transitioning');
+					},
+					complete: onComplete
+				});
+			}
+			else
+			{
+				target.style.display = 'none';
+				target.classList.add(activeClass);
+
+				XF.Animate.slideDown(target, {
+					speed: speed,
+					complete: () =>
+					{
+						target.classList.remove('is-transitioning');
+						if (target.style && typeof target.style.removeProperty === 'function')
+						{
+							target.style.removeProperty('display');
+						}
+						onComplete();
+					}
+				});
+			}
 		},
 
 		applyState (isActive, instant = true)
@@ -216,7 +403,8 @@
 
 		isTransitioning ()
 		{
-			return false;
+			const targets = this.getToggleTargets();
+			return targets.some(target => target.classList.contains('is-transitioning'));
 		},
 
 		getToggleTargets ()
