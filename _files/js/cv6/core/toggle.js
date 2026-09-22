@@ -390,41 +390,39 @@
 
 			if (isActive)
 			{
-				if (!this.isVisible())
+				this.target.classList.add(activeClass);
+				if (this.toggleParent)
 				{
-					this.show(instant);
+					this.toggleParent.classList.add(activeClass);
 				}
-				else
+				targets.forEach(target =>
 				{
-					targets.forEach(target =>
+					target.classList.add(activeClass);
+					if (target.style && typeof target.style.removeProperty === 'function')
 					{
-						target.classList.add(activeClass);
-						if (target.style && typeof target.style.removeProperty === 'function')
-						{
-							target.style.removeProperty('display');
-						}
-					});
-					this.updateAria(true);
-				}
+						target.style.removeProperty('display');
+					}
+				});
+				this.updateAria(true);
 			}
 			else
 			{
-				if (this.isVisible())
+				this.target.classList.remove(activeClass);
+				if (this.toggleParent)
 				{
-					this.hide(instant);
+					this.toggleParent.classList.remove(activeClass);
 				}
-				else
+				targets.forEach(target =>
 				{
-					targets.forEach(target =>
-					{
-						target.classList.remove(activeClass);
-						if (target.style && typeof target.style.removeProperty === 'function')
-						{
-							target.style.removeProperty('display');
-						}
-					});
-					this.updateAria(false);
-				}
+					target.classList.remove(activeClass);
+					target.style.display = 'none';
+				});
+				this.updateAria(false);
+			}
+
+			if (typeof XF.layoutChange === 'function')
+			{
+				XF.layoutChange();
 			}
 		},
 
@@ -593,10 +591,20 @@
 
 			try
 			{
-				const val = window.localStorage.getItem('xf_' + container + '_' + key);
-				if (val !== null)
+				const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
+				const raw = window.localStorage.getItem(prefix + container);
+				if (raw)
 				{
-					return val === '1' || val === 'true';
+					const parsed = JSON.parse(raw);
+					if (parsed && typeof parsed === 'object' && Object.prototype.hasOwnProperty.call(parsed, key))
+					{
+						const item = parsed[key];
+						if (Array.isArray(item))
+						{
+							return Boolean(item.length >= 3 ? item[2] : item[1]);
+						}
+						return Boolean(item);
+					}
 				}
 			}
 			catch (e)
@@ -623,6 +631,7 @@
 				const storage = XF.ToggleStorageData.getInstance(storageType);
 				if (storage)
 				{
+					storage.get(container, '__probe__'); // ensures dataCache is populated from storage
 					storage.set(container, key, isActive, expiry);
 					if (typeof storage.syncToStorage === 'function')
 					{
@@ -643,7 +652,12 @@
 
 			try
 			{
-				window.localStorage.setItem('xf_' + container + '_' + key, isActive ? '1' : '0');
+				const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
+				const raw = window.localStorage.getItem(prefix + container);
+				const data = raw ? JSON.parse(raw) : {};
+				const timestamp = Math.floor(Date.now() / 1000);
+				data[key] = [timestamp, expiry, isActive];
+				window.localStorage.setItem(prefix + container, JSON.stringify(data));
 			}
 			catch (e)
 			{
@@ -668,11 +682,21 @@
 		const elements = root.querySelectorAll(selector);
 		elements.forEach(el =>
 		{
-			XF.Event.initElement(el, 'click');
+			const handlers = XF.Event.initElement(el, 'click');
+			const handler = handlers ? (handlers['cv6-multi-toggle'] || handlers['cv6-bundle-toggle']) : null;
+			if (handler && typeof handler.initStorage === 'function')
+			{
+				handler.initStorage();
+			}
 		});
 	};
 
-	if (document.readyState === 'loading')
+	// Initialize when XF is ready (guarantees XF.config and DOM are ready)
+	if (typeof XF.ready === 'function')
+	{
+		XF.ready(() => initStoredToggles(document));
+	}
+	else if (document.readyState === 'loading')
 	{
 		document.addEventListener('DOMContentLoaded', () => initStoredToggles(document));
 	}
@@ -690,5 +714,10 @@
 	{
 		initStoredToggles(e.element || document);
 	});
+
+	if (document.readyState === 'complete' || (typeof XF.isReady !== 'undefined' && XF.isReady))
+	{
+		initStoredToggles(document);
+	}
 
 })(window, document);
