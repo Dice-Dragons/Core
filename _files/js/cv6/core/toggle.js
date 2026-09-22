@@ -549,6 +549,19 @@
 			this.setStoredState(key, isActive);
 		},
 
+		getStorageContainer ()
+		{
+			if (this.options.storageContainer)
+			{
+				return this.options.storageContainer;
+			}
+			if (this.target && this.target.dataset && this.target.dataset.storageContainer)
+			{
+				return this.target.dataset.storageContainer;
+			}
+			return 'toggle';
+		},
+
 		getStoredState (key)
 		{
 			if (!key)
@@ -556,57 +569,13 @@
 				return null;
 			}
 
-			const container = this.options.storageContainer || 'toggle';
-			const storageType = this.options.storageType || 'local';
-
-			if (typeof XF.ToggleStorageData !== 'undefined' && XF.config && XF.config.cookie)
-			{
-				try
-				{
-					const storage = XF.ToggleStorageData.getInstance(storageType);
-					if (storage)
-					{
-						const val = storage.get(container, key, {
-							allowExpired: false,
-							touch: false,
-						});
-						if (val !== null)
-						{
-							return Boolean(val);
-						}
-					}
-				}
-				catch (e)
-				{
-					// fallback to direct localStorage
-				}
-			}
-
-			if (typeof XF.LocalStorage !== 'undefined' && XF.config && XF.config.cookie)
-			{
-				try
-				{
-					const data = XF.LocalStorage.getJson(container);
-					if (data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, key))
-					{
-						const item = data[key];
-						if (Array.isArray(item))
-						{
-							return Boolean(item.length >= 3 ? item[2] : item[1]);
-						}
-						return Boolean(item);
-					}
-				}
-				catch (e)
-				{
-					// fallback to direct localStorage
-				}
-			}
+			const container = this.getStorageContainer();
+			const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
+			const storageKey = prefix + container;
 
 			try
 			{
-				const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
-				const raw = window.localStorage.getItem(prefix + container);
+				const raw = window.localStorage.getItem(storageKey);
 				if (raw)
 				{
 					const parsed = JSON.parse(raw);
@@ -623,7 +592,30 @@
 			}
 			catch (e)
 			{
-				// ignore
+				// fallback
+			}
+
+			if (typeof XF.ToggleStorageData !== 'undefined' && XF.config && XF.config.cookie)
+			{
+				try
+				{
+					const storage = XF.ToggleStorageData.getInstance(this.options.storageType || 'local');
+					if (storage)
+					{
+						const val = storage.get(container, key, {
+							allowExpired: false,
+							touch: false,
+						});
+						if (val !== null)
+						{
+							return Boolean(val);
+						}
+					}
+				}
+				catch (e)
+				{
+					// ignore
+				}
 			}
 
 			return null;
@@ -636,42 +628,44 @@
 				return;
 			}
 
-			const container = this.options.storageContainer || 'toggle';
-			const storageType = this.options.storageType || 'local';
+			const container = this.getStorageContainer();
 			const expiry = parseInt(this.options.storageExpiry, 10) || 86400 * 30;
-
-			if (typeof XF.ToggleStorageData !== 'undefined')
-			{
-				const storage = XF.ToggleStorageData.getInstance(storageType);
-				if (storage)
-				{
-					storage.get(container, '__probe__'); // ensures dataCache is populated from storage
-					storage.set(container, key, isActive, expiry);
-					if (typeof storage.syncToStorage === 'function')
-					{
-						storage.syncToStorage(container);
-					}
-					return;
-				}
-			}
-
-			if (typeof XF.LocalStorage !== 'undefined')
-			{
-				const data = XF.LocalStorage.getJson(container) || {};
-				const timestamp = Math.floor(Date.now() / 1000);
-				data[key] = [timestamp, expiry, isActive];
-				XF.LocalStorage.setJson(container, data);
-				return;
-			}
+			const timestamp = Math.floor(Date.now() / 1000);
+			const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
+			const storageKey = prefix + container;
 
 			try
 			{
-				const prefix = (XF.config && XF.config.cookie && XF.config.cookie.prefix) || (document.documentElement && document.documentElement.getAttribute('data-cookie-prefix')) || '';
-				const raw = window.localStorage.getItem(prefix + container);
-				const data = raw ? JSON.parse(raw) : {};
-				const timestamp = Math.floor(Date.now() / 1000);
+				// Read current stored data freshly and directly from localStorage
+				const raw = window.localStorage.getItem(storageKey);
+				let data = {};
+				if (raw)
+				{
+					try
+					{
+						data = JSON.parse(raw) || {};
+					}
+					catch (e)
+					{
+						data = {};
+					}
+				}
+
+				// Update or add the single key while keeping all other keys untouched
 				data[key] = [timestamp, expiry, isActive];
-				window.localStorage.setItem(prefix + container, JSON.stringify(data));
+
+				// Write back complete merged dataset
+				window.localStorage.setItem(storageKey, JSON.stringify(data));
+
+				// Keep XF.ToggleStorageData in-memory cache synchronized if available
+				if (typeof XF.ToggleStorageData !== 'undefined')
+				{
+					const storage = XF.ToggleStorageData.getInstance(this.options.storageType || 'local');
+					if (storage && storage.dataCache)
+					{
+						storage.dataCache[container] = Object.assign({}, data);
+					}
+				}
 			}
 			catch (e)
 			{
