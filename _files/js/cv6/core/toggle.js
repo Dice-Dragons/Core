@@ -559,33 +559,47 @@
 			const container = this.options.storageContainer || 'toggle';
 			const storageType = this.options.storageType || 'local';
 
-			if (typeof XF.ToggleStorageData !== 'undefined')
+			if (typeof XF.ToggleStorageData !== 'undefined' && XF.config && XF.config.cookie)
 			{
-				const storage = XF.ToggleStorageData.getInstance(storageType);
-				if (storage)
+				try
 				{
-					const val = storage.get(container, key, {
-						allowExpired: false,
-						touch: false,
-					});
-					if (val !== null)
+					const storage = XF.ToggleStorageData.getInstance(storageType);
+					if (storage)
 					{
-						return Boolean(val);
+						const val = storage.get(container, key, {
+							allowExpired: false,
+							touch: false,
+						});
+						if (val !== null)
+						{
+							return Boolean(val);
+						}
 					}
+				}
+				catch (e)
+				{
+					// fallback to direct localStorage
 				}
 			}
 
-			if (typeof XF.LocalStorage !== 'undefined')
+			if (typeof XF.LocalStorage !== 'undefined' && XF.config && XF.config.cookie)
 			{
-				const data = XF.LocalStorage.getJson(container);
-				if (data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, key))
+				try
 				{
-					const item = data[key];
-					if (Array.isArray(item))
+					const data = XF.LocalStorage.getJson(container);
+					if (data && typeof data === 'object' && Object.prototype.hasOwnProperty.call(data, key))
 					{
-						return Boolean(item.length >= 3 ? item[2] : item[1]);
+						const item = data[key];
+						if (Array.isArray(item))
+						{
+							return Boolean(item.length >= 3 ? item[2] : item[1]);
+						}
+						return Boolean(item);
 					}
-					return Boolean(item);
+				}
+				catch (e)
+				{
+					// fallback to direct localStorage
 				}
 			}
 
@@ -690,6 +704,12 @@
 			}
 		});
 	};
+
+	// Run immediately if DOM body is present to apply stored state before the browser paints (prevents FOUC)
+	if (document.body)
+	{
+		initStoredToggles(document);
+	}
 
 	// Initialize when XF is ready (guarantees XF.config and DOM are ready)
 	if (typeof XF.ready === 'function')
