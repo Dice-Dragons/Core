@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
-  <template type="admin" title="cv6_admin_macros" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:macro name="is_active" arg-active="active" arg-selected="!" arg-label="" arg-hint="">
+  <template type="admin" title="cv6_admin_macros" version_id="1050070" version_string="1.5.0"><![CDATA[<xf:macro name="is_active" arg-active="active" arg-selected="!" arg-label="" arg-hint="">
     <xf:checkboxrow>
         <xf:option name="{$active}" selected="{$selected}" label="{{ $label ?: phrase('cv6_is_active') }}"
             hint="{{ $hint ?: phrase('cv6_active_hint') }}" />
@@ -8,6 +8,7 @@
 </xf:macro>
 
 <xf:macro name="toggle_js">
+    <xf:js src="xf/structure.js" min="1" />
     <xf:js src="cv6/core/toggle.js" min="1" addon="cv6/Core" />
 </xf:macro>]]></template>
   <template type="admin" title="cv6_assetupload" version_id="1040270" version_string="1.4.2"><![CDATA[<xf:macro id="cv6_assetuploadrow" 
@@ -48,7 +49,7 @@
     </xf:if>
 
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_core.less" version_id="1040370" version_string="1.4.3"><![CDATA[.cv6-iconpreview {
+  <template type="admin" title="cv6_core.less" version_id="1050070" version_string="1.5.0"><![CDATA[.cv6-iconpreview {
 	width: 30px !important;
 	height: 30px !important;
 	font-size: 20px !important;
