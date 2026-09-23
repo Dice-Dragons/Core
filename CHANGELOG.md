@@ -2,6 +2,15 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.5.1] - 2026-09-23
+
+### Fixed
+- **Multi-Toggle Cross-Page State Persistence**: Implemented atomic read-modify-write synchronization directly on `window.localStorage` in `_files/js/cv6/core/toggle.js`. Fixes an issue where navigating between different admin views with collapsible items (e.g. Dice Sets and Wiresets) caused stale in-memory caches to overwrite or erase previously saved toggle states.
+- **Toggle Initialization Timing & FOUC Prevention**: Re-architected `initStoredToggles` lifecycle to run synchronously as soon as the DOM body is present, eliminating the brief visible flash of expanded content on page reload before initial browser paint.
+- **Immediate Inline Display State Toggle**: Child rows now immediately receive `style.display = 'none'` when collapsed (and clear inline display when expanded) to prevent CSS specificity conflicts and layout shifts.
+- **Safe Cookie Prefix Resolution**: Added fallback to `<html data-cookie-prefix="...">` when accessing `localStorage` before XenForo's deferred `XF.config.cookie` object is initialized.
+- **Container Isolation Support**: Added `getStorageContainer()` method to support custom `data-storage-container` attributes on toggle triggers while defaulting cleanly to `'toggle'`.
+
 ## [1.5.0] - 2026-09-18
 
 ### Added

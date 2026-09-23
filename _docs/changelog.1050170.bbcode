@@ -1,0 +1,10 @@
+[HEADING=2]Changes in [DD] - Core Library 1.5.1[/HEADING]
+
+[HEADING=3]Fixed[/HEADING]
+[LIST]
+[*][B]Multi-Toggle Cross-Page State Persistence[/B]: Implemented atomic read-modify-write synchronization directly on [I]window.localStorage[/I] in [I]toggle.js[/I]. Resolves an issue where navigating between different admin views with collapsible items (e.g. Dice Sets and Wiresets) caused stale in-memory caches to overwrite or wipe previously stored toggle states.
+[*][B]Toggle Timing & FOUC Prevention[/B]: Re-architected [I]initStoredToggles[/I] lifecycle to execute synchronously as soon as the DOM body is present, preventing the brief visible flash of expanded content on page reload before the browser's first paint.
+[*][B]Direct Display State Handling[/B]: Collapsed child rows now directly receive inline [I]display: none[/I] (cleared on expansion) to eliminate layout shifts and CSS specificity conflicts.
+[*][B]Early Cookie Prefix Resolution[/B]: Added a fallback to [I]<html data-cookie-prefix="...">[/I] when accessing storage before XenForo's deferred [I]XF.config.cookie[/I] is initialized.
+[*][B]Container Isolation Support[/B]: Added [I]getStorageContainer()[/I] to support custom [I]data-storage-container[/I] attributes on toggle triggers while defaulting cleanly to [I]'toggle'[/I].
+[/LIST]

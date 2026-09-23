@@ -1,3 +1,9 @@
+1.5.1
+ - Fixed multi-toggle state persistence across different admin views with atomic localStorage read-modify-write
+ - Prevented flash of unstyled content (FOUC) by executing stored toggle initialization synchronously before paint
+ - Ensured robust target display handling and early cookie prefix fallback for toggle states
+ - Added container isolation support via data-storage-container attribute
+
 1.5.0
  - Added Multi-Alphabet Index Provider Repository (cv6\Core\Repository\Alphabet) supporting Latin, Greek, Cyrillic, Hebrew, and Arabic with RTL layout and letter variant mapping
  - Added Code Event cv6_core_index_alphabets for third-party alphabet provider registration

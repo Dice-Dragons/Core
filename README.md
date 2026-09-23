@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *This documentation is also available in: [Deutsch](README.de.md)*
 
-![Version](https://img.shields.io/badge/version-1.5.0-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.5.1-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** is the foundational framework required for (nearly) all cv6 / Dice Dragons add-ons. It provides a rich set of shared resources, UI components, and developer tools to ensure stability and reduce code duplication.
 
@@ -12,6 +12,7 @@
 This library includes essential tools for XenForo development:
 
 ### UI Components & Templates
+* **Multi-Toggle & Collapsible Rows (`cv6-multi-toggle`)**: Standardized multi-target collapse handler for AdminCP tables (`.dataList-row--childRow`) and lists. Features synchronized table row sliding via `XF.Animate`, atomic cross-page state persistence in `localStorage`, and zero-FOUC initialization.
 * **FontAwesome Icon Auto-Completion**: Interactive auto-completion dropdown (`fa-` + 2 characters) with live SVG mask previews inheriting current text color (`currentColor`), smooth `XF.Animate.fadeDown`/`fadeUp` transitions, and full support for modifier/variant classes (`fas`, `fa-spin`, `fa-rotate-90`). Filters suggested icons based on enabled styles in `cv6CoreFaStyle` (excluding Brand icons when `fab` is disabled). Supports `autocomplete=1` in option format parameters (`edit_format_params`).
 * **FontAwesome Icon Chooser**: Ready-to-use template with a menu interface for selecting icons.
 * **Asset Uploader**: Standardized upload template including live image preview.
