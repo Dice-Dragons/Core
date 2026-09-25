@@ -37,7 +37,7 @@ fab</sub_options>
     <relation group_id="cv6Core" display_order="110"/>
   </option>
   <option option_id="cv6CoreImageSample" edit_format="template" data_type="string" advanced="1">
-    <default_value></default_value>
+    <default_value>styles/cv6/core/sample.png</default_value>
     <edit_format_params>cv6_options_template_asset</edit_format_params>
     <relation group_id="debug" display_order="3601"/>
   </option>
