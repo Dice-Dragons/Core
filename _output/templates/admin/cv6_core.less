@@ -138,3 +138,42 @@ ul.listColumns.cv6-listColumns {
 		display: table-row;
 	}
 }
+
+.inputGroup.inputGroup--asset {
+	display: flex;
+	flex-wrap: nowrap;
+
+	.inputGroup--joined {
+		flex: 1 1 auto;
+		min-width: 0;
+
+		> :last-child {
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+			border-right: none;
+		}
+	}
+
+	.cv6button--reset {
+		border-top-left-radius: 0;
+		border-bottom-left-radius: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+		text-decoration: none !important;
+
+		.fa--xf {
+			display: inline-block;
+			.m-transition(transform; 0.3s; ease);
+		}
+
+		&:hover {
+			color: @xf-textColorAttention;
+
+			.fa--xf {
+				transform: rotate(-180deg);
+			}
+		}
+	}
+}

@@ -6,7 +6,7 @@
     "validation_class": "",
     "validation_method": "",
     "advanced": true,
-    "default_value": "",
+    "default_value": "styles/cv6/core/sample.png",
     "relations": {
         "debug": 3601
     }

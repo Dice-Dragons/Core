@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *Diese Dokumentation ist auch verfügbar auf: [English](README.md)*
 
-![Version](https://img.shields.io/badge/version-1.5.1-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.5.2-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
@@ -13,7 +13,7 @@
 * **Multi-Toggle & Einklappbare Tabellenzeilen (`cv6-multi-toggle`)**: Standardisierter Multi-Target Collapse-Handler für AdminCP-Listen und Tabellen (`.dataList-row--childRow`). Ermöglicht synchrones Zeilen-Sliding via `XF.Animate`, atomare und seitenübergreifende Persistenz im `localStorage` sowie sofortiges Rendern ohne FOUC-Verzögerung.
 * **FontAwesome Icon Auto-Vervollständigung**: Interaktives Dropdown-Auswahlmenü bei Eingabe von `fa-` + 2 Zeichen mit SVG-Masken-Vorschau in Vererbung der aktuellen Textfarbe (`currentColor`), flüssigen `XF.Animate.fadeDown`/`fadeUp` Übergängen und Unterstützung für Zusatz- und Varianten-Klassen (`fas`, `fa-spin`, `fa-rotate-90`). Filtert Vorschläge basierend auf aktivierten Styles in `cv6CoreFaStyle` (schließt Brand-Icons aus, wenn `fab` deaktiviert ist). Unterstützt `autocomplete=1` in den Format-Parametern der Optionen (`edit_format_params`).
 * **FontAwesome Icon Chooser**: Fertiges Menü-Template zur Auswahl von FontAwesome Icons.
-* **Asset Uploader**: Standardisiertes Upload-Template inklusive Bild-Vorschau.
+* **Asset Uploader (`cv6_assetuploadrow`)**: Standardisiertes Upload-Makro inklusive Live-Bildvorschau, optionalem `default`-Pfad, integriertem Reset-Button (`fa-undo`) und flüssiger 180° Gegenuhrzeigersinn-Animation beim Hovern.
 * **Universelle Integration**: Spezialisierte Templates zur einfachen Nutzung von Icon Chooser und Asset Uploader in **Stileigenschaften** und **Add-On-Optionen**.
 * **Tab-Schnittstellen**: Traits und Templates zum schnellen Erstellen getabbter Übersichtsseiten.
 

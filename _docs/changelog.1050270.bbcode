@@ -1,0 +1,10 @@
+[HEADING=2]Changes in [DD] - Core Library 1.5.2[/HEADING]
+
+[HEADING=3]Added[/HEADING]
+[LIST]
+[*][B]Asset Upload Default Parameter & Reset Subsystem[/B]: Enhanced the [I]cv6_assetupload::cv6_assetuploadrow[/I] macro with an optional [I]arg-default=""[/I] parameter. When non-empty, an integrated compact Reset button ([I]fa-undo[/I]) is rendered alongside the file upload button to restore the default image path and update the preview image in a single click.
+[*][B]Counter-Clockwise Reset Hover Animation[/B]: Added a smooth 180° counter-clockwise rotation animation ([I]transform: rotate(-180deg)[/I]) on hover for the reset icon using XenForo's native [I].m-transition[/I] mixin.
+[*][B]Option Template Default Propagation[/B]: Updated [I]cv6_options_template_asset.html[/I] to forward [I]arg-default="{$option.default_value}"[/I], automatically equipping any ACP option using this template with the reset button if a default value is defined.
+[*][B]Sample Dragon Asset[/B]: Deployed [I]styles/cv6/core/sample.png[/I] in [I]_files/[/I], registered [I]styles/cv6/core[/I] in [I]build.json[/I], and assigned it as default value for the debug option [I]cv6CoreImageSample[/I].
+[*][B]OpenSpec Technical Specification[/B]: Created [I]_openspec/spec.md[/I] providing full architectural and component specifications for the Core library.
+[/LIST]

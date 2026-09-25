@@ -2,6 +2,15 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.5.2] - 2026-09-25
+
+### Added
+- **Asset Upload Field Default & Reset Subsystem**: Enhanced the `cv6_assetupload::cv6_assetuploadrow` macro with an optional `arg-default=""` parameter. When set, an integrated Reset button (`fa-undo`) is rendered alongside the file upload button to restore the default asset path and refresh the preview in a single click.
+- **Counter-Clockwise Icon Animation**: Added a smooth 180° counter-clockwise rotation animation (`transform: rotate(-180deg)`) on hover for the asset reset button using XenForo's `.m-transition` mixin.
+- **Option Template Default Propagation**: Updated `cv6_options_template_asset.html` to automatically pass `arg-default="{$option.default_value}"`, enabling the reset button on all options configured with this template that define a default value.
+- **Sample Dragon Graphic Asset**: Added `styles/cv6/core/sample.png` to `_files/` and registered `styles/cv6/core` in `build.json`, setting it as default value for the debug option `cv6CoreImageSample`.
+- **Dedicated OpenSpec Specification**: Added `_openspec/spec.md` documenting architecture, components, options, and standards for `cv6/Core`.
+
 ## [1.5.1] - 2026-09-23
 
 ### Fixed

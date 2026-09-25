@@ -9,23 +9,52 @@
     arg-class=""
     arg-placeholder="path/to/sample.svg"
     arg-preselector="" 
+    arg-default=""
     >
 
     <xf:js src="cv6/core/asset.js" min="1" addon="cv6/Core" />
     
     <xf:css src="cv6_core.less" />
 
-    <xf:assetuploadrow 
-        name="{$name}" 
-        asset="{$asset}" 
-        rowclass="{$rowclass}"
-        label="{$label}"
-        hint="{$hint}"
-        value="{$value}" 
-        explain="{$explain|raw}" 
-        placeholder="{$placeholder}"
-        class="cv6--asset-imagepreview {$class}" 
-        data-xf-init="cv6AssetImage" />
+    <xf:if is="{$default}">
+        <xf:formrow
+            rowclass="formRow--input {$rowclass}"
+            label="{$label}"
+            hint="{$hint}"
+            explain="{$explain|raw}">
+            <div class="inputGroup inputGroup--asset">
+                <xf:assetupload
+                    name="{$name}"
+                    asset="{$asset}"
+                    value="{$value}"
+                    placeholder="{$placeholder}"
+                    class="cv6--asset-imagepreview {$class}"
+                    data-xf-init="cv6AssetImage"
+                    data-default="{$default}" />
+                <xf:button
+                   class="inputGroup inputGroup--button button--alt cv6button--reset js-cv6AssetReset"
+                   data-xf-init="tooltip"
+                   data-xf-click="cv6-asset-reset"
+                   title="{{ phrase('reset') }}"
+                   data-default="{$default}"
+                   tabindex="0">
+                    <xf:fa icon="fa-undo" />
+                </xf:button>
+            </div>
+        </xf:formrow>
+    <xf:else />
+        <xf:assetuploadrow 
+            name="{$name}" 
+            asset="{$asset}" 
+            rowclass="{$rowclass}"
+            label="{$label}"
+            hint="{$hint}"
+            value="{$value}" 
+            explain="{$explain|raw}" 
+            placeholder="{$placeholder}"
+            class="cv6--asset-imagepreview {$class}" 
+            data-xf-init="cv6AssetImage" />
+    </xf:if>
 
     <xf:if is="{$preselector}">
         <xf:formrow rowtype="" label="">

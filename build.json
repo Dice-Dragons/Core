@@ -4,7 +4,8 @@
         "js/cv6/core/combosort.js",
         "js/cv6/core/icon.js",
         "js/cv6/core/phrase.js",
-        "js/cv6/core/toggle.js"
+        "js/cv6/core/toggle.js",
+        "styles/cv6/core"
     ],
     "minify": [
         "js/cv6/core/asset.js",

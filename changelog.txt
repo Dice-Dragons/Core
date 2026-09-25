@@ -1,3 +1,10 @@
+1.5.2
+ - Enhanced cv6_assetuploadrow macro with default parameter and integrated Reset button
+ - Added smooth 180deg counter-clockwise hover animation on reset button icon
+ - Propagated default parameter in cv6_options_template_asset.html
+ - Added sample dragon graphic asset in _files/styles/cv6/core/sample.png and build.json
+ - Created _openspec/spec.md specification document
+
 1.5.1
  - Fixed multi-toggle state persistence across different admin views with atomic localStorage read-modify-write
  - Prevented flash of unstyled content (FOUC) by executing stored toggle initialization synchronously before paint
