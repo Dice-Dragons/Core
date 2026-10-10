@@ -3,7 +3,7 @@
 ## 1. Metadata & Scope
 * **Add-On ID**: `cv6/Core`
 * **Title**: `[DD] - Core Library`
-* **Current Version**: `1.6.0` (Version ID: `1060070`)
+* **Current Version**: `1.6.1` (Version ID: `1060170`)
 * **Vendor**: `cv6` / Hoffi
 * **Target Environment**: XenForo 2.3.0+, PHP 8.2.0+
 * **Dependencies**: None (Core foundational library for all `cv6/*` add-ons)

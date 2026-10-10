@@ -1,3 +1,7 @@
+1.6.1
+ - Extended release publisher workflow to automatically sync resource description with _docs/readme.de.bbcode via XFRM API
+ - Added icon provider selection screenshot in _docs/screenshots/icon-provider-select.png
+
 1.6.0
  - Added Multi-Provider Icon Framework (IconProviderInterface, AbstractIconProvider, FontAwesomeProvider)
  - Added Code Event cv6_icon_provider for custom third-party icon set registration

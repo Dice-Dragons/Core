@@ -2,6 +2,12 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.6.1] - 2026-10-10
+
+### Added
+- **Release Automation - Resource Description Sync**: Extended the reusable release workflow (`xenforo-release-publisher.yml`) to automatically synchronize the XenForo Resource Manager (XFRM) description with `_docs/readme.de.bbcode` (or fallback `readme.bbcode`) via REST API (`POST /api/resources/{id}/`) on each release.
+- **Icon Provider UI Showcase**: Added `_docs/screenshots/icon-provider-select.png` showcasing the icon provider selection dropdown in AdminCP.
+
 ## [1.6.0] - 2026-10-10
 
 ### Added
