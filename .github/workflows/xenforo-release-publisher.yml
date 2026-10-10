@@ -378,6 +378,16 @@ jobs:
           # Step D: Upload Newly Committed Screenshots via CustomFields API
           NEW_UPLOAD_COUNT=0
           FINAL_ATT_IDS=()
+
+          # Auto-detect screenshot custom field ID ('screenshot' or 'screenshots')
+          SCREENSHOT_FIELD="screenshots"
+          if echo "$RESOURCE_RESP" | jq -e '.resource.custom_fields.screenshot != null or .resource.custom_fields_media.screenshot != null' >/dev/null 2>&1; then
+            SCREENSHOT_FIELD="screenshot"
+          elif echo "$RESOURCE_RESP" | jq -e '.resource.custom_fields.screenshots != null or .resource.custom_fields_media.screenshots != null' >/dev/null 2>&1; then
+            SCREENSHOT_FIELD="screenshots"
+          fi
+          echo "Detected screenshot custom field name: '$SCREENSHOT_FIELD'"
+
           if [ ${#NEW_SCREENSHOTS[@]} -gt 0 ]; then
             echo ""
             echo "Step 4: Uploading ${#NEW_SCREENSHOTS[@]} new/modified screenshot(s) for resource ${RESOURCE_ID}..."
@@ -388,7 +398,7 @@ jobs:
                 if [ -n "$existing_id" ] && [[ "$existing_id" =~ ^[0-9]+$ ]]; then
                   FINAL_ATT_IDS+=("$existing_id")
                 fi
-              done < <(echo "$RESOURCE_RESP" | jq -r '.resource.custom_fields_media.screenshots[].attachment_id // empty' 2>/dev/null || true)
+              done < <(echo "$RESOURCE_RESP" | jq -r ".resource.custom_fields_media.${SCREENSHOT_FIELD}[].attachment_id // .resource.custom_fields_media.screenshot[].attachment_id // .resource.custom_fields_media.screenshots[].attachment_id // empty" 2>/dev/null || true)
             fi
 
             echo "Preserving ${#FINAL_ATT_IDS[@]} existing screenshot attachment(s) on resource."
@@ -403,7 +413,7 @@ jobs:
                 -H "X-XF-Api-User: ${XF_API_USER}" \
                 -F "api_key=${XF_API_KEY}" \
                 -F "api_user=${XF_API_USER}" \
-                -F "field_id=screenshots" \
+                -F "field_id=${SCREENSHOT_FIELD}" \
                 -F "field_source=resource" \
                 -F "content_id=${RESOURCE_ID}" \
                 -F "upload=@${shot}")
@@ -431,7 +441,7 @@ jobs:
           if [ "$NEW_UPLOAD_COUNT" -gt 0 ]; then
             echo "Associating total ${#FINAL_ATT_IDS[@]} screenshot(s) with resource ${RESOURCE_ID}..."
             for att_id in "${FINAL_ATT_IDS[@]}"; do
-              RESOURCE_UPDATE_ARGS+=(-F "custom_fields[screenshots][]=$att_id")
+              RESOURCE_UPDATE_ARGS+=(-F "custom_fields[${SCREENSHOT_FIELD}][]=$att_id")
             done
           fi
 
