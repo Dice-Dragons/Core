@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phrases>
+  <phrase title="admin_navigation.cv6IconMigration" version_id="1050270" version_string="1.5.2"><![CDATA[Migration]]></phrase>
+  <phrase title="admin_navigation.cv6Icons" version_id="1050270" version_string="1.5.2"><![CDATA[Icons
+]]></phrase>
   <phrase title="custom_bb_code_desc.book" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[]]></phrase>
   <phrase title="custom_bb_code_example.book" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[]]></phrase>
   <phrase title="custom_bb_code_output.book" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[]]></phrase>
@@ -19,11 +22,69 @@
 ]]></phrase>
   <phrase title="cv6_core_alphabet_latin" version_id="1040370" version_string="1.4.3"><![CDATA[Latin (A–Z)
 ]]></phrase>
+  <phrase title="cv6_core_change_target_icon" version_id="1050270" version_string="1.5.2"><![CDATA[Change target icon
+]]></phrase>
+  <phrase title="cv6_core_choose_target_icon" version_id="1050270" version_string="1.5.2"><![CDATA[Choose target icon
+]]></phrase>
+  <phrase title="cv6_core_choose_target_icon_title" version_id="1050270" version_string="1.5.2"><![CDATA[Customize target icon ({provider})
+]]></phrase>
+  <phrase title="cv6_core_execute_migration" version_id="1050270" version_string="1.5.2"><![CDATA[Execute Migration
+]]></phrase>
+  <phrase title="cv6_core_icon_migration_settings" version_id="1050270" version_string="1.5.2"><![CDATA[Migration Configuration
+]]></phrase>
+  <phrase title="cv6_core_icon_migration_title" version_id="1050270" version_string="1.5.2"><![CDATA[Icon Migration
+]]></phrase>
+  <phrase title="cv6_core_icon_provider_fa_hint" version_id="1050270" version_string="1.5.2"><![CDATA[Default XenForo icon provider
+]]></phrase>
+  <phrase title="cv6_core_icon_provider_missing_explain" version_id="1050270" version_string="1.5.2"><![CDATA[Icon '{classes}' cannot be rendered because the corresponding icon provider is disabled or unavailable.
+]]></phrase>
   <phrase title="cv6_core_inherited_from_x" version_id="1040370" version_string="1.4.3"><![CDATA[Inherited from: {language}
+]]></phrase>
+  <phrase title="cv6_core_invalid_target_provider" version_id="1050270" version_string="1.5.2"><![CDATA[Invalid or inactive target icon provider.
+]]></phrase>
+  <phrase title="cv6_core_items_migrated" version_id="1050270" version_string="1.5.2"><![CDATA[{count} items migrated
+]]></phrase>
+  <phrase title="cv6_core_items_skipped" version_id="1050270" version_string="1.5.2"><![CDATA[Skipped (0 items migrated)
+]]></phrase>
+  <phrase title="cv6_core_migrate_and_next" version_id="1050270" version_string="1.5.2"><![CDATA[Migrate selection & continue
+]]></phrase>
+  <phrase title="cv6_core_migration_completed" version_id="1050270" version_string="1.5.2"><![CDATA[Migration Completed
+]]></phrase>
+  <phrase title="cv6_core_migration_preview" version_id="1050270" version_string="1.5.2"><![CDATA[Migration Preview
+]]></phrase>
+  <phrase title="cv6_core_migration_summary_text" version_id="1050270" version_string="1.5.2"><![CDATA[The icon migration has been completed successfully.
+]]></phrase>
+  <phrase title="cv6_core_migration_summary_title" version_id="1050270" version_string="1.5.2"><![CDATA[Migration completed
+]]></phrase>
+  <phrase title="cv6_core_next_step" version_id="1050270" version_string="1.5.2"><![CDATA[Continue to next step
+]]></phrase>
+  <phrase title="cv6_core_no_items_in_step" version_id="1050270" version_string="1.5.2"><![CDATA[No migratable icons found in this step.
+]]></phrase>
+  <phrase title="cv6_core_no_matching_icons_found" version_id="1050270" version_string="1.5.2"><![CDATA[No matching icons were found to migrate.
 ]]></phrase>
   <phrase title="cv6_core_phrase_master_readonly_explain" version_id="1040370" version_string="1.4.3"><![CDATA[Master phrases can only be modified when development mode is enabled.
 ]]></phrase>
   <phrase title="cv6_core_phrase_translations" version_id="1040370" version_string="1.4.3"><![CDATA[Phrase translations: {title}
+]]></phrase>
+  <phrase title="cv6_core_preview_migration" version_id="1050270" version_string="1.5.2"><![CDATA[Preview Changes
+]]></phrase>
+  <phrase title="cv6_core_skip_step" version_id="1050270" version_string="1.5.2"><![CDATA[Skip this step
+]]></phrase>
+  <phrase title="cv6_core_source_provider" version_id="1050270" version_string="1.5.2"><![CDATA[Source provider
+]]></phrase>
+  <phrase title="cv6_core_start_new_migration" version_id="1050270" version_string="1.5.2"><![CDATA[Start new migration
+]]></phrase>
+  <phrase title="cv6_core_step_complete" version_id="1050270" version_string="1.5.2"><![CDATA[4. Complete
+]]></phrase>
+  <phrase title="cv6_core_step_database" version_id="1050270" version_string="1.5.2"><![CDATA[1. Database (Content & Config)
+]]></phrase>
+  <phrase title="cv6_core_step_phrases" version_id="1050270" version_string="1.5.2"><![CDATA[3. Phrases (Language Strings)
+]]></phrase>
+  <phrase title="cv6_core_step_styles" version_id="1050270" version_string="1.5.2"><![CDATA[2. Style Properties (Designs)
+]]></phrase>
+  <phrase title="cv6_core_target_icon" version_id="1050270" version_string="1.5.2"><![CDATA[Target icon
+]]></phrase>
+  <phrase title="cv6_core_target_provider" version_id="1050270" version_string="1.5.2"><![CDATA[Target provider
 ]]></phrase>
   <phrase title="cv6_core_translate_phrase" version_id="1040370" version_string="1.4.3"><![CDATA[Translate phrase
 ]]></phrase>
@@ -46,6 +107,8 @@
   <phrase title="cv6_fa_rotation" version_id="1000070" version_string="1.0.0"><![CDATA[Rotation]]></phrase>
   <phrase title="cv6_fa_solid" version_id="1000070" version_string="1.0.0"><![CDATA[Solid]]></phrase>
   <phrase title="cv6_fa_style" version_id="1000070" version_string="1.0.0"><![CDATA[Style]]></phrase>
+  <phrase title="cv6_icon_provider" version_id="1050270" version_string="1.5.2"><![CDATA[Icon provider
+]]></phrase>
   <phrase title="cv6_icon_style_based" version_id="1000070" version_string="1.0.0"><![CDATA[None (Style based)]]></phrase>
   <phrase title="cv6_invalid_class" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Invalid Font Awesome Classes]]></phrase>
   <phrase title="cv6_is_active" version_id="1020051" version_string="1.2.0 Release Candidate 1"><![CDATA[Is active]]></phrase>
@@ -59,12 +122,16 @@
 ]]></phrase>
   <phrase title="cv6_please_remove_unknown_icon_classes_x" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[The following items are unknown and should be removed: {items}]]></phrase>
   <phrase title="cv6_remove_filter" version_id="1000170" version_string="1.0.1"><![CDATA[Remove index filter]]></phrase>
+  <phrase title="cv6_select_icon_provider" version_id="1050270" version_string="1.5.2"><![CDATA[Select icon provider
+]]></phrase>
   <phrase title="cv6_slug_must_be_unique" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[URL Slug must be unique]]></phrase>
   <phrase title="cv6_sort_abc" version_id="1020170" version_string="1.2.1"><![CDATA[Sort alphbetical]]></phrase>
   <phrase title="cv6_system_field_cannot_deleted" version_id="1020052" version_string="1.2.0 Release Candidate 2"><![CDATA[System fields cannot be deleted.]]></phrase>
   <phrase title="cv6_tag" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Tag]]></phrase>
   <phrase title="cv6_unknown_fa_icon" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Unknown Font Awesome value]]></phrase>
   <phrase title="cv6_xf_core" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[All XF Core and XF AddOn fields]]></phrase>
+  <phrase title="option.cv6AllowedIconProviders" version_id="1050270" version_string="1.5.2"><![CDATA[Allowed icon providers
+]]></phrase>
   <phrase title="option.cv6CoreFaAnimation" version_id="1000070" version_string="1.0.0"><![CDATA[Icon animation]]></phrase>
   <phrase title="option.cv6CoreFaRotation" version_id="1000070" version_string="1.0.0"><![CDATA[Icon rotation]]></phrase>
   <phrase title="option.cv6CoreFaStyle" version_id="1000070" version_string="1.0.0"><![CDATA[Icon styles]]></phrase>
@@ -78,6 +145,8 @@
   <phrase title="option.cv6ShowNumberTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Should a tab for numbers displayed?]]></phrase>
   <phrase title="option.cv6ShowOthersTab" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Should a others tab be displayed?]]></phrase>
   <phrase title="option.cv6extraFaIcons" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[Additional cv6 icons to include in sprites]]></phrase>
+  <phrase title="option_explain.cv6AllowedIconProviders" version_id="1050270" version_string="1.5.2"><![CDATA[Choose which icon providers are active and selectable across the community. If only one provider is selected, the icon picker operates in single-provider mode.
+]]></phrase>
   <phrase title="option_explain.cv6CoreFaAnimation" version_id="1000070" version_string="1.0.0"><![CDATA[Used to identify the allowed animations for Font Awesome Icons]]></phrase>
   <phrase title="option_explain.cv6CoreFaRotation" version_id="1000070" version_string="1.0.0"><![CDATA[Used to identify the allowed rotations for Font Awesome Icons]]></phrase>
   <phrase title="option_explain.cv6CoreFaStyle" version_id="1000070" version_string="1.0.0"><![CDATA[Used to identify the allowed styles for Font Awesome Icons]]></phrase>

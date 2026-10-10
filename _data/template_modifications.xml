@@ -58,15 +58,56 @@
 	arg-value="{{ $bbCode.editor_icon_type == 'fa' ? $bbCode.editor_icon_value : '' }}" 
 />]]></replace>
   </modification>
+  <modification type="admin" template="option_edit" modification_key="cv6_core_oe_phrases" description="Adds phrase translation button to option title and explain" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:textboxrow name="title" value="{$option}"
+				label="{{ phrase('title') }}" />
+
+			<xf:textarearow name="explain" value="{$option}" autosize="true"
+				label="{{ phrase('explanation') }}"
+				hint="{{ phrase('you_may_use_html') }}" />]]></find>
+    <replace><![CDATA[<xf:textboxrow name="title" value="{$option}"
+				label="{{ phrase('title') }}"
+				phrase="{{ $option.isUpdate() ? 'option.' . $option.option_id : '' }}" />
+
+			<xf:textarearow name="explain" value="{$option}" autosize="true"
+				label="{{ phrase('explanation') }}"
+				hint="{{ phrase('you_may_use_html') }}"
+				phrase="{{ $option.isUpdate() ? 'option_explain.' . $option.option_id : '' }}" />]]></replace>
+  </modification>
   <modification type="admin" template="option_group_edit" modification_key="cv6_core_oge_add_fa" description="adds icon to options group" execution_order="10" enabled="1" action="str_replace">
     <find><![CDATA[<xf:textboxrow name="icon" value="{$group.icon}"
 				label="{{ phrase('icon') }}" />]]></find>
-    <replace><![CDATA[<xf:macro name="cv6_fa_icon::cv6_inputIcon"
+    <replace><![CDATA[<xf:if is="$xf.options.cv6ReplaceXF">
+	<xf:macro template="cv6_fa_icon" name="cv6_inputIcon"
 				arg-name="icon" 
 				arg-value="{$group.icon}"
 				arg-label="{{ phrase('icon') }}"
-		  		arg-target="option-{$group.group_id}"
-			/>]]></replace>
+		  		arg-target="option-group-{$group.group_id|default('new')}"
+			  	arg-placeholder="fa-..."
+			  	arg-stylechooser="{{ ['style','animation','rotation'] }}"
+			  	arg-autocomplete="{{ true }}"
+			/>	
+<xf:else />
+	$0
+</xf:if>]]></replace>
+  </modification>
+  <modification type="admin" template="option_group_edit" modification_key="cv6_core_oge_phrases" description="Adds phrase translation button to option group title and description" execution_order="10" enabled="1" action="str_replace">
+    <find><![CDATA[<xf:textboxrow name="title" value="{$group}"
+				label="{{ phrase('title') }}" />
+
+			<xf:textarearow name="description" value="{$group}"
+				autosize="true"
+				label="{{ phrase('description') }}"
+				hint="{{ phrase('you_may_use_html') }}" />]]></find>
+    <replace><![CDATA[<xf:textboxrow name="title" value="{$group}"
+				label="{{ phrase('title') }}"
+				phrase="{{ $group.isUpdate() ? 'option_group.' . $group.group_id : '' }}" />
+
+			<xf:textarearow name="description" value="{$group}"
+				autosize="true"
+				label="{{ phrase('description') }}"
+				hint="{{ phrase('you_may_use_html') }}"
+				phrase="{{ $group.isUpdate() ? 'option_group_description.' . $group.group_id : '' }}" />]]></replace>
   </modification>
   <modification type="public" template="setup_fa.less" modification_key="cv6_core_add_fa_function" description="adds fa function" execution_order="10" enabled="1" action="preg_replace">
     <find><![CDATA[/$/]]></find>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <option_groups>
-  <group group_id="cv6Core" icon="fa-cog" display_order="3600" debug_only="0"/>
+  <group group_id="cv6Core" icon="fa-cog fad" display_order="3600" debug_only="0"/>
   <group group_id="cv6LetterIndex" icon="fa-spell-check" display_order="3750" debug_only="0"/>
 </option_groups>

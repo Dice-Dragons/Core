@@ -256,8 +256,358 @@ ul.listColumns.cv6-listColumns {
 			}
 		}
 	}
+}
+
+.cv6-provider-picker {
+	display: inline-flex;
+	align-items: center;
+	border-right: 1px solid @xf-borderColor;
+	margin-right: 6px;
+	padding-right: 4px;
+
+	.cv6-provider-trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 3px;
+		padding: 2px 4px;
+		border-radius: @xf-borderRadiusSmall;
+		cursor: pointer;
+		color: @xf-textColorMuted;
+		text-decoration: none !important;
+		line-height: 1;
+		.m-transition();
+
+		&:hover {
+			background: @xf-contentAltBg;
+			color: @xf-textColor;
+		}
+
+		.cv6-provider-current {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 14px;
+			line-height: 1;
+			width: 18px;
+			height: 18px;
+		}
+
+		.cv6-provider-caret {
+			font-size: 10px;
+			opacity: 0.6;
+		}
+	}
+}
+
+.cv6-provider-menu-item {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px;
+	padding: 6px 12px !important;
+	cursor: pointer;
+	text-decoration: none !important;
+
+	.cv6-provider-menu-icon {
+		width: 20px;
+		text-align: center;
+		font-size: 14px;
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cv6-provider-menu-title {
+		flex: 1 1 auto;
+	}
+
+	.cv6-provider-menu-prefix {
+		font-size: 11px;
+		color: @xf-textColorMuted;
+		flex-shrink: 0;
+	}
+
+	.cv6-provider-menu-check {
+		display: none;
+		font-size: 12px;
+		color: @xf-textColorFeature;
+		margin-left: auto;
+		flex-shrink: 0;
+	}
+
+	&.is-active {
+		font-weight: 700;
+		background: @xf-contentAltBg;
+
+		.cv6-provider-menu-check {
+			display: inline-block;
+		}
+	}
+}
+
+.cv6-icon--missing {
+	color: @xf-errorColor;
+	cursor: help;
+}
+
+.cv6-icon-autocomplete-menu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	margin-top: 2px;
+	z-index: 10000;
+	background: @xf-contentBg;
+	border: 1px solid @xf-borderColor;
+	border-radius: @xf-borderRadiusMedium;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	max-height: 240px;
+	overflow-y: auto;
+
+	&.is-active {
+		display: block;
+	}
+
+	.cv6-icon-autocomplete-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 12px;
+		cursor: pointer;
+		text-decoration: none;
+		color: @xf-textColor;
+
+		&:hover,
+		&.is-selected {
+			background: @xf-contentHighlightBg;
+			color: @xf-textColorFeature;
+		}
+	}
 }]]></template>
-  <template type="admin" title="cv6_core_phrase_quick_edit" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:title>{{ phrase('cv6_core_phrase_translations', {'title': $displayTitle}) }}</xf:title>
+  <template type="admin" title="cv6_core_icon_migrate" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:css src="cv6_core.less" />
+<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
+
+<xf:title>{{ phrase('cv6_core_icon_migration_title') }}</xf:title>
+
+<xf:if is="$step != 'start'">
+	<div class="block">
+		<div class="block-container">
+			<ul class="tabs tabs--standalone" role="tablist">
+				<li class="tabs-tab {{ $step == 'database' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_database') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'styles' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_styles') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'phrases' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_phrases') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'complete' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_complete') }}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</xf:if>
+
+<xf:if is="$step == 'start'">
+	<xf:form action="{{ link('cv6-core/migrate') }}" class="block">
+		<input type="hidden" name="step" value="database" />
+
+		<div class="block-container">
+			<h2 class="block-header">{{ phrase('cv6_core_icon_migration_settings') }}</h2>
+			<div class="block-body">
+				<xf:selectrow name="source" value="{$source}" label="{{ phrase('cv6_core_source_provider') }}">
+					<xf:foreach loop="$activeProviders" key="$pId" value="$pObj">
+						<xf:option value="{$pId}" label="{$pObj.getTitle()} ({$pObj.getPrefix()})" />
+					</xf:foreach>
+				</xf:selectrow>
+
+				<xf:selectrow name="target" value="{$target}" label="{{ phrase('cv6_core_target_provider') }}">
+					<xf:foreach loop="$activeProviders" key="$pId" value="$pObj">
+						<xf:option value="{$pId}" label="{$pObj.getTitle()} ({$pObj.getPrefix()})" />
+					</xf:foreach>
+				</xf:selectrow>
+			</div>
+			<xf:submitrow submit="{{ phrase('cv6_core_preview_migration') }}" icon="search" />
+		</div>
+	</xf:form>
+
+<xf:elseif is="$step == 'complete'" />
+	<div class="block">
+		<div class="block-container">
+			<h3 class="block-header">{{ phrase('cv6_core_migration_summary_title') }}</h3>
+			<div class="block-body">
+				<div class="block-row">
+					<div class="blockMessage blockMessage--success blockMessage--iconic">
+						{{ phrase('cv6_core_migration_summary_text') }}
+					</div>
+				</div>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_database') }}">
+					<xf:if is="$counts.database">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.database}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_styles') }}">
+					<xf:if is="$counts.styles">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.styles}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_phrases') }}">
+					<xf:if is="$counts.phrases">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.phrases}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+			</div>
+			<xf:submitrow>
+				<xf:html>
+					<xf:button href="{{ link('cv6-core/migrate') }}" class="button--primary">
+						<xf:fa icon="fa-redo" /> {{ phrase('cv6_core_start_new_migration') }}
+					</xf:button>
+				</xf:html>
+			</xf:submitrow>
+		</div>
+	</div>
+
+<xf:else />
+	<xf:form action="{{ link('cv6-core/migrate') }}" class="block">
+		<input type="hidden" name="source" value="{$source}" />
+		<input type="hidden" name="target" value="{$target}" />
+		<input type="hidden" name="step" value="{$step}" />
+		<input type="hidden" name="counts[database]" value="{$counts.database|default(0)}" />
+		<input type="hidden" name="counts[styles]" value="{$counts.styles|default(0)}" />
+		<input type="hidden" name="counts[phrases]" value="{$counts.phrases|default(0)}" />
+
+		<div class="block-container">
+			<h3 class="block-header">
+				<xf:if is="$step == 'database'">
+					{{ phrase('cv6_core_step_database') }}
+				<xf:elseif is="$step == 'styles'" />
+					{{ phrase('cv6_core_step_styles') }}
+				<xf:elseif is="$step == 'phrases'" />
+					{{ phrase('cv6_core_step_phrases') }}
+				</xf:if>
+				({{ count($results) }})
+			</h3>
+
+			<xf:if is="$groupedResults">
+				<div class="block-body">
+					<xf:datalist>
+						<xf:datarow rowtype="header">
+							<xf:cell class="dataList-cell--min">
+								<label class="iconic">
+									<input type="checkbox" data-xf-init="check-all" data-container="< form" data-match=".js-item-check" checked="checked" title="{{ phrase('select_all') }}" />
+									<i aria-hidden="true"></i>
+								</label>
+							</xf:cell>
+							<xf:cell>{{ phrase('title') }}</xf:cell>
+							<xf:cell>{{ phrase('current_value') }}</xf:cell>
+							<xf:cell>{{ phrase('new_value') }}</xf:cell>
+						</xf:datarow>
+
+						<xf:foreach loop="$groupedResults" value="$group">
+							<tbody class="dataList-rowGroup js-group-{$group.key}">
+								<xf:datarow rowtype="subsection">
+									<xf:cell class="dataList-cell--min">
+										<label class="iconic">
+											<input type="checkbox" data-xf-init="check-all" data-container="< .js-group-{$group.key}" data-match=".js-item-check" checked="checked" title="{{ phrase('select_all') }}" />
+											<i aria-hidden="true"></i>
+										</label>
+									</xf:cell>
+									<xf:cell colspan="3">
+										<strong>{$group.label}</strong> ({{ count($group.items) }})
+									</xf:cell>
+								</xf:datarow>
+
+								<xf:foreach loop="$group.items" value="$item">
+									<xf:datarow rowclass="js-migration-row" data-item-key="{$item.key}">
+										<xf:cell class="dataList-cell--min">
+											<label class="iconic">
+												<input type="checkbox" name="migrate[]" value="{$item.key}" class="js-item-check" checked="checked" />
+												<i aria-hidden="true"></i>
+											</label>
+										</xf:cell>
+										<xf:cell class="dataList-cell--main">{$item.name}</xf:cell>
+										<xf:cell>
+											<xf:fa icon="{{ cv6icon($item.oldIcon) }}" class="cv6-iconpreview" />
+											<code>{$item.old}</code>
+										</xf:cell>
+										<xf:cell>
+											<input type="hidden" name="custom_new[{$item.key}]" value="{$item.new}" class="js-custom-new-input" />
+											<span class="js-new-icon-preview">
+												<xf:if is="{$item.newIcon}">
+													<xf:fa icon="{{ cv6icon($item.newIcon) }}" class="cv6-iconpreview" />
+												<xf:else />
+													<span class="cv6-iconpreview cv6-no-icon"><xf:fa icon="fa-question" /></span>
+												</xf:if>
+											</span>
+											<code class="js-new-icon-text">{$item.new|default('-')}</code>
+											<a href="{{ link('cv6-core/migrate-change', null, {'target': $target, 'key': $item.key, 'icon': $item.newIcon}) }}"
+											   class="button button--link button--icon button--icon--edit js-change-target-icon"
+											   data-xf-click="overlay"
+											   title="{{ phrase('cv6_core_change_target_icon') }}">
+												<xf:fa icon="fa-pencil-alt" />
+											</a>
+										</xf:cell>
+									</xf:datarow>
+								</xf:foreach>
+							</tbody>
+						</xf:foreach>
+					</xf:datalist>
+				</div>
+				<xf:submitrow submit="{{ phrase('cv6_core_migrate_and_next') }}" icon="save" name="action_type" value="apply">
+					<xf:html>
+						<xf:button type="submit" name="action_type" value="skip" class="button--alt">
+							<xf:fa icon="fa-forward" /> {{ phrase('cv6_core_skip_step') }}
+						</xf:button>
+						<xf:button href="{{ link('cv6-core/migrate') }}" class="button--link">{{ phrase('cancel') }}</xf:button>
+					</xf:html>
+				</xf:submitrow>
+			<xf:else />
+				<div class="block-body">
+					<div class="blockMessage">{{ phrase('cv6_core_no_items_in_step') }}</div>
+				</div>
+				<xf:submitrow submit="{{ phrase('cv6_core_next_step') }}" icon="arrow-right" name="action_type" value="skip">
+					<xf:html>
+						<xf:button href="{{ link('cv6-core/migrate') }}" class="button--link">{{ phrase('cancel') }}</xf:button>
+					</xf:html>
+				</xf:submitrow>
+			</xf:if>
+		</div>
+	</xf:form>
+</xf:if>
+]]></template>
+  <template type="admin" title="cv6_core_icon_migrate_change" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:title>{{ phrase('cv6_core_choose_target_icon_title', {'provider': $targetProvider.getTitle()}) }}</xf:title>
+
+<xf:form action="" class="block js-migrateChangeForm" data-key="{$key}" data-provider="{$targetProvider.getId()}">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:macro template="cv6_fa_icon" name="cv6_inputIcon"
+				arg-target="migrate_change"
+				arg-name="target_icon"
+				arg-label="{{ phrase('cv6_core_target_icon') }}"
+				arg-value="{$icon}"
+				arg-provider="{$targetProvider.getId()}"
+				arg-showprovidermenu="{{ false }}"
+				arg-autocomplete="{{ true }}"
+				arg-stylechooser="{{ ['style', 'animation', 'rotation'] }}"
+				arg-class="js-cv6-change-icon-input" />
+		</div>
+		<xf:submitrow submit="{{ phrase('apply') }}" icon="save" />
+	</div>
+</xf:form>
+]]></template>
+  <template type="admin" title="cv6_core_phrase_quick_edit" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:title>{{ phrase('cv6_core_phrase_translations', {'title': $displayTitle}) }}</xf:title>
 
 <xf:description class="pairs pairs--inline">
 	<dl class="pairs pairs--inline">
@@ -335,7 +685,7 @@ ul.listColumns.cv6-listColumns {
 	</div>
 </xf:form>
 ]]></template>
-  <template type="admin" title="cv6_fa_icon" version_id="1040370" version_string="1.4.3"><![CDATA[<xf:macro id="cv6_inputIcon"
+  <template type="admin" title="cv6_fa_icon" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:macro id="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -344,7 +694,7 @@ ul.listColumns.cv6-listColumns {
 			arg-explain=""
 			arg-value="" 
 			arg-stylechooser="{{ ['style'] }}"
-			arg-placeholder="fa-..." 
+			arg-placeholder="" 
 			arg-showError="1"
 			arg-readonly=""
 			arg-maxlength="100"
@@ -352,7 +702,14 @@ ul.listColumns.cv6-listColumns {
 			arg-type="default"
 			arg-stylefield="{{ false }}"
 			arg-autocomplete="{{ false }}"
+			arg-provider=""
+			arg-showprovidermenu="{{ true }}"
+			arg-class=""
 >
+
+	<xf:set var="$activeProviders" value="{{ cv6_active_icon_providers() }}" />
+	<xf:set var="$selectedProvider" value="{$activeProviders.{$provider}}" />
+	<xf:set var="$effectivePlaceholder" value="{{ $placeholder ?: ($selectedProvider ? $selectedProvider.getPrefix() . '...' : 'fa-...') }}" />
 
 	<xf:js>
 		XF.extendObject(XF.phrases,
@@ -366,11 +723,11 @@ ul.listColumns.cv6-listColumns {
 	<xf:css src="cv6_core.less" />
 
 	<xf:set var="$postField">
-		<xf:macro id="layout" arg-stylechooser="{$stylechooser}" />
+		<xf:macro id="layout" arg-stylechooser="{$stylechooser}" arg-providers="{$activeProviders}" arg-provider="{$provider}" />
 	</xf:set>
 
 	<xf:set var="$preField">
-		<xf:macro id="pre" arg-value="{$value}" arg-target="{$target}" />
+		<xf:macro id="pre" arg-value="{$value}" arg-target="{$target}" arg-providers="{$activeProviders}" arg-provider="{$provider}" arg-showprovidermenu="{$showprovidermenu}" />
 	</xf:set>
 
 	<xf:set var="$explainError">
@@ -379,13 +736,13 @@ ul.listColumns.cv6-listColumns {
 	</xf:set>
 
 	<xf:textboxrow rowclass="{$rowclass}" 
-			class="js-cv6-iconclasses--{$target}" 
+			class="js-cv6-iconclasses--{$target} {$class}" 
 			label="{$label}" 
 			hint="{$hint}"
 			explain="{{ $showError ? $explainError|raw : $explain|raw }}" 
 			name="{$name}" 
 			value="{$value}"
-			placeholder="{$placeholder}" 
+			placeholder="{$effectivePlaceholder}" 
 			initialhtml="<div class='inputGroup inputGroup--joined'>{$preField|raw}"
 			html="{$postField|raw}</div>" 
 			data-xf-init="cv6ChangeIcon{{ $autocomplete ? ' cv6-icon-auto-complete' : '' }}" 
@@ -393,6 +750,8 @@ ul.listColumns.cv6-listColumns {
 			data-type="{$type}" 
 			data-style-field="{$stylefield}" 
 			data-show-error="{$showError}"
+			data-provider="{$provider}"
+			data-prefix="{{ $selectedProvider ? $selectedProvider.getPrefix() : '' }}"
 			data-phrase-unknown-icon="{{ phrase('cv6_unknown_fa_icon') }}"
 			data-phrase-unknown-class="{{ phrase('cv6_invalid_class:') }}"
 			readonly="{$readonly}" 
@@ -408,42 +767,103 @@ ul.listColumns.cv6-listColumns {
 	arg-label="" 
 	arg-value="" 
 	arg-stylechooser="{{ ['style'] }}" 
-	arg-placeholder="fa-..." 
+	arg-placeholder="" 
 	arg-readonly=""
 	arg-maxlength="100" 
 	arg-dir="ltr" 
 	arg-type="default" 
+	arg-provider=""
+	arg-showprovidermenu="{{ true }}"
+	arg-autocomplete="{{ false }}"
+	arg-class=""
 	>
+	<xf:set var="$activeProviders" value="{{ cv6_active_icon_providers() }}" />
+	<xf:set var="$selectedProvider" value="{$activeProviders.{$provider}}" />
+	<xf:set var="$effectivePlaceholder" value="{{ $placeholder ?: ($selectedProvider ? $selectedProvider.getPrefix() . '...' : 'fa-...') }}" />
+
 	<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
 	<xf:css src="cv6_core.less" />
 
 	<div class='inputGroup inputGroup--joined'>
-		<xf:macro id="pre" arg-value="{$value}" arg-target="{$target}" />
+		<xf:macro id="pre" arg-value="{$value}" arg-target="{$target}" arg-providers="{$activeProviders}" arg-provider="{$provider}" arg-showprovidermenu="{$showprovidermenu}" />
 		<xf:textbox
-			class="js-cv6-iconclasses--{$target}" 
+			class="js-cv6-iconclasses--{$target} {$class}" 
 			label="{$label}" 
 			name="{$name}" 
 			value="{$value}"
-			placeholder="{$placeholder}" 
-			data-xf-init="cv6ChangeIcon" 
+			placeholder="{$effectivePlaceholder}" 
+			data-xf-init="cv6ChangeIcon{{ $autocomplete ? ' cv6-icon-auto-complete' : '' }}" 
 			data-target=".cv6-iconpreview--{$target}"
 			data-type="{$type}" 
 			data-error="0"
+			data-provider="{$provider}"
+			data-prefix="{{ $selectedProvider ? $selectedProvider.getPrefix() : '' }}"
 			readonly="{$readonly}" 
 			maxlength="{$maxlength}"
 			dir="{$dir}" />
-		<xf:macro id="layout" arg-stylechooser="{$stylechooser}" />
+		<xf:macro id="layout" arg-stylechooser="{$stylechooser}" arg-providers="{$activeProviders}" arg-provider="{$provider}" />
 	</div>
 </xf:macro>
 
-<xf:macro id="pre" arg-value="!" arg-target="!">
+<xf:macro id="pre" arg-value="!" arg-target="!" arg-providers="{{ [] }}" arg-provider="" arg-showprovidermenu="{{ true }}">
 	<span class='inputGroup-text'>
+		<xf:if is="$showprovidermenu && $providers|count > 1">
+			<div class="cv6-provider-picker js-cv6-provider-picker">
+				<a class="cv6-provider-trigger js-cv6-provider-trigger"
+				   data-xf-click="menu"
+				   aria-expanded="false"
+				   aria-haspopup="true"
+				   role="button"
+				   tabindex="0"
+				   title="{{ phrase('cv6_select_icon_provider') }}"
+				   data-xf-init="tooltip">
+					<span class="cv6-provider-current js-cv6-provider-current">
+						<xf:fa icon="fab fa-font-awesome-flag" />
+					</span>
+					<xf:fa icon="fa-caret-down" class="cv6-provider-caret" />
+				</a>
+				<div class="menu" data-menu="menu" aria-hidden="true">
+					<div class="menu-content">
+						<h4 class="menu-header">{{ phrase('cv6_icon_provider') }}</h4>
+						<xf:foreach loop="$providers" key="$pId" value="$pObj">
+							<a class="menu-linkRow cv6-provider-menu-item js-cv6-provider-btn"
+							   data-provider="{$pId}"
+							   data-brand-color="{$pObj.getBrandColor()}"
+							   data-prefix="{$pObj.getPrefix()}"
+							   role="button" tabindex="0">
+								<span class="cv6-provider-menu-icon">
+									<xf:if is="$pObj.getBrandIcon()">
+										<xf:fa icon="{$pObj.getBrandIcon()}" />
+									<xf:else />
+										{$pObj.getTitle()|slice(0, 1)}
+									</xf:if>
+								</span>
+								<span class="cv6-provider-menu-title">{$pObj.getTitle()}</span>
+								<span class="cv6-provider-menu-prefix"><code>{$pObj.getPrefix()}</code></span>
+								<span class="cv6-provider-menu-check"><xf:fa icon="fa-check" /></span>
+							</a>
+						</xf:foreach>
+					</div>
+				</div>
+			</div>
+		<xf:elseif is="$provider" />
+			<xf:set var="$singleProvider" value="{$providers.{$provider}}" />
+			<xf:if is="$singleProvider">
+				<span class="cv6-provider-current js-cv6-provider-current" title="{$singleProvider.getTitle()} ({$singleProvider.getPrefix()})" data-xf-init="tooltip">
+					<xf:if is="$singleProvider.getBrandIcon()">
+						<xf:fa icon="{$singleProvider.getBrandIcon()}" />
+					<xf:else />
+						{$singleProvider.getTitle()|slice(0, 1)}
+					</xf:if>
+				</span>
+			</xf:if>
+		</xf:if>
 		<xf:fa icon="{{ $value ?: 'fa-times-octagon' }}"
 			class="{{ $value ? '' : 'cv6-no-icon' }} cv6-iconpreview--{$target} cv6-iconpreview" />
 	</span>
 </xf:macro>
 
-<xf:macro id="layout" arg-stylechooser="{{ ['style','animation','rotation'] }}">
+<xf:macro id="layout" arg-stylechooser="{{ ['style','animation','rotation'] }}" arg-providers="{{ [] }}" arg-provider="">
 	<xf:if is="$xf.options.cv6ShowIconHelper && $stylechooser|count > 0">
 		<xf:if contentcheck="true">
 			<span class='inputGroup-text'>
@@ -474,22 +894,51 @@ ul.listColumns.cv6-listColumns {
 							<xf:contentcheck>
 								<xf:set var="$styles" value="{$value|split(' ')}" />
 								<xf:if is="in_array('style',$stylechooser)">
-									<xf:set var="$items">
-										<xf:foreach loop="$xf.options.cv6CoreFaStyle" key="$class" value="$on">
-											<xf:if is="$on">
-												<xf:set var="$phrase">cv6_fa_{$class|replace('-','_')}</xf:set>
-												<span class="menu-linkRow{{ in_array($class,$styles) ? ' is-active' : '' }}"
-													data-class="{$class}">{{ phrase_dynamic({$phrase}) }}</span>
-												<xf:if is="in_array($class,$styles)">
-													<xf:set var="$checkStyle" value="1" />
-												</xf:if>
-											</xf:if>
-										</xf:foreach>
-									</xf:set>
 									<li class="is-active" role="tabpanel" aria-expanded="true" data-type="variant">
-										<span class="menu-linkRow{{ $checkStyle ? '' : ' is-active' }}"
+										<span class="menu-linkRow js-cv6-style-row{{ $checkStyle ? '' : ' is-active' }}"
 											data-class="_default">{{ phrase('cv6_icon_style_based') }}</span>
-										{$items|raw}
+										<xf:if is="$providers">
+											<xf:foreach loop="$providers" key="$pId" value="$pObj">
+												<xf:if is="!$provider || $provider == $pId">
+													<xf:if is="$pId == 'fa'">
+														<xf:foreach loop="$xf.options.cv6CoreFaStyle" key="$class" value="$on">
+															<xf:if is="$on">
+																<xf:set var="$phrase">cv6_fa_{$class|replace('-','_')}</xf:set>
+																<span class="menu-linkRow js-cv6-style-row{{ in_array($class,$styles) ? ' is-active' : '' }}"
+																	data-provider="fa"
+																	data-class="{$class}">{{ phrase_dynamic({$phrase}) }}</span>
+																<xf:if is="in_array($class,$styles)">
+																	<xf:set var="$checkStyle" value="1" />
+																</xf:if>
+															</xf:if>
+														</xf:foreach>
+													<xf:else />
+														<xf:foreach loop="$pObj.getStyles()" key="$sClass" value="$sLabel">
+															<span class="menu-linkRow js-cv6-style-row{{ in_array($sClass,$styles) ? ' is-active' : '' }}"
+																data-provider="{$pId}"
+																data-class="{$sClass}">{$sLabel}</span>
+															<xf:if is="in_array($sClass,$styles)">
+																<xf:set var="$checkStyle" value="1" />
+															</xf:if>
+														</xf:foreach>
+													</xf:if>
+												</xf:if>
+											</xf:foreach>
+										<xf:else />
+											<xf:if is="!$provider || $provider == 'fa'">
+												<xf:foreach loop="$xf.options.cv6CoreFaStyle" key="$class" value="$on">
+													<xf:if is="$on">
+														<xf:set var="$phrase">cv6_fa_{$class|replace('-','_')}</xf:set>
+														<span class="menu-linkRow js-cv6-style-row{{ in_array($class,$styles) ? ' is-active' : '' }}"
+															data-provider="fa"
+															data-class="{$class}">{{ phrase_dynamic({$phrase}) }}</span>
+														<xf:if is="in_array($class,$styles)">
+															<xf:set var="$checkStyle" value="1" />
+														</xf:if>
+													</xf:if>
+												</xf:foreach>
+											</xf:if>
+										</xf:if>
 									</li>
 								</xf:if>
 								<xf:if is="in_array('animation',$stylechooser)">
@@ -538,14 +987,17 @@ ul.listColumns.cv6-listColumns {
 		</xf:if>
 	</xf:if>
 </xf:macro>]]></template>
-  <template type="admin" title="cv6_options_icon" version_id="1000070" version_string="1.0.0"><![CDATA[<xf:macro name="cv6_fa_icon::cv6_inputIcon" arg-target="optionDefaultIcon" 
+  <template type="admin" title="cv6_options_icon" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:macro template="cv6_fa_icon" name="cv6_inputIcon"
+	arg-target="optionDefaultIcon" 
 	arg-name="{$inputName}" 
 	arg-label="{$option.title}"
 	arg-hint="{$hintHtml}"
 	arg-explain="{$explainHtml}"
 	arg-rowclass="{$rowClass}"
-    arg-value="{$option.option_value}" 
+	arg-value="{$option.option_value}" 
+	arg-placeholder="fa-..."
 	arg-stylechooser="{{ ['style','animation','rotation'] }}" 
+	arg-autocomplete="{{ true }}"
  />]]></template>
   <template type="admin" title="cv6_options_template_asset" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:macro id="cv6_assetupload::cv6_assetuploadrow" 
     arg-target="optionAsset-{$option.option_id}" 

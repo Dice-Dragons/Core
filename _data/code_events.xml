@@ -33,4 +33,7 @@
   <event event_id="cv6_core_index_alphabets" arguments="[{&quot;name&quot;:&quot;&amp;classes&quot;,&quot;type&quot;:&quot;array&quot;}]"><![CDATA[<p>
 	Called when building the list of available alphabet index providers in the cv6\Core\Repository\Alphabet repository.
 </p>]]></event>
+  <event event_id="cv6_icon_provider" arguments="[{&quot;name&quot;:&quot;&amp;providers&quot;,&quot;type&quot;:&quot;array&quot;}]"><![CDATA[<p>
+	Called when building the list of available icon providers in the cv6\Core\Repository\IconProvider repository.
+</p>]]></event>
 </code_events>

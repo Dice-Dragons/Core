@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <options>
+  <option option_id="cv6AllowedIconProviders" edit_format="callback" data_type="array" validation_class="cv6\Core\Option\IconProvider" validation_method="verifyOption" advanced="0">
+    <default_value>{"fa":true}</default_value>
+    <edit_format_params>cv6\Core\Option\IconProvider::renderCheckbox</edit_format_params>
+    <sub_options>*</sub_options>
+    <relation group_id="cv6Core" display_order="105"/>
+  </option>
   <option option_id="cv6CoreFaAnimation" edit_format="checkbox" data_type="array" advanced="1">
     <default_value>{"fa-spin":true,"fa-pulse":true}</default_value>
     <edit_format_params>fa-spin={{ phrase('cv6_fa_fa_spin') }}
