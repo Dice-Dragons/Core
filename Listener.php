@@ -8,9 +8,11 @@ class Listener
     {
         $templater->addFunction('cv6icon', function ($templater, &$escape, $str)
         {
-            if (is_string($str) && strpos($str, '@fa-var-') === 0)
+            if (is_string($str) && preg_match('/^@([a-z0-9]+)-var-(.*)$/i', $str, $matches))
             {
-                $str = 'fa-' . substr($str, 8);
+                $prefix = strtolower($matches[1]) . '-';
+                $iconName = $matches[2];
+                return $prefix . $iconName;
             }
             return $str;
         });

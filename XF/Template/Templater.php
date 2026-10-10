@@ -9,6 +9,24 @@ class Templater extends XFCP_Templater
         parent::addDefaultHandlers();
         $this->addFunction('iconize', 'fnIconize');
         $this->addFunction('ddcopyright', 'fnDiceDragonsCopyright');
+        $this->addFunction('cv6_active_icon_providers', 'fnCv6ActiveIconProviders');
+        $this->addFunction('cv6_all_icon_providers', 'fnCv6AllIconProviders');
+    }
+
+    public function fnCv6ActiveIconProviders($templater, &$escape): array
+    {
+        $escape = false;
+        /** @var \cv6\Core\Repository\IconProvider $providerRepo */
+        $providerRepo = $this->app->repository(\cv6\Core\Repository\IconProvider::class);
+        return $providerRepo->getActiveProviders();
+    }
+
+    public function fnCv6AllIconProviders($templater, &$escape): array
+    {
+        $escape = false;
+        /** @var \cv6\Core\Repository\IconProvider $providerRepo */
+        $providerRepo = $this->app->repository(\cv6\Core\Repository\IconProvider::class);
+        return $providerRepo->getAllProviders();
     }
 
     /** @return string for less Icons @fa-var-regular-circle */

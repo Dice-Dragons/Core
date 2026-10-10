@@ -12,22 +12,32 @@
     "admin/cv6_core.less": {
         "version_id": 1050270,
         "version_string": "1.5.2",
-        "hash": "4ac61391068aeeebc3e9cc3402a18170"
+        "hash": "752c5e2a57af9be6e1a10ce65a220300"
+    },
+    "admin/cv6_core_icon_migrate.html": {
+        "version_id": 1050270,
+        "version_string": "1.5.2",
+        "hash": "529e501c3ec4566f90b1ffd3ef8cea16"
+    },
+    "admin/cv6_core_icon_migrate_change.html": {
+        "version_id": 1050270,
+        "version_string": "1.5.2",
+        "hash": "a9281e567220f54dacbafbd05c1c103b"
     },
     "admin/cv6_core_phrase_quick_edit.html": {
-        "version_id": 1040370,
-        "version_string": "1.4.3",
+        "version_id": 1050270,
+        "version_string": "1.5.2",
         "hash": "9f0f820961c986c6b219552a0a91c1a2"
     },
     "admin/cv6_fa_icon.html": {
-        "version_id": 1040370,
-        "version_string": "1.4.3",
-        "hash": "bc248b57deda509942187d580bf1f4de"
+        "version_id": 1050270,
+        "version_string": "1.5.2",
+        "hash": "5fb70575b9bb45b14fab084adb962ac3"
     },
     "admin/cv6_options_icon.html": {
-        "version_id": 1000070,
-        "version_string": "1.0.0",
-        "hash": "7d4b923fe50ce5fa4ee5ead805833a4d"
+        "version_id": 1050270,
+        "version_string": "1.5.2",
+        "hash": "bc0f62ce76aa70dedc321c620f75ce40"
     },
     "admin/cv6_options_template_asset.html": {
         "version_id": 1050270,

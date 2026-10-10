@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\IconRenderer",
+    "to_class": "cv6\\Core\\XF\\IconRenderer",
+    "execute_order": 10,
+    "active": true
+}

@@ -41,14 +41,8 @@ class Phrase extends AbstractController
         $masterPhrase = $existingPhrases[0] ?? null;
         $masterText = $masterPhrase ? $masterPhrase->phrase_text : '';
 
-        if ($label !== '')
-        {
-            $displayTitle = $masterText !== '' ? "{$label} ({$masterText})" : $label;
-        }
-        else
-        {
-            $displayTitle = $masterText !== '' ? $masterText : $phraseTitle;
-        }
+        $displayTitle = $label !== '' ? $label : $phraseTitle;
+
 
         $canEditMaster = \XF::$developmentMode || !$masterPhrase || empty($masterPhrase->addon_id);
 

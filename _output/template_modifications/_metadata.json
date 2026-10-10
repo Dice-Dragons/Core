@@ -8,8 +8,14 @@
     "admin/cv6_core_bbce_add_fa.json": {
         "hash": "1fb0afbef948ea49b529471dfcca7515"
     },
+    "admin/cv6_core_oe_phrases.json": {
+        "hash": "f770d904a409ce798b86c7fd605b6e61"
+    },
     "admin/cv6_core_oge_add_fa.json": {
-        "hash": "dbb48a2e1fb37af2059eca03ed42bd96"
+        "hash": "c27df0a02788983db5d46ef8f957f4e2"
+    },
+    "admin/cv6_core_oge_phrases.json": {
+        "hash": "3a7c6c1a47bdb12290042d4d469feb96"
     },
     "public/cv6DiceRollerCopyright.json": {
         "hash": "2bbd662ca29adc1291918b79c5ea7f00"

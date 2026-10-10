@@ -177,3 +177,131 @@ ul.listColumns.cv6-listColumns {
 		}
 	}
 }
+
+.cv6-provider-picker {
+	display: inline-flex;
+	align-items: center;
+	border-right: 1px solid @xf-borderColor;
+	margin-right: 6px;
+	padding-right: 4px;
+
+	.cv6-provider-trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 3px;
+		padding: 2px 4px;
+		border-radius: @xf-borderRadiusSmall;
+		cursor: pointer;
+		color: @xf-textColorMuted;
+		text-decoration: none !important;
+		line-height: 1;
+		.m-transition();
+
+		&:hover {
+			background: @xf-contentAltBg;
+			color: @xf-textColor;
+		}
+
+		.cv6-provider-current {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 14px;
+			line-height: 1;
+			width: 18px;
+			height: 18px;
+		}
+
+		.cv6-provider-caret {
+			font-size: 10px;
+			opacity: 0.6;
+		}
+	}
+}
+
+.cv6-provider-menu-item {
+	display: flex !important;
+	align-items: center !important;
+	gap: 8px;
+	padding: 6px 12px !important;
+	cursor: pointer;
+	text-decoration: none !important;
+
+	.cv6-provider-menu-icon {
+		width: 20px;
+		text-align: center;
+		font-size: 14px;
+		flex-shrink: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.cv6-provider-menu-title {
+		flex: 1 1 auto;
+	}
+
+	.cv6-provider-menu-prefix {
+		font-size: 11px;
+		color: @xf-textColorMuted;
+		flex-shrink: 0;
+	}
+
+	.cv6-provider-menu-check {
+		display: none;
+		font-size: 12px;
+		color: @xf-textColorFeature;
+		margin-left: auto;
+		flex-shrink: 0;
+	}
+
+	&.is-active {
+		font-weight: 700;
+		background: @xf-contentAltBg;
+
+		.cv6-provider-menu-check {
+			display: inline-block;
+		}
+	}
+}
+
+.cv6-icon--missing {
+	color: @xf-errorColor;
+	cursor: help;
+}
+
+.cv6-icon-autocomplete-menu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	margin-top: 2px;
+	z-index: 10000;
+	background: @xf-contentBg;
+	border: 1px solid @xf-borderColor;
+	border-radius: @xf-borderRadiusMedium;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	max-height: 240px;
+	overflow-y: auto;
+
+	&.is-active {
+		display: block;
+	}
+
+	.cv6-icon-autocomplete-item {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		padding: 6px 12px;
+		cursor: pointer;
+		text-decoration: none;
+		color: @xf-textColor;
+
+		&:hover,
+		&.is-selected {
+			background: @xf-contentHighlightBg;
+			color: @xf-textColorFeature;
+		}
+	}
+}

@@ -1,0 +1,9 @@
+{
+    "template": "option_edit",
+    "description": "Adds phrase translation button to option title and explain",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:textboxrow name=\"title\" value=\"{$option}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\" />\n\n\t\t\t<xf:textarearow name=\"explain\" value=\"{$option}\" autosize=\"true\"\n\t\t\t\tlabel=\"{{ phrase('explanation') }}\"\n\t\t\t\thint=\"{{ phrase('you_may_use_html') }}\" />",
+    "replace": "<xf:textboxrow name=\"title\" value=\"{$option}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\"\n\t\t\t\tphrase=\"{{ $option.isUpdate() ? 'option.' . $option.option_id : '' }}\" />\n\n\t\t\t<xf:textarearow name=\"explain\" value=\"{$option}\" autosize=\"true\"\n\t\t\t\tlabel=\"{{ phrase('explanation') }}\"\n\t\t\t\thint=\"{{ phrase('you_may_use_html') }}\"\n\t\t\t\tphrase=\"{{ $option.isUpdate() ? 'option_explain.' . $option.option_id : '' }}\" />"
+}

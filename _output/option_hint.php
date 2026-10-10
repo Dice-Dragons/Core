@@ -11,6 +11,8 @@
 namespace XF;
 
 /**
+ * @property array{fa: bool}|null $cv6AllowedIconProviders Allowed icon providers
+
  * @property array{fa-spin: bool, fa-pulse: bool}|null $cv6CoreFaAnimation Icon animation
  * @property array{fa-rotate-90: bool, fa-rotate-180: bool, fa-rotate-270: bool, fa-flip-vertical: bool, fa-flip-horizontal: bool}|null $cv6CoreFaRotation Icon rotation
  * @property array{fal: bool, far: bool, fas: bool, fad: bool, fab: bool}|null $cv6CoreFaStyle Icon styles

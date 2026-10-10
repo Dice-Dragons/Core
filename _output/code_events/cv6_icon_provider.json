@@ -1,0 +1,10 @@
+{
+    "description": "<p>\n\tCalled when building the list of available icon providers in the cv6\\Core\\Repository\\IconProvider repository.\n</p>",
+    "arguments": [
+        {
+            "name": "&providers",
+            "type": "array"
+        }
+    ],
+    "hint_description": null
+}

@@ -1,0 +1,201 @@
+<xf:css src="cv6_core.less" />
+<xf:js src="cv6/core/icon.js" min="1" addon="cv6/Core" />
+
+<xf:title>{{ phrase('cv6_core_icon_migration_title') }}</xf:title>
+
+<xf:if is="$step != 'start'">
+	<div class="block">
+		<div class="block-container">
+			<ul class="tabs tabs--standalone" role="tablist">
+				<li class="tabs-tab {{ $step == 'database' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_database') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'styles' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_styles') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'phrases' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_phrases') }}</span>
+				</li>
+				<li class="tabs-tab {{ $step == 'complete' ? 'is-active' : '' }}">
+					<span class="tabs-tabText">{{ phrase('cv6_core_step_complete') }}</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</xf:if>
+
+<xf:if is="$step == 'start'">
+	<xf:form action="{{ link('cv6-core/migrate') }}" class="block">
+		<input type="hidden" name="step" value="database" />
+
+		<div class="block-container">
+			<h2 class="block-header">{{ phrase('cv6_core_icon_migration_settings') }}</h2>
+			<div class="block-body">
+				<xf:selectrow name="source" value="{$source}" label="{{ phrase('cv6_core_source_provider') }}">
+					<xf:foreach loop="$activeProviders" key="$pId" value="$pObj">
+						<xf:option value="{$pId}" label="{$pObj.getTitle()} ({$pObj.getPrefix()})" />
+					</xf:foreach>
+				</xf:selectrow>
+
+				<xf:selectrow name="target" value="{$target}" label="{{ phrase('cv6_core_target_provider') }}">
+					<xf:foreach loop="$activeProviders" key="$pId" value="$pObj">
+						<xf:option value="{$pId}" label="{$pObj.getTitle()} ({$pObj.getPrefix()})" />
+					</xf:foreach>
+				</xf:selectrow>
+			</div>
+			<xf:submitrow submit="{{ phrase('cv6_core_preview_migration') }}" icon="search" />
+		</div>
+	</xf:form>
+
+<xf:elseif is="$step == 'complete'" />
+	<div class="block">
+		<div class="block-container">
+			<h3 class="block-header">{{ phrase('cv6_core_migration_summary_title') }}</h3>
+			<div class="block-body">
+				<div class="block-row">
+					<div class="blockMessage blockMessage--success blockMessage--iconic">
+						{{ phrase('cv6_core_migration_summary_text') }}
+					</div>
+				</div>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_database') }}">
+					<xf:if is="$counts.database">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.database}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_styles') }}">
+					<xf:if is="$counts.styles">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.styles}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+
+				<xf:formrow label="{{ phrase('cv6_core_step_phrases') }}">
+					<xf:if is="$counts.phrases">
+						<span class="label label--success">{{ phrase('cv6_core_items_migrated', {'count': $counts.phrases}) }}</span>
+					<xf:else />
+						<span class="label label--muted">{{ phrase('cv6_core_items_skipped') }}</span>
+					</xf:if>
+				</xf:formrow>
+			</div>
+			<xf:submitrow>
+				<xf:html>
+					<xf:button href="{{ link('cv6-core/migrate') }}" class="button--primary">
+						<xf:fa icon="fa-redo" /> {{ phrase('cv6_core_start_new_migration') }}
+					</xf:button>
+				</xf:html>
+			</xf:submitrow>
+		</div>
+	</div>
+
+<xf:else />
+	<xf:form action="{{ link('cv6-core/migrate') }}" class="block">
+		<input type="hidden" name="source" value="{$source}" />
+		<input type="hidden" name="target" value="{$target}" />
+		<input type="hidden" name="step" value="{$step}" />
+		<input type="hidden" name="counts[database]" value="{$counts.database|default(0)}" />
+		<input type="hidden" name="counts[styles]" value="{$counts.styles|default(0)}" />
+		<input type="hidden" name="counts[phrases]" value="{$counts.phrases|default(0)}" />
+
+		<div class="block-container">
+			<h3 class="block-header">
+				<xf:if is="$step == 'database'">
+					{{ phrase('cv6_core_step_database') }}
+				<xf:elseif is="$step == 'styles'" />
+					{{ phrase('cv6_core_step_styles') }}
+				<xf:elseif is="$step == 'phrases'" />
+					{{ phrase('cv6_core_step_phrases') }}
+				</xf:if>
+				({{ count($results) }})
+			</h3>
+
+			<xf:if is="$groupedResults">
+				<div class="block-body">
+					<xf:datalist>
+						<xf:datarow rowtype="header">
+							<xf:cell class="dataList-cell--min">
+								<label class="iconic">
+									<input type="checkbox" data-xf-init="check-all" data-container="< form" data-match=".js-item-check" checked="checked" title="{{ phrase('select_all') }}" />
+									<i aria-hidden="true"></i>
+								</label>
+							</xf:cell>
+							<xf:cell>{{ phrase('title') }}</xf:cell>
+							<xf:cell>{{ phrase('current_value') }}</xf:cell>
+							<xf:cell>{{ phrase('new_value') }}</xf:cell>
+						</xf:datarow>
+
+						<xf:foreach loop="$groupedResults" value="$group">
+							<tbody class="dataList-rowGroup js-group-{$group.key}">
+								<xf:datarow rowtype="subsection">
+									<xf:cell class="dataList-cell--min">
+										<label class="iconic">
+											<input type="checkbox" data-xf-init="check-all" data-container="< .js-group-{$group.key}" data-match=".js-item-check" checked="checked" title="{{ phrase('select_all') }}" />
+											<i aria-hidden="true"></i>
+										</label>
+									</xf:cell>
+									<xf:cell colspan="3">
+										<strong>{$group.label}</strong> ({{ count($group.items) }})
+									</xf:cell>
+								</xf:datarow>
+
+								<xf:foreach loop="$group.items" value="$item">
+									<xf:datarow rowclass="js-migration-row" data-item-key="{$item.key}">
+										<xf:cell class="dataList-cell--min">
+											<label class="iconic">
+												<input type="checkbox" name="migrate[]" value="{$item.key}" class="js-item-check" checked="checked" />
+												<i aria-hidden="true"></i>
+											</label>
+										</xf:cell>
+										<xf:cell class="dataList-cell--main">{$item.name}</xf:cell>
+										<xf:cell>
+											<xf:fa icon="{{ cv6icon($item.oldIcon) }}" class="cv6-iconpreview" />
+											<code>{$item.old}</code>
+										</xf:cell>
+										<xf:cell>
+											<input type="hidden" name="custom_new[{$item.key}]" value="{$item.new}" class="js-custom-new-input" />
+											<span class="js-new-icon-preview">
+												<xf:if is="{$item.newIcon}">
+													<xf:fa icon="{{ cv6icon($item.newIcon) }}" class="cv6-iconpreview" />
+												<xf:else />
+													<span class="cv6-iconpreview cv6-no-icon"><xf:fa icon="fa-question" /></span>
+												</xf:if>
+											</span>
+											<code class="js-new-icon-text">{$item.new|default('-')}</code>
+											<a href="{{ link('cv6-core/migrate-change', null, {'target': $target, 'key': $item.key, 'icon': $item.newIcon}) }}"
+											   class="button button--link button--icon button--icon--edit js-change-target-icon"
+											   data-xf-click="overlay"
+											   title="{{ phrase('cv6_core_change_target_icon') }}">
+												<xf:fa icon="fa-pencil-alt" />
+											</a>
+										</xf:cell>
+									</xf:datarow>
+								</xf:foreach>
+							</tbody>
+						</xf:foreach>
+					</xf:datalist>
+				</div>
+				<xf:submitrow submit="{{ phrase('cv6_core_migrate_and_next') }}" icon="save" name="action_type" value="apply">
+					<xf:html>
+						<xf:button type="submit" name="action_type" value="skip" class="button--alt">
+							<xf:fa icon="fa-forward" /> {{ phrase('cv6_core_skip_step') }}
+						</xf:button>
+						<xf:button href="{{ link('cv6-core/migrate') }}" class="button--link">{{ phrase('cancel') }}</xf:button>
+					</xf:html>
+				</xf:submitrow>
+			<xf:else />
+				<div class="block-body">
+					<div class="blockMessage">{{ phrase('cv6_core_no_items_in_step') }}</div>
+				</div>
+				<xf:submitrow submit="{{ phrase('cv6_core_next_step') }}" icon="arrow-right" name="action_type" value="skip">
+					<xf:html>
+						<xf:button href="{{ link('cv6-core/migrate') }}" class="button--link">{{ phrase('cancel') }}</xf:button>
+					</xf:html>
+				</xf:submitrow>
+			</xf:if>
+		</div>
+	</xf:form>
+</xf:if>

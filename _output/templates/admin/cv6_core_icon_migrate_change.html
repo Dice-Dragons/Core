@@ -1,0 +1,19 @@
+<xf:title>{{ phrase('cv6_core_choose_target_icon_title', {'provider': $targetProvider.getTitle()}) }}</xf:title>
+
+<xf:form action="" class="block js-migrateChangeForm" data-key="{$key}" data-provider="{$targetProvider.getId()}">
+	<div class="block-container">
+		<div class="block-body">
+			<xf:macro template="cv6_fa_icon" name="cv6_inputIcon"
+				arg-target="migrate_change"
+				arg-name="target_icon"
+				arg-label="{{ phrase('cv6_core_target_icon') }}"
+				arg-value="{$icon}"
+				arg-provider="{$targetProvider.getId()}"
+				arg-showprovidermenu="{{ false }}"
+				arg-autocomplete="{{ true }}"
+				arg-stylechooser="{{ ['style', 'animation', 'rotation'] }}"
+				arg-class="js-cv6-change-icon-input" />
+		</div>
+		<xf:submitrow submit="{{ phrase('apply') }}" icon="save" />
+	</div>
+</xf:form>

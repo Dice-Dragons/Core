@@ -3,7 +3,7 @@
 ## 1. Metadata & Scope
 * **Add-On ID**: `cv6/Core`
 * **Title**: `[DD] - Core Library`
-* **Current Version**: `1.5.1` (Version ID: `1050170`)
+* **Current Version**: `1.6.0` (Version ID: `1060070`)
 * **Vendor**: `cv6` / Hoffi
 * **Target Environment**: XenForo 2.3.0+, PHP 8.2.0+
 * **Dependencies**: None (Core foundational library for all `cv6/*` add-ons)
@@ -12,7 +12,21 @@
 
 ## 2. Shared Components & UI Subsystems
 
-### A. Asset Upload Field & Reset Subsystem (`cv6_assetupload`)
+### A. Multi-Provider Icon Framework & Migration Wizard
+* **Interfaces & Core**:
+  * `cv6\Core\Icon\Provider\IconProviderInterface`: Contract for all icon providers (`getId()`, `getPrefix()`, `getStyles()`, `render()`, `getMaskUrl()`, `search()`, `isValidIcon()`, `getMigrationMap()`, `getStyleMap()`).
+  * `cv6\Core\Icon\Provider\AbstractIconProvider`: Base class providing prefix normalization, automatic Data-URI CSS mask extraction (`fill="black"`), and style mapping defaults.
+  * `cv6\Core\Icon\Provider\FontAwesomeProvider`: Native Font Awesome provider (`fa-`).
+* **Code Event (`cv6_icon_provider`)**: Official XenForo event enabling third-party add-ons to register custom icon sets.
+* **Core Extensions**:
+  * `cv6\Core\XF\IconRenderer`: Extends `XF\IconRenderer` to delegate rendering calls dynamically by prefix/class, with fallback placeholder rendering on missing providers.
+  * `cv6\Core\XF\CssRenderer`: Extends `XF\CssRenderer` to intercept `@<prefix>-var-<name>` variables in LESS and generate runtime `data:image/svg+xml` masks.
+* **Migration Wizard (`cv6\Core\Admin\Controller\Icon::actionMigrate`)**:
+  * 4-step wizard to convert icons across Database (options, standard XF tables, dynamic `cv6_icon` tables), Style Properties (`@...-var-...`), and Phrases (`<xf:fa>`), with interactive override modal (`actionMigrateChange`) and automatic cache rebuilds.
+* **Autocomplete & Picker**:
+  * `cv6_fa_icon::cv6_inputIcon`: Multi-provider selector dropdown with brand icons/colors, dynamic styles, and live Ajax SVG autocomplete (`_files/js/cv6/core/icon.js`).
+
+### B. Asset Upload Field & Reset Subsystem (`cv6_assetupload`)
 * **Macro**: `cv6_assetupload::cv6_assetuploadrow`
 * **Arguments**:
   * `arg-name` (Required): Form input name.
@@ -73,6 +87,7 @@
 | `cv6CoreFaAnimation` | `string` | `select` | `none` | Default FontAwesome animation. |
 | `cv6CoreFaRotation` | `string` | `select` | `0` | Default FontAwesome rotation degree. |
 | `cv6extraFaIcons` | `array` | - | `[]` | Additional custom FA icons registered in the system. |
+| `cv6AllowedIconProviders` | `array` | `callback` (`cv6\Core\Option\IconProvider::renderCheckbox`) | `['fa' => true]` | Select active icon providers available in the system. |
 | `cv6ShowIconHelper` | `boolean` | `onoff` | `true` | Display helper tools for icon selection in ACP. |
 
 ### Build Process & Static Assets (`build.json`)

@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "<xf:textboxrow name=\"icon\" value=\"{$group.icon}\"\n\t\t\t\tlabel=\"{{ phrase('icon') }}\" />",
-    "replace": "<xf:macro name=\"cv6_fa_icon::cv6_inputIcon\"\n\t\t\t\targ-name=\"icon\" \n\t\t\t\targ-value=\"{$group.icon}\"\n\t\t\t\targ-label=\"{{ phrase('icon') }}\"\n\t\t  \t\targ-target=\"option-{$group.group_id}\"\n\t\t\t/>"
+    "replace": "<xf:if is=\"$xf.options.cv6ReplaceXF\">\n\t<xf:macro template=\"cv6_fa_icon\" name=\"cv6_inputIcon\"\n\t\t\t\targ-name=\"icon\" \n\t\t\t\targ-value=\"{$group.icon}\"\n\t\t\t\targ-label=\"{{ phrase('icon') }}\"\n\t\t  \t\targ-target=\"option-group-{$group.group_id|default('new')}\"\n\t\t\t  \targ-placeholder=\"fa-...\"\n\t\t\t  \targ-stylechooser=\"{{ ['style','animation','rotation'] }}\"\n\t\t\t  \targ-autocomplete=\"{{ true }}\"\n\t\t\t/>\t\n<xf:else />\n\t$0\n</xf:if>"
 }

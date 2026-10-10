@@ -1,3 +1,13 @@
+1.6.0
+ - Added Multi-Provider Icon Framework (IconProviderInterface, AbstractIconProvider, FontAwesomeProvider)
+ - Added Code Event cv6_icon_provider for custom third-party icon set registration
+ - Extended XF\IconRenderer with dynamic delegation and missing provider fallback protection
+ - Extended XF\CssRenderer with runtime SVG Data-URI mask generation for LESS @<prefix>-var-<name> variables
+ - Added 4-Step Icon Migration Wizard (Database, Styles, Phrases, Summary & Cache Rebuilds) with interactive override modal
+ - Enhanced cv6_inputIcon macro and cv6/core/icon.js with multi-provider picker and live Ajax SVG autocomplete
+ - Added Option cv6AllowedIconProviders and updated cv6\Core\Option\Check for multi-provider validation
+ - Added developer guide in _docs/icon_providers.md
+
 1.5.2
  - Enhanced cv6_assetuploadrow macro with default parameter and integrated Reset button
  - Added smooth 180deg counter-clockwise hover animation on reset button icon

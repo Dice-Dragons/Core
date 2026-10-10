@@ -1,0 +1,15 @@
+{
+    "edit_format": "callback",
+    "edit_format_params": "cv6\\Core\\Option\\IconProvider::renderCheckbox",
+    "data_type": "array",
+    "sub_options": [
+        "*"
+    ],
+    "validation_class": "cv6\\Core\\Option\\IconProvider",
+    "validation_method": "verifyOption",
+    "advanced": false,
+    "default_value": "{\"fa\":true}",
+    "relations": {
+        "cv6Core": 105
+    }
+}

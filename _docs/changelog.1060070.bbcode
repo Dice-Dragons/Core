@@ -1,0 +1,19 @@
+[HEADING=2]Changes in [DD] - Core Library 1.6.0[/HEADING]
+
+[HEADING=3]Added[/HEADING]
+[LIST]
+[*][B]Multi-Provider Icon System[/B]: Built a modular, provider-based icon subsystem ([I]cv6\Core\Icon\Provider\IconProviderInterface[/I], [I]AbstractIconProvider[/I], [I]FontAwesomeProvider[/I]) allowing any custom or third-party icon set (such as Google Material Symbols, Game Icons, or Font Awesome 6/7) to integrate seamlessly into XenForo 2.3.
+[*][B]Icon Provider Code Event ([I]cv6_icon_provider[/I])[/B]: Official code event allowing external add-ons to register custom icon providers without core file modifications.
+[*][B]Provider Management Repository & Options[/B]: Added [I]cv6\Core\Repository\IconProvider[/I] to resolve and cache active providers. Added [I]cv6AllowedIconProviders[/I] AdminCP option to enable/disable specific icon providers.
+[*][B]Rendering & Fallback Protection[/B]: Extended [I]XF\IconRenderer[/I] to dynamically delegate rendering to active providers based on prefixes and classes. Features an automatic fallback placeholder with informative tooltips when an icon belongs to an inactive or uninstalled provider to prevent layout breakage.
+[*][B]Runtime CSS Mask Generation[/B]: Extended [I]XF\CssRenderer[/I] to intercept [I]@<prefix>-var-<name>[/I] variables in LESS stylesheets and dynamically generate standard [I]data:image/svg+xml;utf8,...[/I] CSS masks with [I]fill="black"[/I] for non-FA icons used in [I].m-faIcon()[/I] masks.
+[*][B]4-Step Icon Migration Wizard ([I]admin.php?cv6-core/migrate[/I])[/B]: Comprehensive ACP migration tool to convert existing icons between any two registered providers across Database (options, standard XF tables, and custom tables), Style Properties ([I]@...-var-...[/I] variables), Phrases ([I]<xf:fa>[/I] tags), and automated cache rebuilds, including an interactive modal override option ([I]cv6-core/migrate-change[/I]).
+[*][B]Multi-Provider Icon Input & Live Autocomplete[/B]: Enhanced [I]cv6_fa_icon::cv6_inputIcon[/I] macro and [I]cv6/core/icon.js[/I] to support provider switching, style dropdowns, and live SVG autocomplete previews via Ajax.
+[*][B]Developer Documentation[/B]: Added [I]_docs/icon_providers.md[/I] documenting architecture, registration, and implementation guidelines for custom icon providers.
+[/LIST]
+
+[HEADING=3]Changed[/HEADING]
+[LIST]
+[*][B]Option Validation[/B]: Updated [I]cv6\Core\Option\Check[/I] to dynamically validate icon format and modifier classes against all active providers and styles instead of strictly Font Awesome.
+[*][B]Phrase Translation Clean Title[/B]: Streamlined title display in [I]Phrase::actionTranslate()[/I] to avoid redundant parenthesized titles.
+[/LIST]

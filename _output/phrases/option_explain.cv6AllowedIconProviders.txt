@@ -1,0 +1,1 @@
+Choose which icon providers are active and selectable across the community. If only one provider is selected, the icon picker operates in single-provider mode.

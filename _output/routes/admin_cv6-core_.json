@@ -6,6 +6,6 @@
     "build_class": "",
     "build_method": "",
     "controller": "cv6\\Core\\Admin\\Controller\\Icon",
-    "context": "",
+    "context": "cv6IconMigration",
     "action_prefix": ""
 }

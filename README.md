@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *This documentation is also available in: [Deutsch](README.de.md)*
 
-![Version](https://img.shields.io/badge/version-1.5.2-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.6.0-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** is the foundational framework required for (nearly) all cv6 / Dice Dragons add-ons. It provides a rich set of shared resources, UI components, and developer tools to ensure stability and reduce code duplication.
 
@@ -10,6 +10,13 @@
 ## Features & Developer Tools
 
 This library includes essential tools for XenForo development:
+
+### Multi-Provider Icon Framework
+* **Modular Icon Providers**: Extensible provider architecture (`IconProviderInterface`, `AbstractIconProvider`, `FontAwesomeProvider`) enabling third-party icon libraries (Google Material Symbols, Game Icons, Font Awesome 6/7, etc.) to integrate into XenForo.
+* **Code Event (`cv6_icon_provider`)**: Einhängepunkt für Dritt-Add-ons zur einfachen Registrierung eigener Icon-Sets.
+* **Core Extensions & Fallback Protection**: Extends `XF\IconRenderer` and `XF\CssRenderer` for automatic delegation, missing-provider fallback icons, and dynamic `@<prefix>-var-<name>` Data-URI mask generation in LESS.
+* **4-Step Icon Migration Wizard**: Guided ACP tool (`admin.php?cv6-core/migrate`) for converting icons across Database, Style Properties, and Phrases between any registered providers with interactive override modals.
+* **Universal Multi-Provider Icon Chooser & Live Autocomplete**: Enhanced `cv6_inputIcon` macro and `cv6/core/icon.js` with provider switching and live Ajax SVG previews.
 
 ### UI Components & Templates
 * **Multi-Toggle & Collapsible Rows (`cv6-multi-toggle`)**: Standardized multi-target collapse handler for AdminCP tables (`.dataList-row--childRow`) and lists. Features synchronized table row sliding via `XF.Animate`, atomic cross-page state persistence in `localStorage`, and zero-FOUC initialization.

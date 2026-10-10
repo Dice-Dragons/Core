@@ -1,8 +1,17 @@
-[SIZE=6][B][DD] - Core Library v1.5.2[/B][/SIZE]
+[SIZE=6][B][DD] - Core Library v1.6.0[/B][/SIZE]
 
 [B][DD] - Core Library[/B] ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
 [HEADING=2]Funktionen & Entwickler-Tools[/HEADING]
+
+[HEADING=3]Multi-Provider Icon Framework[/HEADING]
+[LIST]
+[*][B]Modulare Icon-Provider[/B]: Erweiterbare Provider-Architektur ([I]IconProviderInterface[/I], [I]AbstractIconProvider[/I], [I]FontAwesomeProvider[/I]), die beliebige externe Icon-Sets (Google Material Symbols, Game Icons, Font Awesome 6/7 usw.) nahtlos in XenForo integriert.
+[*][B]Code-Event ([I]cv6_icon_provider[/I])[/B]: Einhängepunkt für Dritt-Add-ons zur Registrierung eigener Icon-Sets ohne Core-Modifikationen.
+[*][B]Core-Erweiterungen & Fallback-Schutz[/B]: Erweitert [I]XF\IconRenderer[/I] und [I]XF\CssRenderer[/I] für automatische Rendering-Delegation, Ausfallschutz-Platzhalter bei deaktivierten Providern und dynamische [I]@<prefix>-var-<name>[/I] Data-URI-Masken in LESS.
+[*][B]4-Stufen Icon-Migrations-Assistent[/B]: Geführtes ACP-Tool ([I]admin.php?cv6-core/migrate[/I]) zur automatischen Konvertierung von Icons über Datenbank, Stileigenschaften und Phrasen zwischen zwei beliebigen Providern mit interaktivem Übersteuerungs-Modal.
+[*][B]Universeller Multi-Provider Icon Chooser & Live-Autovervollständigung[/B]: Erweitertes [I]cv6_inputIcon[/I]-Makro und [I]cv6/core/icon.js[/I] mit Provider-Umschaltung, Style-Auswahl und Ajax-SVG-Vorschau.
+[/LIST]
 
 [HEADING=3]UI-Komponenten & Templates[/HEADING]
 [LIST]

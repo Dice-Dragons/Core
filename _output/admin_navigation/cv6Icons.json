@@ -1,0 +1,11 @@
+{
+    "parent_navigation_id": "tools",
+    "display_order": 700,
+    "link": "",
+    "icon": "fa-icons",
+    "admin_permission_id": "rebuildCache",
+    "debug_only": false,
+    "development_only": false,
+    "super_admin_only": false,
+    "hide_no_children": true
+}

@@ -1,0 +1,9 @@
+{
+    "template": "option_group_edit",
+    "description": "Adds phrase translation button to option group title and description",
+    "execution_order": 10,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<xf:textboxrow name=\"title\" value=\"{$group}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\" />\n\n\t\t\t<xf:textarearow name=\"description\" value=\"{$group}\"\n\t\t\t\tautosize=\"true\"\n\t\t\t\tlabel=\"{{ phrase('description') }}\"\n\t\t\t\thint=\"{{ phrase('you_may_use_html') }}\" />",
+    "replace": "<xf:textboxrow name=\"title\" value=\"{$group}\"\n\t\t\t\tlabel=\"{{ phrase('title') }}\"\n\t\t\t\tphrase=\"{{ $group.isUpdate() ? 'option_group.' . $group.group_id : '' }}\" />\n\n\t\t\t<xf:textarearow name=\"description\" value=\"{$group}\"\n\t\t\t\tautosize=\"true\"\n\t\t\t\tlabel=\"{{ phrase('description') }}\"\n\t\t\t\thint=\"{{ phrase('you_may_use_html') }}\"\n\t\t\t\tphrase=\"{{ $group.isUpdate() ? 'option_group_description.' . $group.group_id : '' }}\" />"
+}

@@ -8,6 +8,12 @@
  * @noinspection PhpMultipleClassesDeclarationsInOneFile
  */
 
+namespace cv6\Core\XF
+{
+	class XFCP_CssRenderer extends \XF\CssRenderer {}
+	class XFCP_IconRenderer extends \XF\IconRenderer {}
+}
+
 namespace cv6\Core\XF\Repository
 {
 	class XFCP_IconRepository extends \XF\Repository\IconRepository {}

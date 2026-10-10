@@ -68,6 +68,8 @@
             type: null,
             styleField: null,
             showError: false,
+            provider: null,
+            prefix: null,
             phraseUnknownIcon: null,
             phraseUnknownClass: null
         },
@@ -83,6 +85,10 @@
         styleField: null,
         inputTimer: null,
         currentValue: '',
+        activeProvider: 'fa',
+        providerButtons: [],
+        providerPicker: null,
+        providerTrigger: null,
 
         newIcon: {
             variant: 'default',
@@ -146,13 +152,155 @@
             XF.on(this.target, 'change', this.handleChange.bind(this));
 
             this.inputGroup = this.target.closest('.inputGroup') || this.target.parentElement;
-            this.layoutMenu = this.inputGroup ? this.inputGroup.querySelectorAll('.menu-linkRow') : [];
+            this.layoutMenu = this.inputGroup ? this.inputGroup.querySelectorAll('.cv6-tabPanes .menu-linkRow') : [];
 
             this.layoutMenu.forEach(linkRow => {
                 XF.on(linkRow, 'click', this.click6.bind(this));
             });            
 
+            this.initProvider();
             this.analyzeIconText(true, false);
+        },
+
+        initProvider: function () {
+            const explicitProvider = this.options.provider || this.target.getAttribute('data-provider');
+            if (explicitProvider) {
+                this.setActiveProvider(explicitProvider, false);
+            }
+
+            if (!this.inputGroup) return;
+
+            this.providerPicker = this.inputGroup.querySelector('.js-cv6-provider-picker');
+            if (!this.providerPicker) {
+                if (!explicitProvider) {
+                    const val = this.target.value.trim();
+                    if (val.indexOf('gm-') !== -1 || ['gmo', 'gmr', 'gms', 'gmf'].some(s => val.indexOf(s) !== -1)) {
+                        this.setActiveProvider('google', false);
+                    } else if (val.indexOf('gi-') !== -1 || ['gio'].some(s => val.indexOf(s) !== -1)) {
+                        this.setActiveProvider('game', false);
+                    }
+                }
+                return;
+            }
+
+            this.providerTrigger = this.providerPicker.querySelector('.js-cv6-provider-trigger');
+            this.providerButtons = this.providerPicker.querySelectorAll('.js-cv6-provider-btn');
+
+            this.providerButtons.forEach(btn => {
+                XF.on(btn, 'click', this.clickProvider.bind(this));
+                const icon = btn.querySelector('.cv6-provider-menu-icon');
+                const color = btn.getAttribute('data-brand-color');
+                if (icon && color) {
+                    icon.style.color = color;
+                }
+            });
+
+            if (!explicitProvider) {
+                const val = this.target.value.trim();
+                let detected = 'fa';
+
+                for (const btn of this.providerButtons) {
+                    const prefix = btn.getAttribute('data-prefix');
+                    const id = btn.getAttribute('data-provider');
+                    if (prefix && prefix !== 'fa-' && val.indexOf(prefix) !== -1) {
+                        detected = id;
+                        break;
+                    }
+                }
+
+                this.setActiveProvider(detected, false);
+            }
+        },
+
+        clickProvider: function (e) {
+            e.preventDefault();
+            const btn = e.target.closest('.js-cv6-provider-btn');
+            if (!btn) return;
+
+            const newProvider = btn.getAttribute('data-provider');
+            if (newProvider === this.activeProvider) return;
+
+            this.setActiveProvider(newProvider, true);
+
+            if (this.providerTrigger) {
+                const menu = XF.ElementData.get(this.providerTrigger, 'menu');
+                if (menu && typeof menu.close === 'function') {
+                    menu.close();
+                }
+            }
+        },
+
+        setActiveProvider: function (providerId, userInitiated = false) {
+            this.activeProvider = providerId;
+            this.target.setAttribute('data-active-provider', providerId);
+
+            let activeBtn = null;
+            if (this.providerButtons && this.providerButtons.length) {
+                this.providerButtons.forEach(btn => {
+                    const id = btn.getAttribute('data-provider');
+                    const color = btn.getAttribute('data-brand-color');
+                    if (id === providerId) {
+                        btn.classList.add('is-active');
+                        if (color) btn.style.color = color;
+                        activeBtn = btn;
+                    } else {
+                        btn.classList.remove('is-active');
+                        btn.style.color = '';
+                    }
+                });
+            }
+
+            const prefix = this.getPrefix();
+            this.target.setAttribute('placeholder', prefix + '...');
+
+            // Update single-badge current indicator icon & brand color
+            const currentBadge = this.inputGroup ? this.inputGroup.querySelector('.js-cv6-provider-current') : null;
+            if (currentBadge && activeBtn) {
+                const iconSpan = activeBtn.querySelector('.cv6-provider-menu-icon');
+                if (iconSpan) {
+                    currentBadge.innerHTML = iconSpan.innerHTML;
+                }
+                const brandColor = activeBtn.getAttribute('data-brand-color');
+                currentBadge.style.color = brandColor || '';
+            }
+
+            if (this.inputGroup) {
+                const styleRows = this.inputGroup.querySelectorAll('.js-cv6-style-row[data-provider]');
+                styleRows.forEach(row => {
+                    const rowProvider = row.getAttribute('data-provider');
+                    row.style.display = (rowProvider === providerId) ? '' : 'none';
+                });
+            }
+
+            if (userInitiated) {
+                const currentVal = this.target.value.trim();
+                let keptClasses = [];
+                if (currentVal !== '') {
+                    const ICON_CLASS_ANIMATION = /^fa-(spin|pulse)$/i;
+                    const ICON_CLASS_ROTATION = /^fa-(rotate-(90|180|270)|flip-(horizontal|vertical))$/i;
+                    const parts = currentVal.split(/\s+/);
+                    keptClasses = parts.filter(c => c.match(ICON_CLASS_ANIMATION) || c.match(ICON_CLASS_ROTATION));
+                }
+                this.target.value = keptClasses.length ? keptClasses.join(' ') + ' ' : '';
+                this.updatePreview(false);
+                this.target.focus();
+            }
+        },
+
+        getPrefix: function () {
+            const explicitPrefix = this.options.prefix || this.target.getAttribute('data-prefix');
+            if (explicitPrefix) return explicitPrefix;
+
+            if (this.providerButtons && this.providerButtons.length) {
+                for (const btn of this.providerButtons) {
+                    if (btn.getAttribute('data-provider') === this.activeProvider) {
+                        return btn.getAttribute('data-prefix') || 'fa-';
+                    }
+                }
+            }
+            const known = { 'fa': 'fa-', 'google': 'gm-', 'game': 'gi-' };
+            if (known[this.activeProvider]) return known[this.activeProvider];
+            return this.activeProvider === 'fa' ? 'fa-' : this.activeProvider + '-';
         },
 
         getPreview: function () {
@@ -243,9 +391,10 @@
         },
 
         click6: function (e) {
-
-            var elm = e.target;
-            var parent = elm.parentElement;
+            var elm = e.target.closest('.menu-linkRow');
+            if (!elm) return;
+            var parent = elm.closest('[data-type]');
+            if (!parent) return;
             var newValue = this.iconText.value;
 
             var type = parent.getAttribute('data-type');
@@ -260,7 +409,7 @@
                 }
             });
 
-            var faClass = e.target.getAttribute('data-class');
+            var faClass = elm.getAttribute('data-class');
 
             switch (faClass) {
                 case '_default':
@@ -300,41 +449,63 @@
                 return false;
             }
 
+            const isFa = (this.activeProvider === 'fa' || !this.activeProvider);
+            const prefix = this.getPrefix();
+
             for (const className of iconParts) {
  
                 if (className.match(ICON_CLASS_ANIMATION_REGEX)) {
                     this.setClassType('animation', className);
                     usedParts.push(className);
-                    continue
+                    continue;
                 }
 
                 else if (className.match(ICON_CLASS_ROTATION_REGEX)) {
                     this.setClassType('rotation', className);
                     usedParts.push(className);
-                    continue
+                    continue;
                 }
 
                 else if (className.match(ICON_CLASS_SIZE_REGEX)) {
                     this.setClassType('size', className);
                     usedParts.push(className);
-                    continue
+                    continue;
                 }
 
-                else if (className.match(XF.Icon.ICON_CLASS_BLOCKLIST_REGEX)) {
-                    continue
-                }
+                if (isFa) {
+                    if (className.match(XF.Icon.ICON_CLASS_BLOCKLIST_REGEX)) {
+                        continue;
+                    }
 
-                else if (['fal', 'far', 'fas', 'fad', 'fab'].includes(className)) {
-                    // variant = XF.Icon.normalizeIconVariant(className);
-                    variant = className;
-                    usedParts.push(className);
-                    continue
-                }
+                    else if (['fal', 'far', 'fas', 'fad', 'fab'].includes(className)) {
+                        variant = className;
+                        usedParts.push(className);
+                        continue;
+                    }
 
-                else if (className.match(XF.Icon.ICON_CLASS_REGEX)) {
-                    name = XF.Icon.normalizeIconName(className);
-                    usedParts.push(className);
-                    continue
+                    else if (className.match(XF.Icon.ICON_CLASS_REGEX)) {
+                        name = XF.Icon.normalizeIconName(className);
+                        usedParts.push(className);
+                        continue;
+                    }
+                } else {
+                    if (['gmo', 'gmr', 'gms', 'gmf', 'gio'].includes(className)) {
+                        variant = className;
+                        usedParts.push(className);
+                        continue;
+                    }
+
+                    if (prefix && className.indexOf(prefix) === 0) {
+                        name = className.substring(prefix.length);
+                        usedParts.push(className);
+                        continue;
+                    }
+
+                    if (/^[a-z0-9_-]+$/i.test(className)) {
+                        name = className;
+                        usedParts.push(className);
+                        continue;
+                    }
                 }
 
             }
@@ -342,7 +513,8 @@
             for (const usedPart of usedParts) {
                 iconParts = iconParts.filter(part => part !== usedPart)
             }
-            if (!variant || variant === 'default' || variant === '_default') { variant = 'fal' }
+            if (isFa && (!variant || variant === 'default' || variant === '_default')) { variant = 'fal' }
+            else if (!isFa && (!variant || variant === 'default' || variant === '_default')) { variant = '' }
 
             this.setName(name);
             this.setVariant(variant);
@@ -351,8 +523,10 @@
             if (setMenu && this.layoutMenu) {
                 this.layoutMenu.forEach(linkRow => {
                     var className = linkRow.getAttribute('data-class');
+                    if (!className) return;
                     var parentNode = linkRow.closest('[data-type]');
-                    const type = parentNode ? parentNode.getAttribute('data-type') : linkRow.parentElement.getAttribute('data-type');
+                    const type = parentNode ? parentNode.getAttribute('data-type') : (linkRow.parentElement ? linkRow.parentElement.getAttribute('data-type') : null);
+                    if (!type) return;
                     if (this.newIcon[type] == className || 
                         (className == '_default' && (this.newIcon[type] == '' || this.newIcon[type] == 'default' || !this.newIcon[type]))
                     )  {
@@ -428,7 +602,12 @@
         },
 
         setName: function (name) {
-            this.newIcon.name = XF.Icon.normalizeIconName(name);
+            if (this.activeProvider === 'fa' || !this.activeProvider) {
+                this.newIcon.name = XF.Icon.normalizeIconName(name || '');
+            } else {
+                const prefix = this.getPrefix();
+                this.newIcon.name = (name || '').replace(new RegExp('^' + prefix), '');
+            }
         },
 
         async createIcon(additionalClass = '', isBlur = false) {
@@ -437,34 +616,75 @@
                 this.showNoIcon();
                 return;
             }
-            try {
-                let icon = await XF.Icon.getInlineIcon(
+
+            const isFa = (this.activeProvider === 'fa' || !this.activeProvider);
+
+            if (isFa) {
+                try {
+                    let icon = await XF.Icon.getInlineIcon(
+                        this.newIcon.variant,
+                        this.newIcon.name,
+                        this.newIcon.classes
+                    );
+                    const object = XF.createElementFromString(icon);
+                    const current = this.getPreview();
+                    if (current) {
+                        current.replaceWith(object);
+                    }
+                    this.setErrorText('');
+                    this.hideError();
+                    this.target.dispatchEvent(new Event("change", { bubbles: true }));
+                }
+                catch (e) {
+                    console.warn(e);
+                    if (isBlur) {
+                        this.showError(this.getPhrase('unknownIcon'));
+                    }
+                }
+            } else {
+                const prefix = this.getPrefix();
+                const fullName = (this.newIcon.name.indexOf(prefix) === 0) ? this.newIcon.name : prefix + this.newIcon.name;
+                const fullClasses = [
                     this.newIcon.variant,
-                    this.newIcon.name,
-                    this.newIcon.classes
-                );
-                const object = XF.createElementFromString(icon);
-                const current = this.getPreview();
-                if (current) {
-                    current.replaceWith(object);
-                }
-                this.setErrorText('');
-                this.hideError();
-                this.target.dispatchEvent(new Event("change", { bubbles: true }));
+                    fullName,
+                    this.newIcon.size,
+                    this.newIcon.rotation,
+                    this.newIcon.animation
+                ].filter(Boolean).join(' ').trim();
+
+                const script = (typeof XF.getApp === 'function' && XF.getApp() === 'admin') ? 'admin.php' : 'index.php';
+                const url = XF.canonicalizeUrl(script + '?cv6-core/preview-icon');
+
+                XF.ajax('GET', url, { classes: fullClasses, provider: this.activeProvider }, (data) => {
+                    const html = (data && typeof data.html === 'string' && data.html !== '') ? data.html : ((data && data.iconHtml) || (data && data.html && data.html.content) || '');
+                    if (html) {
+                        const object = XF.createElementFromString(html);
+                        object.classList.add(this.targetClass, 'cv6-iconpreview');
+                        const current = this.getPreview();
+                        if (current) {
+                            current.replaceWith(object);
+                        }
+                        this.setErrorText('');
+                        this.hideError();
+                    } else if (isBlur) {
+                        this.showError(this.getPhrase('unknownIcon'));
+                    }
+                }, { skipDefault: true });
             }
-            catch (e) {
-                console.warn(e);
-                if (isBlur) {
-                    this.showError(this.getPhrase('unknownIcon'));
-                }
-            }
+
             if (this.styleField) {
                 if (this.options.type === 'stylevar') {
-                    this.styleField.value = "@fa-var-" + (this.newIcon.name || '');
+                    const prefix = isFa ? 'fa-' : this.getPrefix();
+                    const cleanPrefix = prefix.replace(/-+$/, '');
+                    const varPrefix = '@' + cleanPrefix + '-var-';
+                    const iconName = this.newIcon.name ? (this.newIcon.name.indexOf(prefix) === 0 ? this.newIcon.name.substring(prefix.length) : this.newIcon.name) : '';
+                    this.styleField.value = varPrefix + iconName;
                 } else {
+                    const prefix = isFa ? 'fa-' : this.getPrefix();
+                    const iconName = this.newIcon.name ? ((this.newIcon.name.indexOf(prefix) === 0) ? this.newIcon.name : prefix + this.newIcon.name) : '';
                     const fullClass = [
                         this.newIcon.variant,
-                        this.newIcon.name ? 'fa-' + this.newIcon.name : '',
+                        iconName,
                         this.newIcon.size,
                         this.newIcon.rotation,
                         this.newIcon.animation,
@@ -541,6 +761,7 @@
             this.input.setAttribute('autocomplete', 'off');
 
             XF.on(this.input, 'input', this.onInput.bind(this));
+            XF.on(this.input, 'focus', this.onInput.bind(this));
             XF.on(this.input, 'keydown', this.onKeyDown.bind(this));
             XF.on(this.input, 'blur', this.onBlur.bind(this));
 
@@ -564,6 +785,15 @@
             }
         },
 
+        getProvider: function() {
+            if (this.input) {
+                const p = this.input.getAttribute('data-active-provider') || this.input.getAttribute('data-provider');
+                if (p) return p;
+            }
+            var activeBtn = this.input.closest('.inputGroup') ? this.input.closest('.inputGroup').querySelector('.js-cv6-provider-btn.is-active') : null;
+            return activeBtn ? (activeBtn.getAttribute('data-provider') || 'fa') : 'fa';
+        },
+
         getActiveQuery: function() {
             var val = this.input.value;
             var cursor = this.input.selectionStart || val.length;
@@ -571,12 +801,12 @@
             var words = textBeforeCursor.split(/\s+/);
             var currentWord = words[words.length - 1] || '';
 
-            const MODIFIER_REGEX = /^fa-(spin|pulse|rotate-90|rotate-180|rotate-270|flip-horizontal|flip-vertical|xs|sm|lg|\d+x|fw)$/i;
+            const MODIFIER_REGEX = /^(fa-(spin|pulse|rotate-90|rotate-180|rotate-270|flip-horizontal|flip-vertical|xs|sm|lg|\d+x|fw)|fas|far|fal|fad|fab|gmo|gmr|gms|gmf)$/i;
             if (MODIFIER_REGEX.test(currentWord)) {
                 return null;
             }
 
-            if (/^fa-[a-z0-9-]{2,}$/i.test(currentWord)) {
+            if (/^[a-z0-9_-]{2,}$/i.test(currentWord)) {
                 var allWords = val.trim().split(/\s+/);
                 var targetIdx = words.length - 1;
                 return {
@@ -602,10 +832,11 @@
             }
 
             var query = active.word;
+            var provider = this.getProvider();
             var script = (typeof XF.getApp === 'function' && XF.getApp() === 'admin') ? 'admin.php' : 'index.php';
             var url = this.options.acUrl || XF.canonicalizeUrl(script + '?cv6-core/auto-complete');
 
-            XF.ajax('GET', url, { q: query }, this.handleResults.bind(this), { skipDefault: true });
+            XF.ajax('GET', url, { q: query, provider: provider }, this.handleResults.bind(this), { skipDefault: true });
         },
 
         handleResults: function(data, status, xhr) {
@@ -691,7 +922,9 @@
                 }
 
                 var iconHtml = '';
-                if (typeof XF.Icon === 'object' && typeof XF.Icon.getStandaloneIconUrl === 'function') {
+                if (item.html) {
+                    iconHtml = item.html;
+                } else if (typeof XF.Icon === 'object' && typeof XF.Icon.getStandaloneIconUrl === 'function') {
                     var svgUrl = XF.Icon.getStandaloneIconUrl(activeVariant, item.name);
                     iconHtml = '<span class="' + extraClasses + '" style="display:inline-block; width:16px; height:16px; background-color:currentColor; -webkit-mask:url(\'' + svgUrl + '\') center/contain no-repeat; mask:url(\'' + svgUrl + '\') center/contain no-repeat; ' + inlineStyles + '"></span>';
                 } else if (typeof XF.Icon === 'object' && typeof XF.Icon.getIcon === 'function') {
@@ -703,7 +936,7 @@
                 var row = XF.createElementFromString(
                     '<a class="menu-linkRow cv6-icon-autocomplete-item" data-index="' + index + '" style="display:flex; align-items:center; gap:8px; padding:6px 12px; cursor:pointer; text-decoration:none; color:var(--xf-textColor, #141414);">' +
                     '<span style="font-size:16px; width:20px; text-align:center; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center;">' + iconHtml + '</span>' +
-                    '<span style="font-size:13px;">' + item.name + '</span>' +
+                    '<span style="font-size:13px;">' + (item.text || item.name) + '</span>' +
                     '</a>'
                 );
                 XF.on(row, 'mousedown', (e) => {
@@ -756,7 +989,8 @@
         selectItem: function(index) {
             if (this.results[index]) {
                 var selectedItem = this.results[index];
-                var selectedIcon = selectedItem.id;
+                var selectedIcon = selectedItem.id || selectedItem.icon;
+                var provider = this.getProvider();
                 var isBrand = (selectedItem.variant === 'brands');
 
                 var val = this.input.value;
@@ -764,40 +998,43 @@
                 var words = active ? active.allWords : val.trim().split(/\s+/);
                 var targetIdx = active ? active.index : words.length - 1;
 
-                const VARIANTS = ['fal', 'far', 'fas', 'fad', 'fab'];
-                var currentVariant = '';
+                if (provider === 'fa') {
+                    const VARIANTS = ['fal', 'far', 'fas', 'fad', 'fab'];
+                    var currentVariant = '';
 
-                for (var i = 0; i < words.length; i++) {
-                    var wLower = words[i].toLowerCase();
-                    if (VARIANTS.indexOf(wLower) !== -1) {
-                        currentVariant = wLower;
-                        break;
-                    }
-                }
-
-                if (isBrand) {
-                    if (currentVariant && currentVariant !== 'fab') {
-                        this.lastNonBrandStyle = currentVariant;
-                    } else if (!this.lastNonBrandStyle) {
-                        this.lastNonBrandStyle = 'fal';
+                    for (var i = 0; i < words.length; i++) {
+                        var wLower = words[i].toLowerCase();
+                        if (VARIANTS.indexOf(wLower) !== -1) {
+                            currentVariant = wLower;
+                            break;
+                        }
                     }
 
-                    if (currentVariant) {
-                        words = words.map(w => VARIANTS.indexOf(w.toLowerCase()) !== -1 ? 'fab' : w);
+                    if (isBrand) {
+                        if (currentVariant && currentVariant !== 'fab') {
+                            this.lastNonBrandStyle = currentVariant;
+                        } else if (!this.lastNonBrandStyle) {
+                            this.lastNonBrandStyle = 'fal';
+                        }
+
+                        if (currentVariant) {
+                            words = words.map(w => VARIANTS.indexOf(w.toLowerCase()) !== -1 ? 'fab' : w);
+                        } else {
+                            words.unshift('fab');
+                            targetIdx++;
+                        }
                     } else {
-                        words.unshift('fab');
-                        targetIdx++;
-                    }
-                } else {
-                    if (currentVariant === 'fab') {
-                        var restoredStyle = this.lastNonBrandStyle || 'fal';
-                        words = words.map(w => w.toLowerCase() === 'fab' ? restoredStyle : w);
+                        if (currentVariant === 'fab') {
+                            var restoredStyle = this.lastNonBrandStyle || 'fal';
+                            words = words.map(w => w.toLowerCase() === 'fab' ? restoredStyle : w);
+                        }
                     }
                 }
 
                 words[targetIdx] = selectedIcon;
 
                 this.input.value = words.join(' ').trim();
+                this.input.dispatchEvent(new Event('input', { bubbles: true }));
                 this.input.dispatchEvent(new Event('change', { bubbles: true }));
                 this.input.dispatchEvent(new Event('blur', { bubbles: true }));
             }
@@ -806,17 +1043,14 @@
 
         showMenu: function() {
             if (!this.menu) return;
-            if (this.menu.classList.contains('is-active') && getComputedStyle(this.menu).display !== 'none') {
-                return;
-            }
             this.menu.classList.add('is-active');
-            XF.Animate.fadeDown(this.menu, { speed: XF.config.speed.fast });
+            this.menu.style.display = 'block';
         },
 
         hideMenu: function() {
-            if (this.menu && this.menu.classList.contains('is-active')) {
+            if (this.menu) {
                 this.menu.classList.remove('is-active');
-                XF.Animate.fadeUp(this.menu, { speed: XF.config.speed.fast });
+                this.menu.style.display = 'none';
             }
         },
 
@@ -827,5 +1061,121 @@
 
     XF.Element.register('cv6-icon-auto-complete', 'XF.cv6IconAutoComplete');
     XF.Element.register('cv6IconAutoComplete', 'XF.cv6IconAutoComplete');
+
+    function handleMigrateChangeApply(container) {
+        var key = container.dataset.key;
+        var input = container.querySelector('.js-cv6-change-icon-input') || container.querySelector('[name="target_icon"]') || container.querySelector('.inputGroup input[type="text"]');
+        if (!key || !input) {
+            return;
+        }
+
+        var newIconVal = input.value.trim();
+        var provider = container.dataset.provider || '';
+
+        // Find the corresponding row in the datalist table
+        var row = document.querySelector('[data-item-key="' + CSS.escape(key) + '"]');
+        if (row) {
+            var hiddenInput = row.querySelector('.js-custom-new-input');
+            var isStyleVar = hiddenInput && /^@[a-z0-9]+-var-/i.test(hiddenInput.value);
+            var isPhrase = key.indexOf('xf_phrase|') === 0;
+
+            var saveVal = newIconVal;
+            if (isStyleVar) {
+                var prefixMatch = container.querySelector('[data-prefix]');
+                var prefix = prefixMatch ? prefixMatch.getAttribute('data-prefix') : (provider ? provider + '-' : '');
+                if (prefix) {
+                    var cleanPrefix = prefix.replace(/-+$/, '');
+                    var cleanName = newIconVal;
+                    if (cleanName.indexOf(prefix) === 0) {
+                        cleanName = cleanName.substring(prefix.length);
+                    }
+                    saveVal = '@' + cleanPrefix + '-var-' + cleanName;
+                }
+            } else if (isPhrase) {
+                var currentVal = hiddenInput ? hiddenInput.value : '';
+                if (currentVal && /<xf:fa\b[^>]*?\bicon="([^"]+)"[^>]*>/i.test(currentVal)) {
+                    saveVal = currentVal.replace(/(<xf:fa\b[^>]*?\bicon=")[^"]+("[^>]*>)/i, '$1' + newIconVal + '$2');
+                }
+            }
+
+            if (hiddenInput) {
+                hiddenInput.value = saveVal;
+            }
+
+            var textCode = row.querySelector('.js-new-icon-text');
+            if (textCode) {
+                textCode.textContent = saveVal || '-';
+            }
+
+            var editBtn = row.querySelector('.js-change-target-icon');
+            if (editBtn) {
+                var href = editBtn.getAttribute('href') || '';
+                if (href) {
+                    var editParamVal = isPhrase ? newIconVal : saveVal;
+                    editBtn.setAttribute('href', href.replace(/([?&]icon=)[^&]*/, '$1' + encodeURIComponent(editParamVal)));
+                }
+            }
+
+            // Update icon preview
+            var previewEl = row.querySelector('.js-new-icon-preview');
+            if (previewEl) {
+                var modalPreview = container.querySelector('.cv6-iconpreview--migrate_change') || container.querySelector('.js-cv6-change-preview') || container.querySelector('.cv6-iconpreview');
+                var isError = modalPreview && (
+                    modalPreview.classList.contains('cv6-error-icon') ||
+                    modalPreview.classList.contains('cv6-no-icon') ||
+                    modalPreview.querySelector('.fa-bug')
+                );
+
+                if (modalPreview && newIconVal && !isError) {
+                    previewEl.innerHTML = modalPreview.outerHTML;
+                } else if (newIconVal) {
+                    XF.ajax('POST', XF.canonicalizeUrl('admin.php?cv6-core/preview-icon'), {
+                        classes: newIconVal,
+                        provider: provider
+                    }, function(data) {
+                        var html = (data && typeof data.html === 'string' && data.html !== '') ? data.html : ((data && data.iconHtml) || '');
+                        if (html) {
+                            previewEl.innerHTML = html;
+                        }
+                    });
+                } else {
+                    previewEl.innerHTML = '<span class="cv6-iconpreview cv6-no-icon"><i class="fa--xf far fa-question-circle" aria-hidden="true"></i></span>';
+                }
+            }
+
+            // Check row checkbox
+            var check = row.querySelector('.js-item-check');
+            if (check) {
+                check.checked = true;
+            }
+        }
+
+        // Close overlay
+        XF.hideParentOverlay(container);
+    }
+
+    XF.on(document, 'submit', function(e) {
+        var form = e.target.closest('.js-migrateChangeForm');
+        if (!form) {
+            return;
+        }
+
+        e.preventDefault();
+        handleMigrateChangeApply(form);
+    });
+
+    XF.on(document, 'click', function(e) {
+        var applyBtn = e.target.closest('.js-cv6-change-apply');
+        if (!applyBtn) {
+            return;
+        }
+
+        e.preventDefault();
+
+        var container = applyBtn.closest('.js-migrateChangeContainer') || applyBtn.closest('.js-migrateChangeForm');
+        if (container) {
+            handleMigrateChangeApply(container);
+        }
+    });
 
 })(window, document)

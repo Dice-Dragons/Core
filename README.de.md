@@ -1,13 +1,20 @@
 # [DD] - Core Library
 *Diese Dokumentation ist auch verfügbar auf: [English](README.md)*
 
-![Version](https://img.shields.io/badge/version-1.5.2-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.6.0-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
 ---
 
 ## Funktionen & Entwickler-Tools
+
+### Multi-Provider Icon Framework
+* **Modulare Icon-Provider**: Erweiterbare Provider-Architektur (`IconProviderInterface`, `AbstractIconProvider`, `FontAwesomeProvider`), die beliebige externe Icon-Sets (Google Material Symbols, Game Icons, Font Awesome 6/7 usw.) nahtlos in XenForo integriert.
+* **Code-Event (`cv6_icon_provider`)**: Einhängepunkt für Dritt-Add-ons zur Registrierung eigener Icon-Sets ohne Core-Modifikationen.
+* **Core-Erweiterungen & Fallback-Schutz**: Erweitert `XF\IconRenderer` und `XF\CssRenderer` für automatische Rendering-Delegation, Ausfallschutz-Platzhalter bei deaktivierten Providern und dynamische `@<prefix>-var-<name>` Data-URI-Masken in LESS.
+* **4-Stufen Icon-Migrations-Assistent**: Geführtes ACP-Tool (`admin.php?cv6-core/migrate`) zur automatischen Konvertierung von Icons über Datenbank, Stileigenschaften und Phrasen zwischen zwei beliebigen Providern mit interaktivem Übersteuerungs-Modal.
+* **Universeller Multi-Provider Icon Chooser & Live-Autovervollständigung**: Erweitertes `cv6_inputIcon`-Makro und `cv6/core/icon.js` mit Provider-Umschaltung, Style-Auswahl und Ajax-SVG-Vorschau.
 
 ### UI-Komponenten & Templates
 * **Multi-Toggle & Einklappbare Tabellenzeilen (`cv6-multi-toggle`)**: Standardisierter Multi-Target Collapse-Handler für AdminCP-Listen und Tabellen (`.dataList-row--childRow`). Ermöglicht synchrones Zeilen-Sliding via `XF.Animate`, atomare und seitenübergreifende Persistenz im `localStorage` sowie sofortiges Rendern ohne FOUC-Verzögerung.

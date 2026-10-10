@@ -65,11 +65,7 @@ class Check extends AbstractOption
     {
         $parts = array_filter(explode(' ', trim($value)));
         
-        $validIcons = IconHelper::getIconList();
-        
-        $validVariants = array_keys(IconRepository::ICON_VARIANTS);
         $blocklistRegex = IconRepository::ICON_CLASS_BLOCKLIST_REGEX;
-        $classRegex = IconRepository::ICON_CLASS_REGEX;
         
         $options = \XF::options();
         $allowedStyles = (array) ($options->cv6CoreFaStyle ?? []);
@@ -79,6 +75,17 @@ class Check extends AbstractOption
         $rotationClasses = ['fa-rotate-90', 'fa-rotate-180', 'fa-rotate-270', 'fa-flip-vertical', 'fa-flip-horizontal'];
         $animationClasses = ['fa-spin', 'fa-pulse'];
 
+        /** @var \cv6\Core\Repository\IconProvider $providerRepo */
+        $providerRepo = \XF::repository(\cv6\Core\Repository\IconProvider::class);
+        $activeProviders = $providerRepo->getActiveProviders();
+
+        $allProviderStyles = [];
+        foreach ($activeProviders as $pId => $provider) {
+            foreach (array_keys($provider->getStyles()) as $sKey) {
+                $allProviderStyles[$sKey] = $pId;
+            }
+        }
+
         $foundIcons = [];
         $foundModifiers = [];
         $unknownClasses = [];
@@ -87,9 +94,15 @@ class Check extends AbstractOption
         foreach ($parts as $part) {
             $partLower = strtolower($part);
             
-            if (in_array($partLower, $validVariants, true)) {
-                if (empty($allowedStyles[$partLower])) {
-                    $disallowedClasses[] = $part;
+            // Provider styles (e.g. fas, far, gmo, gmr, gms, gmf)
+            if (isset($allProviderStyles[$partLower])) {
+                $pId = $allProviderStyles[$partLower];
+                if ($pId === 'fa') {
+                    if (empty($allowedStyles[$partLower])) {
+                        $disallowedClasses[] = $part;
+                    } else {
+                        $foundModifiers[] = $partLower;
+                    }
                 } else {
                     $foundModifiers[] = $partLower;
                 }
@@ -119,12 +132,21 @@ class Check extends AbstractOption
                 continue;
             }
             
-            if (preg_match("/{$classRegex}/i", $partLower, $matches)) {
-                $name = $matches['name'];
-                if (isset($validIcons[$name]) || in_array($name, $validIcons, true)) {
-                    $foundIcons[] = $partLower;
-                    continue;
+            // Check against active icon providers
+            $matchedIcon = false;
+            foreach ($activeProviders as $pId => $provider) {
+                $prefix = $provider->getPrefix();
+                if ($prefix !== '' && str_starts_with($partLower, $prefix)) {
+                    if ($provider->isValidIcon($partLower)) {
+                        $foundIcons[] = $partLower;
+                        $matchedIcon = true;
+                        break;
+                    }
                 }
+            }
+
+            if ($matchedIcon) {
+                continue;
             }
             
             $unknownClasses[] = $part;
