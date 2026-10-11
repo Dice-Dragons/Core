@@ -1,8 +1,16 @@
-[SIZE=6][B][DD] - Core Library v1.6.1[/B][/SIZE]
+[SIZE=6][B][DD] - Core Library v1.6.2[/B][/SIZE]
 
 [B][DD] - Core Library[/B] ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
 [HEADING=2]Funktionen & Entwickler-Tools[/HEADING]
+
+[HEADING=3]Zentrales Vergleichsoperatoren-Subsystem[/HEADING]
+[LIST]
+[*][B]Standardisierte Vergleichsoperatoren[/B]: Suite-weit vereinheitlichte Operatorendefinitionen, Zeichen (=, !=, >, >=, <, <=) und kurze Keywords in Großbuchstaben (BETWEEN, NOT BETWEEN, IN, NOT IN, CONTAINS, NOT CONTAINS, EMPTY, NOT EMPTY, STARTS WITH, ENDS WITH).
+[*][B]PHP-Helper (\cv6\Core\Helper\Operator)[/B]: Zentrale typisierte Konstanten, mathematische und logische Gruppierungen sowie Filter- und Validierungsmethoden.
+[*][B]Templater-Funktionen[/B]: Globale Template-Funktionen [I]{{ cv6_operators() }}[/I] und [I]{{ cv6_grouped_operators() }}[/I] für [I]<xf:options source="..." />[/I].
+[*][B]AdminCP-Makros[/B]: Vorgefertigte Makros [I]<xf:macro template="cv6_admin_macros" name="operator_select" ... />[/I] und [I]operator_select_row[/I] mit optgroup-Unterstützung und Whitelist-/Blacklist-Filterung.
+[/LIST]
 
 [HEADING=3]Multi-Provider Icon Framework[/HEADING]
 [LIST]

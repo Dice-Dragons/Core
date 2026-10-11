@@ -3,7 +3,7 @@
 ## 1. Metadata & Scope
 * **Add-On ID**: `cv6/Core`
 * **Title**: `[DD] - Core Library`
-* **Current Version**: `1.6.1` (Version ID: `1060170`)
+* **Current Version**: `1.6.2` (Version ID: `1060270`)
 * **Vendor**: `cv6` / Hoffi
 * **Target Environment**: XenForo 2.3.0+, PHP 8.2.0+
 * **Dependencies**: None (Core foundational library for all `cv6/*` add-ons)
@@ -74,6 +74,12 @@
 * **ComboSort (`combosort.js`)**: Enables multi-select reordering and sorting in ACP lists.
 * **Phrase Quick Edit (`phrase.js`, `cv6_core_phrase_quick_edit.html`)**: In-place phrase editing without navigating away from the current page.
 
+### F. Centralized Comparison Operators Subsystem (`\cv6\Core\Helper\Operator`)
+* **Standardized Operators**: Suite-wide uniform comparison phrases with mathematical symbols (`=`, `!=`, `>`, `>=`, `<`, `<=`) and concise uppercase keywords (`BETWEEN`, `NOT BETWEEN`, `IN`, `NOT IN`, `CONTAINS`, `NOT CONTAINS`, `EMPTY`, `NOT EMPTY`, `STARTS WITH`, `ENDS WITH`).
+* **Helper (`\cv6\Core\Helper\Operator`)**: Exposes constants (`OP_EQUALS`, `OP_CONTAINS`, etc.), category groupings (`GROUP_MATH`, `GROUP_LOGIC`), and retrieval/filter methods (`getMathematicalOperators()`, `getLogicalOperators()`, `getAllOperators()`, `getGroupedOperators()`, `getOperators()`).
+* **Template Functions**: `{{ cv6_operators() }}` and `{{ cv6_grouped_operators() }}` registered on `XF\Template\Templater`.
+* **AdminCP Macros**: `<xf:macro template="cv6_admin_macros" name="operator_select" ... />` and `operator_select_row` supporting optgroup categorization and filtering.
+
 ---
 
 ## 3. Options & Assets
@@ -115,3 +121,6 @@
   - State persisted in LocalStorage across navigation.
 - [x] **FontAwesome Validation**:
   - Full compatibility with FA6 icon formats and XenForo 2.3 SVG rendering.
+- [x] **Centralized Comparison Operators**:
+  - `Operator::getAllOperators()` returns all 16 standardized mathematical and logical operators.
+  - Template functions `{{ cv6_operators() }}` and macros render formatted dropdowns with English and German translations.

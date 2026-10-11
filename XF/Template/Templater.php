@@ -11,6 +11,20 @@ class Templater extends XFCP_Templater
         $this->addFunction('ddcopyright', 'fnDiceDragonsCopyright');
         $this->addFunction('cv6_active_icon_providers', 'fnCv6ActiveIconProviders');
         $this->addFunction('cv6_all_icon_providers', 'fnCv6AllIconProviders');
+        $this->addFunction('cv6_operators', 'fnCv6Operators');
+        $this->addFunction('cv6_grouped_operators', 'fnCv6GroupedOperators');
+    }
+
+    public function fnCv6Operators($templater, &$escape, string $type = 'all', ?array $include = null, ?array $exclude = null): array
+    {
+        $escape = false;
+        return \cv6\Core\Helper\Operator::getOperators($type, $include, $exclude);
+    }
+
+    public function fnCv6GroupedOperators($templater, &$escape): array
+    {
+        $escape = false;
+        return \cv6\Core\Helper\Operator::getGroupedOperators();
     }
 
     public function fnCv6ActiveIconProviders($templater, &$escape): array

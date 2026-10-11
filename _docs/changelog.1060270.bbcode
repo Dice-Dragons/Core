@@ -1,0 +1,9 @@
+[HEADING=2]Changes in [DD] - Core Library 1.6.2[/HEADING]
+
+[HEADING=3]Added[/HEADING]
+[LIST]
+[*][B]Centralized Comparison Operators Subsystem[/B]: Centralized all comparison operator phrases, symbols, and helpers across cv6 add-ons into [I]cv6/Core[/I] to ensure uniform terminology, concise phrases, and cross-addon compatibility.
+[*][B]Standardized Operator Phrases[/B]: Added concise mathematical symbols (=, !=, >, >=, <, <=) and uppercase keywords (BETWEEN, NOT BETWEEN, IN, NOT IN, CONTAINS, NOT CONTAINS, EMPTY, NOT EMPTY, STARTS WITH, ENDS WITH) in both English (language_id = 0) and German (language_id = 6).
+[*][B]PHP Helper (\cv6\Core\Helper\Operator)[/B]: Provides typed constants (OP_EQUALS, OP_CONTAINS, etc.), category groupings (GROUP_MATH, GROUP_LOGIC), and retrieval/filter methods (getMathematicalOperators(), getLogicalOperators(), getAllOperators(), getGroupedOperators(), getOperators()).
+[*][B]Template Functions & AdminCP Macros[/B]: Registered [I]{{ cv6_operators() }}[/I] and [I]{{ cv6_grouped_operators() }}[/I] in XenForo Templater, and added [I]operator_select[/I] / [I]operator_select_row[/I] macros in [I]cv6_admin_macros.html[/I] supporting optgroup groupings and filtering.
+[/LIST]

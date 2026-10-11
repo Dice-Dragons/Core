@@ -1,13 +1,19 @@
 # [DD] - Core Library
 *Diese Dokumentation ist auch verfügbar auf: [English](README.md)*
 
-![Version](https://img.shields.io/badge/version-1.6.1-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.6.2-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
 ---
 
 ## Funktionen & Entwickler-Tools
+
+### Zentrales Vergleichsoperatoren-Subsystem
+* **Standardisierte Vergleichsoperatoren**: Suite-weit vereinheitlichte Operatorendefinitionen, Zeichen (`=`, `!=`, `>`, `>=`, `<`, `<=`) und kurze Keywords in Großbuchstaben (`BETWEEN`, `NOT BETWEEN`, `IN`, `NOT IN`, `CONTAINS`, `NOT CONTAINS`, `EMPTY`, `NOT EMPTY`, `STARTS WITH`, `ENDS WITH`).
+* **PHP-Helper (`\cv6\Core\Helper\Operator`)**: Zentrale typisierte Konstanten, mathematische und logische Gruppierungen sowie Filter- und Validierungsmethoden.
+* **Templater-Funktionen**: Globale Template-Funktionen `{{ cv6_operators() }}` und `{{ cv6_grouped_operators() }}` für `<xf:options source="..." />`.
+* **AdminCP-Makros**: Vorgefertigte Makros `<xf:macro template="cv6_admin_macros" name="operator_select" ... />` und `operator_select_row` mit `<xf:optgroup>`-Unterstützung und Whitelist-/Blacklist-Filterung.
 
 ### Multi-Provider Icon Framework
 * **Modulare Icon-Provider**: Erweiterbare Provider-Architektur (`IconProviderInterface`, `AbstractIconProvider`, `FontAwesomeProvider`), die beliebige externe Icon-Sets (Google Material Symbols, Game Icons, Font Awesome 6/7 usw.) nahtlos in XenForo integriert.

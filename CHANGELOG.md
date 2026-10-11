@@ -2,6 +2,15 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.6.2] - 2026-10-11
+
+### Added
+- **Centralized Comparison Operators Subsystem**: Centralized all comparison operator phrases, symbols, and helpers across `cv6/*` add-ons (such as `cv6/CustomFields` and `cv6/CharEdit`) into `cv6/Core` to ensure uniform terminology, concise phrases, and cross-addon compatibility:
+  - **Standardized Phrases**: Concise mathematical symbols (`=`, `!=`, `>`, `>=`, `<`, `<=`) and uppercase keywords (`BETWEEN`, `NOT BETWEEN`, `IN`, `NOT IN`, `CONTAINS`, `NOT CONTAINS`, `EMPTY`, `NOT EMPTY`, `STARTS WITH`, `ENDS WITH`) in both English (`language_id = 0`) and German (`language_id = 6`).
+  - **PHP Helper (`\cv6\Core\Helper\Operator`)**: Provides typed constants (`OP_EQUALS`, `OP_CONTAINS`, etc.), category groupings (`GROUP_MATH`, `GROUP_LOGIC`), and retrieval/filter methods (`getMathematicalOperators()`, `getLogicalOperators()`, `getAllOperators()`, `getGroupedOperators()`, `getOperators()`).
+  - **Template Functions**: Registered `{{ cv6_operators($type, $include, $exclude) }}` and `{{ cv6_grouped_operators() }}` in `Templater` for direct usage in `<xf:options source="..." />`.
+  - **AdminCP Macros**: Added `<xf:macro template="cv6_admin_macros" name="operator_select" ... />` and `operator_select_row` supporting grouped `<xf:optgroup>` rendering and whitelist/blacklist filtering.
+
 ## [1.6.1] - 2026-10-10
 
 ### Added

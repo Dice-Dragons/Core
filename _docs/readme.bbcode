@@ -1,10 +1,18 @@
-[SIZE=6][B][DD] - Core Library v1.6.1[/B][/SIZE]
+[SIZE=6][B][DD] - Core Library v1.6.2[/B][/SIZE]
 
 [B][DD] - Core Library[/B] is the foundational framework required for (nearly) all cv6 / Dice Dragons add-ons. It provides a rich set of shared resources, UI components, and developer tools to ensure stability and reduce code duplication.
 
 [HEADING=2]Features & Developer Tools[/HEADING]
 
 This library includes essential tools for XenForo development:
+
+[HEADING=3]Centralized Comparison Operators Subsystem[/HEADING]
+[LIST]
+[*][B]Standardized Comparison Operators[/B]: Suite-wide centralized operator definitions, symbols (=, !=, >, >=, <, <=), and concise uppercase keywords (BETWEEN, NOT BETWEEN, IN, NOT IN, CONTAINS, NOT CONTAINS, EMPTY, NOT EMPTY, STARTS WITH, ENDS WITH).
+[*][B]PHP Helper (\cv6\Core\Helper\Operator)[/B]: Centralized typed constants, mathematical and logical groupings, and filter methods.
+[*][B]Templater Integration[/B]: Global template functions [I]{{ cv6_operators() }}[/I] and [I]{{ cv6_grouped_operators() }}[/I] for [I]<xf:options source="..." />[/I].
+[*][B]AdminCP Macros[/B]: Pre-built [I]<xf:macro template="cv6_admin_macros" name="operator_select" ... />[/I] and [I]operator_select_row[/I] with optgroup grouping and filtering.
+[/LIST]
 
 [HEADING=3]Multi-Provider Icon Framework[/HEADING]
 [LIST]

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language title="Deutsch (dev)" date_format="M j, Y" date_short_format="M 'y" date_short_recent_format="M j" time_format="g:i A" currency_format="{symbol}{value}" week_start="0" decimal_point="." thousands_separator="," label_separator=":" comma_separator=", " ellipsis="..." parenthesis_open="(" parenthesis_close=")" language_code="de-DE" text_direction="LTR" user_selectable="1" addon_id="cv6/Core" base_version_id="1060270" export_version="2">
+  <phrase title="cv6_delete_selected" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Ausgewählte löschen]]></phrase>
+  <phrase title="cv6_description" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Beschreibung]]></phrase>
+  <phrase title="cv6_op_between" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[ZWISCHEN]]></phrase>
+  <phrase title="cv6_op_contains" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[ENTHÄLT]]></phrase>
+  <phrase title="cv6_op_empty" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[LEER]]></phrase>
+  <phrase title="cv6_op_ends_with" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[ENDET MIT]]></phrase>
+  <phrase title="cv6_op_equals" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[=]]></phrase>
+  <phrase title="cv6_op_greater" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[>]]></phrase>
+  <phrase title="cv6_op_greater_equals" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[>=]]></phrase>
+  <phrase title="cv6_op_group_logic" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Logisch]]></phrase>
+  <phrase title="cv6_op_group_math" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Mathematisch]]></phrase>
+  <phrase title="cv6_op_in" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[IN]]></phrase>
+  <phrase title="cv6_op_less" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[<]]></phrase>
+  <phrase title="cv6_op_less_equals" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[<=]]></phrase>
+  <phrase title="cv6_op_not_between" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[NICHT ZWISCHEN]]></phrase>
+  <phrase title="cv6_op_not_contains" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[ENTHÄLT NICHT]]></phrase>
+  <phrase title="cv6_op_not_empty" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[NICHT LEER]]></phrase>
+  <phrase title="cv6_op_not_equals" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[!=]]></phrase>
+  <phrase title="cv6_op_not_in" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[NICHT IN]]></phrase>
+  <phrase title="cv6_op_starts_with" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[BEGINNT MIT]]></phrase>
+  <phrase title="cv6_operator" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Operator]]></phrase>
+  <phrase title="cv6_operators" addon_id="cv6/Core" version_id="1060170" version_string="1.6.1"><![CDATA[Operatoren]]></phrase>
+</language>

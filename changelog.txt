@@ -1,3 +1,9 @@
+1.6.2
+ - Added Centralized Comparison Operators Subsystem (\cv6\Core\Helper\Operator)
+ - Added standardized concise operator phrases (English & German) with mathematical symbols and uppercase keywords
+ - Added template functions cv6_operators() and cv6_grouped_operators()
+ - Added AdminCP macros operator_select and operator_select_row with optgroup support and filtering
+
 1.6.1
  - Extended release publisher workflow to automatically sync resource description with _docs/readme.de.bbcode via XFRM API
  - Added icon provider selection screenshot in _docs/screenshots/icon-provider-select.png

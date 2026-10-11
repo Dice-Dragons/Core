@@ -8,4 +8,61 @@
 <xf:macro name="toggle_js">
     <xf:js src="xf/structure.js" min="1" />
     <xf:js src="cv6/core/toggle.js" min="1" addon="cv6/Core" />
+</xf:macro>
+
+<xf:macro name="operator_select"
+    arg-name="operator"
+    arg-value=""
+    arg-type="all"
+    arg-grouped="{{ false }}"
+    arg-include="{{ [] }}"
+    arg-exclude="{{ [] }}"
+    arg-class=""
+    arg-prompt=""
+    arg-id="">
+    <xf:if is="$grouped">
+        <xf:select name="{$name}" value="{$value}" class="{$class}" prompt="{$prompt}" id="{$id}">
+            <xf:optgroup label="{{ phrase('cv6_op_group_math') }}">
+                <xf:options source="{{ cv6_operators('math', $include, $exclude) }}" />
+            </xf:optgroup>
+            <xf:optgroup label="{{ phrase('cv6_op_group_logic') }}">
+                <xf:options source="{{ cv6_operators('logic', $include, $exclude) }}" />
+            </xf:optgroup>
+        </xf:select>
+    <xf:else />
+        <xf:select name="{$name}" value="{$value}" class="{$class}" prompt="{$prompt}" id="{$id}">
+            <xf:options source="{{ cv6_operators($type, $include, $exclude) }}" />
+        </xf:select>
+    </xf:if>
+</xf:macro>
+
+<xf:macro name="operator_select_row"
+    arg-name="operator"
+    arg-value=""
+    arg-type="all"
+    arg-grouped="{{ false }}"
+    arg-include="{{ [] }}"
+    arg-exclude="{{ [] }}"
+    arg-class=""
+    arg-prompt=""
+    arg-id=""
+    arg-label="{{ phrase('cv6_operator') }}"
+    arg-hint=""
+    arg-explain="">
+    <xf:if is="$grouped">
+        <xf:selectrow name="{$name}" value="{$value}" class="{$class}" prompt="{$prompt}" id="{$id}"
+            label="{$label}" hint="{$hint}" explain="{$explain}">
+            <xf:optgroup label="{{ phrase('cv6_op_group_math') }}">
+                <xf:options source="{{ cv6_operators('math', $include, $exclude) }}" />
+            </xf:optgroup>
+            <xf:optgroup label="{{ phrase('cv6_op_group_logic') }}">
+                <xf:options source="{{ cv6_operators('logic', $include, $exclude) }}" />
+            </xf:optgroup>
+        </xf:selectrow>
+    <xf:else />
+        <xf:selectrow name="{$name}" value="{$value}" class="{$class}" prompt="{$prompt}" id="{$id}"
+            label="{$label}" hint="{$hint}" explain="{$explain}">
+            <xf:options source="{{ cv6_operators($type, $include, $exclude) }}" />
+        </xf:selectrow>
+    </xf:if>
 </xf:macro>
