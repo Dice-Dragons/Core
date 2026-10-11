@@ -115,6 +115,27 @@
   <phrase title="cv6_letter_filter" version_id="1010051" version_string="1.1.0 Release Candidate 1"><![CDATA[Starts with]]></phrase>
   <phrase title="cv6_logo" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Logo]]></phrase>
   <phrase title="cv6_no_style" version_id="1020031" version_string="1.2.0 Beta 1"><![CDATA[No Icon styling options possible.]]></phrase>
+  <phrase title="cv6_op_between" version_id="1060170" version_string="1.6.1"><![CDATA[BETWEEN]]></phrase>
+  <phrase title="cv6_op_contains" version_id="1060170" version_string="1.6.1"><![CDATA[CONTAINS]]></phrase>
+  <phrase title="cv6_op_empty" version_id="1060170" version_string="1.6.1"><![CDATA[EMPTY]]></phrase>
+  <phrase title="cv6_op_ends_with" version_id="1060170" version_string="1.6.1"><![CDATA[ENDS WITH]]></phrase>
+  <phrase title="cv6_op_equals" version_id="1060170" version_string="1.6.1"><![CDATA[=
+]]></phrase>
+  <phrase title="cv6_op_greater" version_id="1060170" version_string="1.6.1"><![CDATA[>]]></phrase>
+  <phrase title="cv6_op_greater_equals" version_id="1060170" version_string="1.6.1"><![CDATA[>=]]></phrase>
+  <phrase title="cv6_op_group_logic" version_id="1060170" version_string="1.6.1"><![CDATA[Logical]]></phrase>
+  <phrase title="cv6_op_group_math" version_id="1060170" version_string="1.6.1"><![CDATA[Mathematical]]></phrase>
+  <phrase title="cv6_op_in" version_id="1060170" version_string="1.6.1"><![CDATA[IN]]></phrase>
+  <phrase title="cv6_op_less" version_id="1060170" version_string="1.6.1"><![CDATA[<]]></phrase>
+  <phrase title="cv6_op_less_equals" version_id="1060170" version_string="1.6.1"><![CDATA[<=]]></phrase>
+  <phrase title="cv6_op_not_between" version_id="1060170" version_string="1.6.1"><![CDATA[NOT BETWEEN]]></phrase>
+  <phrase title="cv6_op_not_contains" version_id="1060170" version_string="1.6.1"><![CDATA[NOT CONTAINS]]></phrase>
+  <phrase title="cv6_op_not_empty" version_id="1060170" version_string="1.6.1"><![CDATA[NOT EMPTY]]></phrase>
+  <phrase title="cv6_op_not_equals" version_id="1060170" version_string="1.6.1"><![CDATA[!=]]></phrase>
+  <phrase title="cv6_op_not_in" version_id="1060170" version_string="1.6.1"><![CDATA[NOT IN]]></phrase>
+  <phrase title="cv6_op_starts_with" version_id="1060170" version_string="1.6.1"><![CDATA[STARTS WITH]]></phrase>
+  <phrase title="cv6_operator" version_id="1060170" version_string="1.6.1"><![CDATA[Operator]]></phrase>
+  <phrase title="cv6_operators" version_id="1060270" version_string="1.6.2"><![CDATA[Operators]]></phrase>
   <phrase title="cv6_please_enter_only_one_icon_class" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[Please enter only one icon class and multiple formatting classes.]]></phrase>
   <phrase title="cv6_please_enter_valid_icon_classes" version_id="1030031" version_string="1.3.0 Beta 1"><![CDATA[Please enter a valid font awesome icon class.]]></phrase>
   <phrase title="cv6_please_enter_valid_tag" version_id="1020053" version_string="1.2.0 Release Candidate 3"><![CDATA[Please add a valid tag. This needs to be unique!]]></phrase>
