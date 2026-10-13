@@ -107,9 +107,24 @@ jobs:
         run: |
           set -e
 
+          # 1. Locate addon.json - prefer extracting from ZIP file, fallback to repo root
           ADDON_JSON="addon.json"
+          ZIP_FILE="$ZIP_FILE_PATH"
+
+          if [ -n "$ZIP_FILE" ] && [ -f "$ZIP_FILE" ]; then
+            ZIP_ADDON_ENTRY=$(unzip -l "$ZIP_FILE" 2>/dev/null | grep -oE '[^ ]*addon\.json$' | head -n 1 || true)
+            if [ -n "$ZIP_ADDON_ENTRY" ]; then
+              echo "Extracting addon.json directly from release asset: $ZIP_FILE ($ZIP_ADDON_ENTRY)..."
+              unzip -p "$ZIP_FILE" "$ZIP_ADDON_ENTRY" > /tmp/zip_addon.json 2>/dev/null || true
+              if [ -s /tmp/zip_addon.json ] && jq empty /tmp/zip_addon.json 2>/dev/null; then
+                ADDON_JSON="/tmp/zip_addon.json"
+                echo "SUCCESS: Using addon.json from release ZIP asset."
+              fi
+            fi
+          fi
+
           if [ ! -f "$ADDON_JSON" ]; then
-            echo "::error::addon.json not found in repository root!"
+            echo "::error::addon.json not found in ZIP asset or repository root!"
             exit 1
           fi
 
@@ -133,7 +148,7 @@ jobs:
             echo "::warning::XENFORO_API_USER_ID is set to '$XF_API_USER', but XenForo API expects a numeric user_id (e.g. 1). Please update the secret to the integer user_id."
           fi
 
-          # 1. Parse metadata from addon.json
+          # 2. Parse metadata from addon.json
           ADDON_TITLE=$(jq -r '.title // empty' "$ADDON_JSON" | tr -d '\r\n')
           VERSION_STRING=$(jq -r '.version_string // empty' "$ADDON_JSON" | tr -d '\r\n')
           VERSION_ID=$(jq -r '.version_id // empty' "$ADDON_JSON" | tr -d '\r\n')
