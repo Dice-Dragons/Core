@@ -72,6 +72,33 @@ trait SetupTrait
         }
     }
 
+    protected function columnExists(string $tableName, string $columnName): bool
+    {
+        return $this->schemaManager()->columnExists($tableName, $columnName);
+    }
+
+    /**
+     * Adds a column only if the table exists and the column is still missing.
+     *
+     * @param callable(Alter): mixed $definition Receives the Alter object and must call addColumn(...)
+     */
+    protected function addColumnIfMissing(string $tableName, string $columnName, callable $definition): bool
+    {
+        $sm = $this->schemaManager();
+
+        if (!$sm->tableExists($tableName) || $this->columnExists($tableName, $columnName))
+        {
+            return false;
+        }
+
+        $sm->alterTable($tableName, function (Alter $table) use ($definition): void
+        {
+            $definition($table);
+        });
+
+        return true;
+    }
+
     protected function insertInitialData($tableName = null) 
     {
         $db = $this->db();
