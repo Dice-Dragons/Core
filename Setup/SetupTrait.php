@@ -46,7 +46,22 @@ trait SetupTrait
                 $sm->dropTable($tableName);
             }
         }
-    }    
+    }
+
+    /**
+     * Renames a table if the old table exists and the new table does not yet exist.
+     */
+    protected function renameTableIfExists(string $oldTableName, string $newTableName): bool
+    {
+        $sm = $this->schemaManager();
+        if (!$this->tableExists($oldTableName) || $this->tableExists($newTableName))
+        {
+            return false;
+        }
+
+        $sm->renameTable($oldTableName, $newTableName);
+        return true;
+    }
 
     protected function indexExists(string $tableName, string $indexName): bool
     {
@@ -73,6 +88,32 @@ trait SetupTrait
     }
 
     /**
+     * Drops one or more indexes from a table if the table and the indexes exist.
+     */
+    protected function dropIndexIfExists(string $tableName, string|array $indexNames): bool
+    {
+        if (!$this->tableExists($tableName))
+        {
+            return false;
+        }
+
+        $indexNames = (array)$indexNames;
+        $toDrop = array_filter($indexNames, fn(string $idx): bool => $this->indexExists($tableName, $idx));
+
+        if (empty($toDrop))
+        {
+            return false;
+        }
+
+        $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($toDrop): void
+        {
+            $table->dropIndexes($toDrop);
+        });
+
+        return true;
+    }
+
+    /**
      * Adds a column only if the table exists and the column is still missing.
      * Note: tableExists() and columnExists() are inherited from XF\AddOn\AbstractSetup (InstallHelperTrait).
      *
@@ -88,6 +129,94 @@ trait SetupTrait
         $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($definition): void
         {
             $definition($table);
+        });
+
+        return true;
+    }
+
+    /**
+     * Adds multiple columns to a table in a single ALTER TABLE query, skipping columns that already exist.
+     *
+     * @param array<string, callable(Alter): void> $columns Map of [column_name => callable]
+     * @return int Number of columns added
+     */
+    protected function addColumnsIfMissing(string $tableName, array $columns): int
+    {
+        if (!$this->tableExists($tableName) || empty($columns))
+        {
+            return 0;
+        }
+
+        $missing = [];
+        foreach ($columns as $columnName => $definition)
+        {
+            if (!$this->columnExists($tableName, $columnName))
+            {
+                $missing[$columnName] = $definition;
+            }
+        }
+
+        if (empty($missing))
+        {
+            return 0;
+        }
+
+        $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($missing): void
+        {
+            foreach ($missing as $definition)
+            {
+                $definition($table);
+            }
+        });
+
+        return count($missing);
+    }
+
+    /**
+     * Drops one or more columns from a table if the table and the columns exist.
+     */
+    protected function dropColumnIfExists(string $tableName, string|array $columnNames): bool
+    {
+        if (!$this->tableExists($tableName))
+        {
+            return false;
+        }
+
+        $columnNames = (array)$columnNames;
+        $toDrop = array_filter($columnNames, fn(string $col): bool => $this->columnExists($tableName, $col));
+
+        if (empty($toDrop))
+        {
+            return false;
+        }
+
+        $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($toDrop): void
+        {
+            $table->dropColumns($toDrop);
+        });
+
+        return true;
+    }
+
+    /**
+     * Renames a column if the table and old column exist and the new column does not yet exist.
+     *
+     * @param ?callable(\XF\Db\Schema\Column, Alter): void $definition Optional callback to adjust definition
+     */
+    protected function renameColumnIfExists(string $tableName, string $oldColumn, string $newColumn, ?callable $definition = null): bool
+    {
+        if (!$this->tableExists($tableName) || !$this->columnExists($tableName, $oldColumn) || $this->columnExists($tableName, $newColumn))
+        {
+            return false;
+        }
+
+        $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($oldColumn, $newColumn, $definition): void
+        {
+            $column = $table->renameColumn($oldColumn, $newColumn);
+            if ($definition !== null)
+            {
+                $definition($column, $table);
+            }
         });
 
         return true;
@@ -146,6 +275,27 @@ trait SetupTrait
                 $phrase->addon_id = $addonId;
                 $phrase->save(false, false);
             }
+        }
+    }
+
+    /**
+     * Deletes widgets by their widget keys.
+     */
+    protected function deleteWidgets(array|string $widgetKeys): void
+    {
+        $widgetKeys = (array)$widgetKeys;
+        if (empty($widgetKeys))
+        {
+            return;
+        }
+
+        $widgets = \XF::finder('XF:Widget')
+            ->where('widget_key', $widgetKeys)
+            ->fetch();
+
+        foreach ($widgets as $widget)
+        {
+            $widget->delete();
         }
     }
 }
