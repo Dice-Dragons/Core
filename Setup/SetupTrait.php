@@ -72,26 +72,20 @@ trait SetupTrait
         }
     }
 
-    protected function columnExists(string $tableName, string $columnName): bool
-    {
-        return $this->schemaManager()->columnExists($tableName, $columnName);
-    }
-
     /**
      * Adds a column only if the table exists and the column is still missing.
+     * Note: tableExists() and columnExists() are inherited from XF\AddOn\AbstractSetup (InstallHelperTrait).
      *
      * @param callable(Alter): mixed $definition Receives the Alter object and must call addColumn(...)
      */
     protected function addColumnIfMissing(string $tableName, string $columnName, callable $definition): bool
     {
-        $sm = $this->schemaManager();
-
-        if (!$sm->tableExists($tableName) || $this->columnExists($tableName, $columnName))
+        if (!$this->tableExists($tableName) || $this->columnExists($tableName, $columnName))
         {
             return false;
         }
 
-        $sm->alterTable($tableName, function (Alter $table) use ($definition): void
+        $this->schemaManager()->alterTable($tableName, function (Alter $table) use ($definition): void
         {
             $definition($table);
         });
