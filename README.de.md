@@ -1,7 +1,7 @@
 # [DD] - Core Library
 *Diese Dokumentation ist auch verfügbar auf: [English](README.md)*
 
-![Version](https://img.shields.io/badge/version-1.6.2-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
+![Version](https://img.shields.io/badge/version-1.6.3-blue.svg) ![XenForo](https://img.shields.io/badge/XenForo-2.3%2B-orange.svg) ![PHP](https://img.shields.io/badge/PHP-8.2%2B-qt.svg)
 
 **[DD] - Core Library** ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
@@ -36,7 +36,7 @@
 * **Option-Verifizierer (`cv6\Core\Option\Check`)**:
     * `verifyValidIconMandatory`: Pflichtfeld-Prüfung für ein gültiges Haupt-Icon. Validiert Format-Klassen gegen aktivierte Einstellungen der `cv6Core`-Gruppe (`cv6CoreFaStyle`, `cv6CoreFaRotation`, `cv6CoreFaAnimation`).
     * `verifyValidIconOptional`: Leert das Eingabefeld automatisch, wenn nur Modifizierer ohne Icon angegeben werden, und prüft ungültige oder nicht erlaubte Klassen anhand der nativen `XF\Repository\IconRepository` Konstanten.
-* **Setup Traits**: Wiederverwendbare Traits für Installation, Upgrades und Schema-Änderungen.
+* **Setup Traits (`cv6\Core\Setup\SetupTrait`)**: Wiederverwendbare, idempotente Traits für Installation, Upgrades und Schema-Migrationen mit Bulk-Spaltenerstellung (`addColumnsIfMissing`), sicheren Löschungen (`dropColumnIfExists`, `dropIndexIfExists`), Umbenennungen (`renameTableIfExists`, `renameColumnIfExists`) und Widget-Bereinigung (`deleteWidgets`).
 * **Multi-Alphabet Index-Provider Repository (`cv6\Core\Repository\Alphabet`)**: Erweiterbares Alphabet-Registry für mehrere Schriftsysteme (Lateinisch, Griechisch, Kyrillisch, Hebräisch, Arabisch) mit RTL- und Varianten-Unterstützung. Siehe [Eigene Alphabet-Provider hinzufügen](_docs/custom_alphabet.de.md).
 * **JS Dependency Handler**: Effiziente Verwaltung von JavaScript-Abhängigkeiten.
 * **Widget Framework**: Basisfunktionalität zum Erstellen von Index-Widgets.

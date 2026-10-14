@@ -1,0 +1,12 @@
+[HEADING=2]Changes in [DD] - Core Library 1.6.3[/HEADING]
+
+[HEADING=3]Added[/HEADING]
+[LIST]
+[*][B]SetupTrait Schema & Lifecycle Helpers[/B]: Expanded [I]cv6\Core\Setup\SetupTrait[/I] with reusable, idempotent helper methods for add-on installation, upgrade, and uninstallation routines across all cv6 extensions.
+[*][B]addColumnsIfMissing[/B]: High-performance bulk column creation executing all missing columns in a single atomic [I]ALTER TABLE[/I] query.
+[*][B]addColumnIfMissing[/B]: Safely adds an individual column only if missing, using inherited [I]tableExists()[/I] and [I]columnExists()[/I] without access level conflicts.
+[*][B]dropColumnIfExists[/B]: Safely drops one or more columns only when both the table and columns exist, preventing SQL exceptions during uninstalls or repeated upgrade steps.
+[*][B]dropIndexIfExists[/B]: Safely drops one or more table indexes only if they exist.
+[*][B]renameTableIfExists & renameColumnIfExists[/B]: Safely renames database tables and columns during refactorings.
+[*][B]deleteWidgets[/B]: Cleanly removes widget definitions by widget keys during add-on uninstallation.
+[/LIST]

@@ -1,3 +1,7 @@
+1.6.3
+ - Expanded SetupTrait with addColumnsIfMissing (bulk), dropColumnIfExists, dropIndexIfExists, renameTableIfExists, renameColumnIfExists, and deleteWidgets
+ - Fixed method visibility collision on SetupTrait by removing conflicting columnExists override
+
 1.6.2
  - Added Centralized Comparison Operators Subsystem (\cv6\Core\Helper\Operator)
  - Added standardized concise operator phrases (English & German) with mathematical symbols and uppercase keywords

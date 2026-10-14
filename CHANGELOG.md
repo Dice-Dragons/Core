@@ -2,6 +2,18 @@
 
 All notable changes to this add-on will be documented in this file.
 
+## [1.6.3] - 2026-10-14
+
+### Added
+- **SetupTrait Schema & Lifecycle Helpers**: Expanded `cv6\Core\Setup\SetupTrait` with reusable, idempotent helper methods for add-on installation, upgrade, and uninstallation routines across all `cv6/*` extensions:
+  - **`addColumnsIfMissing(string $tableName, array $columns): int`**: High-performance bulk column creation executing all missing columns in a single atomic `ALTER TABLE` query.
+  - **`addColumnIfMissing(string $tableName, string $columnName, callable $definition): bool`**: Safely adds an individual column only if missing, using inherited `tableExists()` and `columnExists()` without access level conflicts.
+  - **`dropColumnIfExists(string $tableName, string|array $columnNames): bool`**: Safely drops one or more columns only when both the table and columns exist, preventing SQL exceptions during uninstalls or repeated upgrade steps.
+  - **`dropIndexIfExists(string $tableName, string|array $indexNames): bool`**: Safely drops one or more table indexes only if they exist.
+  - **`renameTableIfExists(string $oldTableName, string $newTableName): bool`**: Renames a database table if the source exists and the target name is available.
+  - **`renameColumnIfExists(string $tableName, string $oldColumn, string $newColumn, ?callable $definition = null): bool`**: Renames a column safely with optional definition adjustment callback.
+  - **`deleteWidgets(array|string $widgetKeys): void`**: Cleanly removes widget definitions by widget keys during add-on uninstallation.
+
 ## [1.6.2] - 2026-10-11
 
 ### Added

@@ -3,7 +3,7 @@
 ## 1. Metadata & Scope
 * **Add-On ID**: `cv6/Core`
 * **Title**: `[DD] - Core Library`
-* **Current Version**: `1.6.2` (Version ID: `1060270`)
+* **Current Version**: `1.6.3` (Version ID: `1060370`)
 * **Vendor**: `cv6` / Hoffi
 * **Target Environment**: XenForo 2.3.0+, PHP 8.2.0+
 * **Dependencies**: None (Core foundational library for all `cv6/*` add-ons)
@@ -80,6 +80,14 @@
 * **Template Functions**: `{{ cv6_operators() }}` and `{{ cv6_grouped_operators() }}` registered on `XF\Template\Templater`.
 * **AdminCP Macros**: `<xf:macro template="cv6_admin_macros" name="operator_select" ... />` and `operator_select_row` supporting optgroup categorization and filtering.
 
+### G. Reusable Setup & Migration Helpers (`\cv6\Core\Setup\SetupTrait`)
+* **Bulk Column Creation (`addColumnsIfMissing($table, array $columns)`)**: Iterates column closures, verifying column existence via `$this->columnExists($table, $column)` before applying schema alter closures.
+* **Safe Column Drop (`dropColumnIfExists($table, $column)`)**: Drops table column only if it exists.
+* **Safe Index Drop (`dropIndexIfExists($table, $indexName)`)**: Checks `$sm->tableExists()` and `$sm->indexExists()` before dropping index.
+* **Safe Table Rename (`renameTableIfExists($oldTable, $newTable)`)**: Verifies old table exists and new table does not exist before renaming.
+* **Safe Column Rename (`renameColumnIfExists($table, $oldColumn, $newColumn, ?\Closure $definition = null)`)**: Checks presence of `$oldColumn` and absence of `$newColumn` before renaming.
+* **Widget Cleanup (`deleteWidgets(array $keys)`)**: Automatically removes widget definitions and positions by key on uninstall or upgrade.
+
 ---
 
 ## 3. Options & Assets
@@ -124,3 +132,6 @@
 - [x] **Centralized Comparison Operators**:
   - `Operator::getAllOperators()` returns all 16 standardized mathematical and logical operators.
   - Template functions `{{ cv6_operators() }}` and macros render formatted dropdowns with English and German translations.
+- [x] **Reusable Setup Traits**:
+  - `SetupTrait` provides idempotent column adding, dropping, renaming, and widget cleanup across add-on migrations.
+

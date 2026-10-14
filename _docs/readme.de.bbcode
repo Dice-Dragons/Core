@@ -1,4 +1,4 @@
-[SIZE=6][B][DD] - Core Library v1.6.2[/B][/SIZE]
+[SIZE=6][B][DD] - Core Library v1.6.3[/B][/SIZE]
 
 [B][DD] - Core Library[/B] ist das grundlegende Framework für fast alle cv6 / Dice Dragons Add-Ons. Es stellt gemeinsam genutzte Ressourcen, UI-Komponenten und Entwickler-Tools bereit, um Stabilität zu gewährleisten und Code-Duplizierung zu vermeiden.
 
@@ -40,7 +40,7 @@
 [*][I]verifyValidIconMandatory[/I]: Pflichtfeld-Prüfung für ein gültiges Haupt-Icon. Validiert Format-Klassen gegen aktivierte Einstellungen der [I]cv6Core[/I]-Gruppe ([I]cv6CoreFaStyle[/I], [I]cv6CoreFaRotation[/I], [I]cv6CoreFaAnimation[/I]).
 [*][I]verifyValidIconOptional[/I]: Leert das Eingabefeld automatisch, wenn nur Modifizierer ohne Icon angegeben werden, und prüft ungültige oder nicht erlaubte Klassen anhand der nativen [I]XF\Repository\IconRepository[/I] Konstanten.
 [/LIST]
-[*][B]Setup Traits[/B]: Wiederverwendbare Traits für Installation, Upgrades und Schema-Änderungen.
+[*][B]Setup Traits ([I]cv6\Core\Setup\SetupTrait[/I])[/B]: Wiederverwendbare, idempotente Traits für Installation, Upgrades und Schema-Migrationen mit Bulk-Spaltenerstellung ([I]addColumnsIfMissing[/I]), sicheren Löschungen ([I]dropColumnIfExists[/I], [I]dropIndexIfExists[/I]), Umbenennungen ([I]renameTableIfExists[/I], [I]renameColumnIfExists[/I]) und Widget-Bereinigung ([I]deleteWidgets[/I]).
 [*][B]Multi-Alphabet Index-Provider Repository ([I]cv6\Core\Repository\Alphabet[/I])[/B]: Erweiterbares Alphabet-Registry für mehrere Schriftsysteme (Lateinisch, Griechisch, Kyrillisch, Hebräisch, Arabisch) mit RTL- und Varianten-Unterstützung.
 [*][B]JS Dependency Handler[/B]: Effiziente Verwaltung von JavaScript-Abhängigkeiten.
 [*][B]Widget Framework[/B]: Basisfunktionalität zum Erstellen von Index-Widgets.
