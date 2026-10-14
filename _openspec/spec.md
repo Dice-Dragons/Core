@@ -25,6 +25,7 @@
   * 4-step wizard to convert icons across Database (options, standard XF tables, dynamic `cv6_icon` tables), Style Properties (`@...-var-...`), and Phrases (`<xf:fa>`), with interactive override modal (`actionMigrateChange`) and automatic cache rebuilds.
 * **Autocomplete & Picker**:
   * `cv6_fa_icon::cv6_inputIcon`: Multi-provider selector dropdown with brand icons/colors, dynamic styles, and live Ajax SVG autocomplete (`_files/js/cv6/core/icon.js`).
+* **Available Icon Set Add-Ons**: Additional icon providers (e.g. Material Symbols, Game Icons) are distributed as modular add-ons at `https://forum.dice-dragons.de/downloads/categories/icon-interfaces.61/`.
 
 ### B. Asset Upload Field & Reset Subsystem (`cv6_assetupload`)
 * **Macro**: `cv6_assetupload::cv6_assetuploadrow`

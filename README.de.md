@@ -21,6 +21,7 @@
 * **Core-Erweiterungen & Fallback-Schutz**: Erweitert `XF\IconRenderer` und `XF\CssRenderer` für automatische Rendering-Delegation, Ausfallschutz-Platzhalter bei deaktivierten Providern und dynamische `@<prefix>-var-<name>` Data-URI-Masken in LESS.
 * **4-Stufen Icon-Migrations-Assistent**: Geführtes ACP-Tool (`admin.php?cv6-core/migrate`) zur automatischen Konvertierung von Icons über Datenbank, Stileigenschaften und Phrasen zwischen zwei beliebigen Providern mit interaktivem Übersteuerungs-Modal.
 * **Universeller Multi-Provider Icon Chooser & Live-Autovervollständigung**: Erweitertes `cv6_inputIcon`-Makro und `cv6/core/icon.js` mit Provider-Umschaltung, Style-Auswahl und Ajax-SVG-Vorschau.
+* **Weitere Icon-Sets**: Zusätzliche Icon-Set Add-Ons (Material Symbols, Game Icons usw.) stehen unter [Dice Dragons Icon Interfaces](https://forum.dice-dragons.de/downloads/categories/icon-interfaces.61/) zum Download bereit.
 
 ### UI-Komponenten & Templates
 * **Multi-Toggle & Einklappbare Tabellenzeilen (`cv6-multi-toggle`)**: Standardisierter Multi-Target Collapse-Handler für AdminCP-Listen und Tabellen (`.dataList-row--childRow`). Ermöglicht synchrones Zeilen-Sliding via `XF.Animate`, atomare und seitenübergreifende Persistenz im `localStorage` sowie sofortiges Rendern ohne FOUC-Verzögerung.

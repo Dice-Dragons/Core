@@ -23,6 +23,7 @@ This library includes essential tools for XenForo development:
 * **Core Extensions & Fallback Protection**: Extends `XF\IconRenderer` and `XF\CssRenderer` for automatic delegation, missing-provider fallback icons, and dynamic `@<prefix>-var-<name>` Data-URI mask generation in LESS.
 * **4-Step Icon Migration Wizard**: Guided ACP tool (`admin.php?cv6-core/migrate`) for converting icons across Database, Style Properties, and Phrases between any registered providers with interactive override modals.
 * **Universal Multi-Provider Icon Chooser & Live Autocomplete**: Enhanced `cv6_inputIcon` macro and `cv6/core/icon.js` with provider switching and live Ajax SVG previews.
+* **Additional Icon Sets**: Further icon set add-ons (Material Symbols, Game Icons, etc.) can be downloaded at [Dice Dragons Icon Interfaces](https://forum.dice-dragons.de/downloads/categories/icon-interfaces.61/).
 
 ### UI Components & Templates
 * **Multi-Toggle & Collapsible Rows (`cv6-multi-toggle`)**: Standardized multi-target collapse handler for AdminCP tables (`.dataList-row--childRow`) and lists. Features synchronized table row sliding via `XF.Animate`, atomic cross-page state persistence in `localStorage`, and zero-FOUC initialization.
