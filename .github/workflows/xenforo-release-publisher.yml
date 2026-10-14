@@ -216,6 +216,14 @@ jobs:
                 elif [[ "$extra_lower" =~ (rc|release[[:space:]_.-]*candidate)[[:space:]_.-]*([0-9]+)? ]]; then
                   local build="${BASH_REMATCH[2]:-1}"
                   state_block=$((50 + build - 1))
+                elif [[ "$extra_lower" =~ patch[[:space:]_.-]*([0-9]+)? ]]; then
+                  local build="${BASH_REMATCH[1]:-1}"
+                  state_block=$((70 + build))
+                elif [[ "$extra_lower" =~ ^\.([0-9]+) ]]; then
+                  local build="${BASH_REMATCH[1]:-1}"
+                  state_block=$((70 + build))
+                elif [[ "$extra_lower" =~ stable || "$extra_lower" =~ final || "$extra_lower" =~ gold ]]; then
+                  state_block=70
                 fi
               fi
 
