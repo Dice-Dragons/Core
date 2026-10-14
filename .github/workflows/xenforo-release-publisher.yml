@@ -547,7 +547,7 @@ jobs:
             fi
             NEWS_MESSAGE="${NEWS_MESSAGE}"$'\n\n'"Eine neue Version von [B]${ADDON_NAME}[/B] steht ab sofort zum Download bereit!"$'\n\n'"[HEADING=2]Was ist neu in Version ${VERSION_STRING}?[/HEADING]"$'\n\n'"[QUOTE]"$'\n'"${MESSAGE_CONTENT}"$'\n'"[/QUOTE]"$'\n\n'"[HEADING=2]Links & Download[/HEADING]"$'\n\n'"* [B]Download:[/B] [URL='${FAQ_URL}']Add-on im Ressourcen-Bereich herunterladen[/URL]"
             if [ -n "$SUPPORT_URL" ]; then
-              NEWS_MESSAGE="${NEWS_MESSAGE}"$'\n'"* [B]Hilfe & Diskussion:[/B] [URL='${SUPPORT_URL}']Zum Support-Thema im Forum[/URL]"
+              NEWS_MESSAGE="${NEWS_MESSAGE}"$'\n'"* [B]Hilfe & Diskussion:[/B] [URL='${SUPPORT_URL}']Zum Support-Forum[/URL]"
             fi
 
             NEWS_RESP=$(curl -s -S -X POST "https://forum.dice-dragons.de/api/threads/" \
