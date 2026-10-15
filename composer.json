@@ -1,0 +1,16 @@
+{
+    "name": "dice-dragons/core",
+    "description": "[DD] - Core Library",
+    "type": "xenforo-addon",
+    "license": "proprietary",
+    "homepage": "https://forum.dice-dragons.de",
+    "authors": [
+        {
+            "name": "Hoffi",
+            "homepage": "https://forum.dice-dragons.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.2.0"
+    }
+}
