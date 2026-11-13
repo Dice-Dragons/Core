@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "\t\t\t\t<xf:textboxrow name=\"icon\" value=\"{$dropdown}\" label=\"{{ phrase('icon') }}\">\n\t\t\t\t\t<xf:explain>{{ phrase('you_can_preview_icons_and_their_names_here') }}</xf:explain>\n\t\t\t\t</xf:textboxrow>",
-    "replace": "<xf:if is=\"$xf.options.cv6ReplaceXF\">\n\t<xf:macro id=\"cv6_fa_icon::cv6_inputIcon\"\n\t\t\t\targ-name=\"icon\" \n\t\t\t\targ-value=\"{$dropdown.icon}\"\n\t\t\t\targ-label=\"{{ phrase('icon') }}\"\n\t\t  \t\targ-target=\"bbcode-dd\"\n\t\t\t  \targ-placeholder=\"fa-button\"\n\t\t\t  \targ-stylechooser=\"{{ ['style'] }}\"\n\t\t\t  \targ-explain=\"{{ phrase('you_can_preview_icons_and_their_names_here')|raw }}\"\n\t\t\t/>\t\n<xf:else />\n\t$0\n</xf:if>"
+    "replace": "<xf:if is=\"$xf.options.cv6ReplaceXF\">\n\t<xf:macro id=\"cv6_fa_icon::cv6_inputIcon\"\n\t\t\t\targ-name=\"icon\" \n\t\t\t\targ-value=\"{$dropdown.icon}\"\n\t\t\t\targ-label=\"{{ phrase('icon') }}\"\n\t\t  \t\targ-target=\"bbcode-dd\"\n\t\t\t  \targ-placeholder=\"fa-button\"\n\t\t\t  \targ-stylechooser=\"{{ ['style'] }}\"\n\t\t\t  \targ-autocomplete=\"{{ true }}\"\n\t\t\t  \targ-explain=\"{{ phrase('you_can_preview_icons_and_their_names_here')|raw }}\"\n\t\t\t/>\t\n<xf:else />\n\t$0\n</xf:if>"
 }

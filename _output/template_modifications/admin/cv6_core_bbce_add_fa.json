@@ -5,5 +5,5 @@
     "enabled": true,
     "action": "str_replace",
     "find": "\t\t\t\t\t<xf:textbox name=\"editor_icon_fa\"\n\t\t\t\t\t\treadonly=\"{{ !$bbCode.canEdit() }}\"\n\t\t\t\t\t\tvalue=\"{{ $bbCode.editor_icon_type == 'fa' ? $bbCode.editor_icon_value : '' }}\"\n\t\t\t\t\t\tmaxlength=\"{{ max_length($bbCode, 'editor_icon_value') }}\"\n\t\t\t\t\t\tdir=\"ltr\" />",
-    "replace": "<xf:macro name=\"cv6_fa_icon::cv6_inlineIcon\"\n\targ-target=\"bbcode-icon\"\n\targ-name=\"editor_icon_fa\" \n\targ-readonly=\"{{ !$bbCode.canEdit() }}\"\n\targ-maxlength=\"{{ max_length($bbCode, 'editor_icon_value') }}\"\n\targ-stylechooser=\"{{ ['style'] }}\"\n\targ-value=\"{{ $bbCode.editor_icon_type == 'fa' ? $bbCode.editor_icon_value : '' }}\" \n/>"
+    "replace": "<xf:macro name=\"cv6_fa_icon::cv6_inlineIcon\"\n\targ-target=\"bbcode-icon\"\n\targ-name=\"editor_icon_fa\" \n\targ-readonly=\"{{ !$bbCode.canEdit() }}\"\n\targ-maxlength=\"{{ max_length($bbCode, 'editor_icon_value') }}\"\n\targ-stylechooser=\"{{ ['style'] }}\"\n\targ-autocomplete=\"{{ true }}\"\n\targ-value=\"{{ $bbCode.editor_icon_type == 'fa' ? $bbCode.editor_icon_value : '' }}\" \n/>"
 }

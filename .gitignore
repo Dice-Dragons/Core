@@ -1,6 +1,7 @@
 # Exclude build releases & release XML data
 /_data/
 /_releases/
+/_build/
 /_output/language/
 
 # Editor and system files
