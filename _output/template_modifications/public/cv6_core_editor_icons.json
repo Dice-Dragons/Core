@@ -1,0 +1,9 @@
+{
+    "template": "editor",
+    "description": "Loads cv6 icon renderer and definitions for custom editor icons",
+    "execution_order": 5,
+    "enabled": true,
+    "action": "str_replace",
+    "find": "<!--[XF:include_js]-->",
+    "replace": "$0\n<script class=\"js-cv6EditorIcons\" type=\"application/json\">\n\t{{ cv6_editor_icons()|json|raw }}\n</script>\n<xf:js src=\"cv6/core/editor.js\" min=\"1\" addon=\"cv6/Core\" />"
+}

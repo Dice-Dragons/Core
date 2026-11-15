@@ -1,0 +1,6 @@
+{
+    "from_class": "XF\\Data\\Editor",
+    "to_class": "cv6\\Core\\XF\\Data\\Editor",
+    "execute_order": 10,
+    "active": true
+}

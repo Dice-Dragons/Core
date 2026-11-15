@@ -4,7 +4,18 @@ declare(strict_types=1);
 
 namespace cv6\Core\XF;
 
+use cv6\Core\Icon\Provider\IconProviderInterface;
 use cv6\Core\Repository\IconProvider as IconProviderRepo;
+
+use function array_keys;
+use function htmlspecialchars;
+use function implode;
+use function in_array;
+use function is_array;
+use function preg_split;
+use function str_starts_with;
+use function substr;
+use function trim;
 
 class IconRenderer extends XFCP_IconRenderer
 {
@@ -19,8 +30,6 @@ class IconRenderer extends XFCP_IconRenderer
             return parent::render($iconClasses, $options);
         }
 
-        $options = $this->standardizeOptions($iconClasses, $options);
-
         // Check if provider is currently active
         $activeProvider = $providerRepo->getActiveProvider($provider->getId());
         if ($activeProvider === null) {
@@ -28,8 +37,40 @@ class IconRenderer extends XFCP_IconRenderer
             return $this->renderMissingProviderFallback($iconClasses, $options);
         }
 
+        $cleanClasses = $this->cleanProviderClasses($iconClasses, $activeProvider);
+        $options = $this->standardizeOptions($cleanClasses, $options);
+
         // Delegate to custom provider
-        return $activeProvider->render($iconClasses, null, $options);
+        return $activeProvider->render($cleanClasses, null, $options);
+    }
+
+    protected function cleanProviderClasses(string $classes, IconProviderInterface $provider): string
+    {
+        $tokens = preg_split('/\s+/', trim($classes));
+        if (!is_array($tokens)) {
+            return $classes;
+        }
+
+        $prefix = $provider->getPrefix();
+        $styles = array_keys($provider->getStyles());
+
+        $cleaned = [];
+        foreach ($tokens as $token) {
+            $token = trim($token);
+            if ($token === '') {
+                continue;
+            }
+
+            if ($prefix !== '' && str_starts_with($token, 'fa-' . $prefix)) {
+                $cleaned[] = substr($token, 3);
+            } elseif (str_starts_with($token, 'fa-') && in_array(substr($token, 3), $styles, true)) {
+                $cleaned[] = substr($token, 3);
+            } else {
+                $cleaned[] = $token;
+            }
+        }
+
+        return implode(' ', $cleaned);
     }
 
     protected function renderMissingProviderFallback(string $iconClasses, array $options = []): string

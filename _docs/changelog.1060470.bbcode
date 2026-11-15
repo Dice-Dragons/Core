@@ -1,0 +1,12 @@
+[B]Release 1.6.4[/B]
+
+[HEADING=2]Added[/HEADING]
+[LIST]
+[*][B]Editor Custom Icon Provider Integration[/B]: Added template function [I]{{ cv6_editor_icons() }}[/I] and client-side Froala integration ([I]cv6/core/editor.js[/I]) using Froala's [I]DefineIconTemplate[/I] to render custom icon provider SVGs (e.g. Game Icons, Google Material Symbols, Lucide) in Froala toolbars and dropdown menus.
+[/LIST]
+
+[HEADING=2]Fixed[/HEADING]
+[LIST]
+[*][B]BB Code Button Manager Icon Normalization[/B]: Extended [I]XF\Data\Editor[/I] to restore clean custom icon names for non-FontAwesome providers, correcting XenForo's default forced [I]fa-[/I] prefix.
+[*][B]Icon Provider Prefix Normalization[/B]: Enhanced [I]AbstractIconProvider[/I] and [I]XF\IconRenderer[/I] to reliably strip inadvertent [I]fa-[/I] prefixes prepended to registered icon provider prefixes.
+[/LIST]

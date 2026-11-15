@@ -12,5 +12,8 @@
     ],
     "require": {
         "php": ">=8.2.0"
+    },
+    "extra": {
+        "dd-tier": "free"
     }
 }

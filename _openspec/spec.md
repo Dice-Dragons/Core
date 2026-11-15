@@ -3,7 +3,7 @@
 ## 1. Metadata & Scope
 * **Add-On ID**: `cv6/Core`
 * **Title**: `[DD] - Core Library`
-* **Current Version**: `1.6.3` (Version ID: `1060370`)
+* **Current Version**: `1.6.4` (Version ID: `1060470`)
 * **Vendor**: `cv6` / Hoffi
 * **Target Environment**: XenForo 2.3.0+, PHP 8.2.0+
 * **Dependencies**: None (Core foundational library for all `cv6/*` add-ons)
@@ -25,6 +25,9 @@
   * 4-step wizard to convert icons across Database (options, standard XF tables, dynamic `cv6_icon` tables), Style Properties (`@...-var-...`), and Phrases (`<xf:fa>`), with interactive override modal (`actionMigrateChange`) and automatic cache rebuilds.
 * **Autocomplete & Picker**:
   * `cv6_fa_icon::cv6_inputIcon`: Multi-provider selector dropdown with brand icons/colors, dynamic styles, and live Ajax SVG autocomplete (`_files/js/cv6/core/icon.js`).
+* **Editor & BBCode Toolbar Integration**:
+  * `cv6\Core\XF\Data\Editor`: Extends `XF\Data\Editor` to preserve clean custom icon names for non-FontAwesome providers (`gi-*`, `gm-*`, `lu-*`), stripping XenForo's forced `fa-` prefix in the BB Code Button Manager.
+  * `Templater` & Template Modification `cv6_core_editor_icons`: Registers `{{ cv6_editor_icons() }}` injecting pre-rendered SVGs via `.js-cv6EditorIcons` and initializes Froala custom icon templates (`FroalaEditor.DefineIconTemplate('cv6_html', '[HTML]')`) via `_files/js/cv6/core/editor.js`.
 * **Available Icon Set Add-Ons**: Additional icon providers (e.g. Material Symbols, Game Icons) are distributed as modular add-ons at `https://forum.dice-dragons.de/downloads/categories/icon-interfaces.61/`.
 
 ### B. Asset Upload Field & Reset Subsystem (`cv6_assetupload`)

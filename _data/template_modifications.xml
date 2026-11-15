@@ -37,6 +37,7 @@
 		  		arg-target="bbcode-dd"
 			  	arg-placeholder="fa-button"
 			  	arg-stylechooser="{{ ['style'] }}"
+			  	arg-autocomplete="{{ true }}"
 			  	arg-explain="{{ phrase('you_can_preview_icons_and_their_names_here')|raw }}"
 			/>	
 <xf:else />
@@ -55,8 +56,17 @@
 	arg-readonly="{{ !$bbCode.canEdit() }}"
 	arg-maxlength="{{ max_length($bbCode, 'editor_icon_value') }}"
 	arg-stylechooser="{{ ['style'] }}"
+	arg-autocomplete="{{ true }}"
 	arg-value="{{ $bbCode.editor_icon_type == 'fa' ? $bbCode.editor_icon_value : '' }}" 
 />]]></replace>
+  </modification>
+  <modification type="public" template="editor" modification_key="cv6_core_editor_icons" description="Loads cv6 icon renderer and definitions for custom editor icons" execution_order="5" enabled="1" action="str_replace">
+    <find><![CDATA[<!--[XF:include_js]-->]]></find>
+    <replace><![CDATA[$0
+<script class="js-cv6EditorIcons" type="application/json">
+	{{ cv6_editor_icons()|json|raw }}
+</script>
+<xf:js src="cv6/core/editor.js" min="1" addon="cv6/Core" />]]></replace>
   </modification>
   <modification type="admin" template="option_edit" modification_key="cv6_core_oe_phrases" description="Adds phrase translation button to option title and explain" execution_order="10" enabled="1" action="str_replace">
     <find><![CDATA[<xf:textboxrow name="title" value="{$option}"

@@ -742,7 +742,7 @@ ul.listColumns.cv6-listColumns {
 	</div>
 </xf:form>
 ]]></template>
-  <template type="admin" title="cv6_fa_icon" version_id="1050270" version_string="1.5.2"><![CDATA[<xf:macro id="cv6_inputIcon"
+  <template type="admin" title="cv6_fa_icon" version_id="1060370" version_string="1.6.3"><![CDATA[<xf:macro id="cv6_inputIcon"
 			arg-target="!"
 			arg-name="!" 
 			arg-label=""
@@ -758,7 +758,7 @@ ul.listColumns.cv6-listColumns {
 			arg-dir="ltr"
 			arg-type="default"
 			arg-stylefield="{{ false }}"
-			arg-autocomplete="{{ false }}"
+			arg-autocomplete="{{ true }}"
 			arg-provider=""
 			arg-showprovidermenu="{{ true }}"
 			arg-class=""
@@ -831,7 +831,7 @@ ul.listColumns.cv6-listColumns {
 	arg-type="default" 
 	arg-provider=""
 	arg-showprovidermenu="{{ true }}"
-	arg-autocomplete="{{ false }}"
+	arg-autocomplete="{{ true }}"
 	arg-class=""
 	>
 	<xf:set var="$activeProviders" value="{{ cv6_active_icon_providers() }}" />

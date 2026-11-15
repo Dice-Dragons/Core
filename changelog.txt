@@ -1,3 +1,8 @@
+1.6.4
+ - Added editor icon template function and client-side Froala SVG integration for custom icon providers
+ - Fixed non-FontAwesome icon display in BB Code Button Manager by restoring uncorrupted icon names in XF\Data\Editor
+ - Enhanced AbstractIconProvider and XF\IconRenderer to normalize and strip inadvertent fa- prefixes
+
 1.6.3
  - Expanded SetupTrait with addColumnsIfMissing (bulk), dropColumnIfExists, dropIndexIfExists, renameTableIfExists, renameColumnIfExists, and deleteWidgets
  - Fixed method visibility collision on SetupTrait by removing conflicting columnExists override

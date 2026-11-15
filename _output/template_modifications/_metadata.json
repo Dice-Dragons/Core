@@ -22,5 +22,8 @@
     },
     "public/cv6_core_add_fa_function.json": {
         "hash": "62a2cb653f7ae9e381e999202eac585c"
+    },
+    "public/cv6_core_editor_icons.json": {
+        "hash": "bfcd877acd55d79c0d20dd914ba6afe9"
     }
 }

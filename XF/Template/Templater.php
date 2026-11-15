@@ -13,6 +13,58 @@ class Templater extends XFCP_Templater
         $this->addFunction('cv6_all_icon_providers', 'fnCv6AllIconProviders');
         $this->addFunction('cv6_operators', 'fnCv6Operators');
         $this->addFunction('cv6_grouped_operators', 'fnCv6GroupedOperators');
+        $this->addFunction('cv6_editor_icons', 'fnCv6EditorIcons');
+    }
+
+    public function fnCv6EditorIcons($templater, &$escape): array
+    {
+        $escape = false;
+
+        /** @var \cv6\Core\Repository\IconProvider $providerRepo */
+        $providerRepo = $this->app->repository(\cv6\Core\Repository\IconProvider::class);
+        $renderer = $this->app->iconRenderer();
+
+        $icons = [];
+
+        // 1. Custom BBCodes
+        $bbCodeContainer = $this->app->bbCode();
+        foreach ($bbCodeContainer['custom'] as $k => $custom) {
+            if (empty($custom['editor_icon_type']) || $custom['editor_icon_type'] !== 'fa') {
+                continue;
+            }
+
+            $rawIcon = (string) $custom['editor_icon_value'];
+            if ($rawIcon === '') {
+                continue;
+            }
+
+            $provider = $providerRepo->getProviderForClasses($rawIcon);
+            if ($provider !== null && $provider->getId() !== 'fa') {
+                $rendered = $renderer->render($rawIcon);
+                if ($rendered !== '') {
+                    $icons['xfCustom_' . $k] = $rendered;
+                }
+            }
+        }
+
+        // 2. Dropdown buttons
+        $dropdowns = (array) (\XF::options()->editorDropdownConfig ?? []);
+        foreach ($dropdowns as $cmd => $dropdown) {
+            $rawIcon = (string) ($dropdown['icon'] ?? '');
+            if ($rawIcon === '') {
+                continue;
+            }
+
+            $provider = $providerRepo->getProviderForClasses($rawIcon);
+            if ($provider !== null && $provider->getId() !== 'fa') {
+                $rendered = $renderer->render($rawIcon);
+                if ($rendered !== '') {
+                    $icons[$cmd] = $rendered;
+                }
+            }
+        }
+
+        return $icons;
     }
 
     public function fnCv6Operators($templater, &$escape, string $type = 'all', ?array $include = null, ?array $exclude = null): array

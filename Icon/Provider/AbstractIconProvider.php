@@ -7,8 +7,13 @@ abstract class AbstractIconProvider implements IconProviderInterface
     public function normalizeName(string $name): string
     {
         $prefix = $this->getPrefix();
-        if ($prefix !== '' && str_starts_with($name, $prefix)) {
-            return substr($name, strlen($prefix));
+        if ($prefix !== '') {
+            if (str_starts_with($name, 'fa-' . $prefix)) {
+                return substr($name, strlen('fa-' . $prefix));
+            }
+            if (str_starts_with($name, $prefix)) {
+                return substr($name, strlen($prefix));
+            }
         }
 
         return $name;
@@ -25,10 +30,18 @@ abstract class AbstractIconProvider implements IconProviderInterface
         $styles = array_keys($this->getStyles());
 
         foreach ($tokens as $token) {
-            if ($prefix !== '' && str_starts_with($token, $prefix)) {
-                return true;
+            if ($prefix !== '') {
+                if (str_starts_with($token, $prefix)) {
+                    return true;
+                }
+                if (str_starts_with($token, 'fa-' . $prefix)) {
+                    return true;
+                }
             }
             if (in_array($token, $styles, true)) {
+                return true;
+            }
+            if (str_starts_with($token, 'fa-') && in_array(substr($token, 3), $styles, true)) {
                 return true;
             }
         }
